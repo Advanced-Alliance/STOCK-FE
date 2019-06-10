@@ -10,6 +10,7 @@ import { AnswersService } from './answers.service';
 export class AppComponent implements OnInit {
   winnerTeamId: number;
   gameEnded: boolean;
+  adminStarted: boolean;
   answers: any;
   activeTeam: number;
   title: string;
@@ -51,7 +52,7 @@ export class AppComponent implements OnInit {
     this.showFireworks = false;
     this.gameStarted = false;
     this.startActiveTeam = this.activeTeam;
-
+    this.adminStarted = false;
     this.initSounds();
 
   }
@@ -286,4 +287,13 @@ export class AppComponent implements OnInit {
 
     }, 1000);
   }
+
+  private startAdmin() {
+    this.adminStarted = true;
+  }
+
+  private endAdmin() {
+    this.adminStarted = false;
+  }
+
 }

@@ -1,0 +1,11 @@
+Добавить новый вопрос:
+<div *ngFor="let q of questions">
+  <input type="text" width="140" [(ngModel)]="q.question"/>
+  <div *ngFor="let a of q.answers">
+    <input type="text" width="40" [(ngModel)]="a.answer"/>
+    <input type="text" width="40" [(ngModel)]="a.quantity"/>
+    <br/>
+  </div>
+</div>
+
+<button (click)="saveChanges()">Сохранить изменения</button>

@@ -3,7 +3,7 @@
   <div class="after"></div>
 </div>
 
-<div class="root-container" *ngIf="gameStarted">
+<div class="root-container" *ngIf="gameStarted && !adminStarted">
   <div class="game-name">
     <span>
       {{getCurrentQuestion()}}
@@ -82,7 +82,7 @@
   </button>
 </div>
 
-<div class="container" *ngIf="!gameStarted">
+<div class="container" *ngIf="!gameStarted && !adminStarted">
   <span class="text-large-2x">
     Хотите сыграть?
   </span>
@@ -102,7 +102,16 @@
   <div class="form-group">
     <button type="button btn-lg" (click)="startGame(3)" class="btn btn-danger"> Финал </button>
   </div>
+  <br>
+  <div class="form-group">
+    <button type="button btn-lg" (click)="startAdmin()" class="btn btn-danger">Административная панель</button>
+  </div>
 </div>
+
+<app-admin *ngIf="adminStarted">
+</app-admin>
+<br>
+<button *ngIf="adminStarted" type="button btn-lg" (click)="endAdmin()" class="btn btn-danger">Покинуть административную панель</button>
 
 <!--
 <div class='container' *ngIf="!gameStarted" (click)="startGame()">
