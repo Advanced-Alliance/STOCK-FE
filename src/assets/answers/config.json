@@ -1,6 +1,6 @@
 {
-  "apiUrl": "http://it.shadowhd.ru:10000/answers",
-  "saveUrl": "http://it.shadowhd.ru:10000/answers/save",
+  "apiUrl": "/api/games",
+  "saveUrl": "/api/games/save",
   "file": "answers.example.json",
   "method": "server"
 }
