@@ -1,6 +1,7 @@
 {
-  "name": "game-hundred-to-one",
-  "version": "0.1.0",
+  "name": "stock",
+  "description": "FUID-like web game fornt-engine",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
