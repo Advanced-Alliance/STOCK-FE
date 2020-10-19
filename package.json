@@ -1,6 +1,7 @@
 {
-  "name": "game-hundred-to-one",
-  "version": "0.1.0",
+  "name": "stock",
+  "description": "FUID-like web game fornt-engine",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -30,7 +31,7 @@
     "@angular/cli": "~1.7.2",
     "@angular/compiler-cli": "^5.2.0",
     "@angular/language-service": "^5.2.0",
-    "@types/jasmine": "~2.8.3",
+    "@types/jasmine": "^3.5.14",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
     "codelyzer": "^4.0.1",
