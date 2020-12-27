@@ -4,7 +4,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 @Component({
   selector: 'app-answer-card',
   templateUrl: './answer-card.component.html',
-  styleUrls: ['./answer-card.component.css'],
+  styleUrls: ['./answer-card.component.scss'],
   animations: [
     trigger('flipState', [
       state('active', style({
