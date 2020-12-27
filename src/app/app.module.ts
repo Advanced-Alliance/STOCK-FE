@@ -12,6 +12,8 @@ import { AnswersService } from './answers.service';
 import { AdminComponent } from './admin/admin.component';
 
 import {MatButtonModule} from '@angular/material/button';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @NgModule({
@@ -22,11 +24,10 @@ import {MatButtonModule} from '@angular/material/button';
     AdminComponent,
   ],
   imports: [
+    CoreModule,
+    SharedModule,
     BrowserModule,
     BrowserAnimationsModule,
-    HttpClientModule,
-    FormsModule,
-    MatButtonModule,
   ],
   providers: [
     AnswersService,
