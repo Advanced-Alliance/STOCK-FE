@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-indicator',
-  styleUrls: ['indicator.component.css'],
+  styleUrls: ['indicator.component.scss'],
   templateUrl: './indicator.component.html'
 })
 
