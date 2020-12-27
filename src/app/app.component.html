@@ -72,7 +72,7 @@
 </div>
 
 <div>
-  <button (click)="switchSound()">
+  <button mat-button (click)="switchSound()">
     <span *ngIf="isSoundOn">
       Выключить звук
     </span>
@@ -88,30 +88,30 @@
   </span>
   <p>Выберите раунд игры</p>
   <div class="form-group">
-    <button type="button btn-lg" (click)="startGame(0)" class="btn btn-primary">Первый раунд</button>
+    <button mat-button type="button btn-lg" (click)="startGame(0)" class="btn btn-primary">Первый раунд</button>
   </div>
   <br>
   <div class="form-group">
-    <button type="button btn-lg" (click)="startGame(1)" class="btn btn-secondary">Второй раунд</button>
+    <button mat-button type="button btn-lg" (click)="startGame(1)" class="btn btn-secondary">Второй раунд</button>
   </div>
   <br>
   <div class="form-group">
-    <button type="button btn-lg" (click)="startGame(2)" class="btn btn-success">Третий раунд</button>
+    <button mat-button type="button btn-lg" (click)="startGame(2)" class="btn btn-success">Третий раунд</button>
   </div>
   <br>
   <div class="form-group">
-    <button type="button btn-lg" (click)="startGame(3)" class="btn btn-danger"> Финал </button>
+    <button mat-button type="button btn-lg" (click)="startGame(3)" class="btn btn-danger"> Финал </button>
   </div>
   <br>
   <div class="form-group">
-    <button type="button btn-lg" (click)="startAdmin()" class="btn btn-danger">Административная панель</button>
+    <button mat-button type="button btn-lg" (click)="startAdmin()" class="btn btn-danger">Административная панель</button>
   </div>
 </div>
 
 <app-admin *ngIf="adminStarted">
 </app-admin>
 <br>
-<button *ngIf="adminStarted" type="button btn-lg" (click)="endAdmin()" class="btn btn-danger">Покинуть административную панель</button>
+<button mat-button *ngIf="adminStarted" type="button btn-lg" (click)="endAdmin()" class="btn btn-danger">Покинуть административную панель</button>
 
 <!--
 <div class='container' *ngIf="!gameStarted" (click)="startGame()">
