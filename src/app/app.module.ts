@@ -7,10 +7,11 @@ import { AppComponent } from './app.component';
 import { AnswerCardComponent } from './answer-card/answer-card.component';
 import { IndicatorComponent } from './indicator/indicator.component';
 import { AnswersService } from './answers.service';
-import { AdminComponent } from './admin/admin.component';
+import { AdminComponent } from './pages/admin/admin.component';
 
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
@@ -18,13 +19,13 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
     AnswerCardComponent,
     IndicatorComponent,
-    AdminComponent,
   ],
   imports: [
     CoreModule,
     SharedModule,
     BrowserModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
   ],
   providers: [
     AnswersService,

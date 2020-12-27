@@ -2,7 +2,6 @@ import { SharedModule } from './../shared/shared.module';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { CoreRoutingModule } from './core-routing.module';
 import { CoreComponent } from './core.component';
 
 
@@ -11,10 +10,8 @@ import { CoreComponent } from './core.component';
   imports: [
     CommonModule,
     SharedModule,
-    CoreRoutingModule
   ],
   exports: [
-    // CoreRoutingModule,
     CoreComponent,
   ]
 })
