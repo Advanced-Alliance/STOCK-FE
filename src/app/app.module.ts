@@ -23,8 +23,6 @@ import { AppRoutingModule } from './app-routing.module';
   imports: [
     CoreModule,
     SharedModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
   ],
   providers: [
