@@ -1,14 +1,18 @@
+html,
 body {
-  width: 100%;
   height: 100%;
-  font-family: 'Play', sans-serif;
-  margin:0;
-  overflow:hidden;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  overflow: hidden;
 }
 
 .centered {
-  display:block;
-  margin:auto;
+  display: block;
+  margin: auto;
 }
 
 .text-large {
@@ -40,13 +44,13 @@ body {
 }
 
 .odometer {
-	font-family: 'Staatliches', cursive;
+  font-family: 'Staatliches', cursive;
 }
 
 .team-blue {
-	color:#056CFF;
+  color: #056CFF;
 }
 
 .team-red {
-	color:#FF4255;
+  color: #FF4255;
 }

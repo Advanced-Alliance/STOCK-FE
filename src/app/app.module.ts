@@ -11,6 +11,8 @@ import { IndicatorComponent } from './indicator/indicator.component';
 import { AnswersService } from './answers.service';
 import { AdminComponent } from './admin/admin.component';
 
+import {MatButtonModule} from '@angular/material/button';
+
 
 @NgModule({
   declarations: [
@@ -23,10 +25,11 @@ import { AdminComponent } from './admin/admin.component';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    MatButtonModule,
   ],
   providers: [
-    AnswersService
+    AnswersService,
   ],
   bootstrap: [AppComponent]
 })
