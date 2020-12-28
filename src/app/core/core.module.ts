@@ -8,17 +8,14 @@ import { CoreComponent } from './core.component';
 
 
 @NgModule({
-  declarations: [CoreComponent],
+  declarations: [CoreComponent], // TODO Remove
   imports: [
     CommonModule,
     SharedModule,
-    BrowserModule,
     BrowserAnimationsModule,
   ],
-  exports: [
+  exports: [ // TODO Remove
     CoreComponent,
-    BrowserModule,
-    BrowserAnimationsModule,
   ]
 })
 export class CoreModule {
