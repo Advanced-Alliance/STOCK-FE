@@ -18,11 +18,7 @@ export class AnswersService {
       this.file = configAPI['file'];
       this.method = configAPI['method'];
     });
-    this.httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json'
-      })
-    };
+
   }
 
   public getAnswers() {
@@ -31,9 +27,5 @@ export class AnswersService {
     } else {
       return this.http.get(this.apiUrl + '/' + this.file + '?round=' + this.round);
     }
-  }
-
-  public saveQuestions(questions: any) {
-    return this.http.post(this.saveUrl, questions, this.httpOptions);
   }
 }

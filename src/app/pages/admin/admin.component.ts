@@ -1,5 +1,5 @@
+import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
-import { AnswersService } from './../home/answers.service';
 import { Component, OnInit } from "@angular/core";
 
 @Component({
@@ -10,12 +10,12 @@ import { Component, OnInit } from "@angular/core";
 export class AdminComponent extends BaseComponent implements OnInit {
   questions: any;
 
-  constructor(private answersService: AnswersService) {
+  constructor(private adminService: AdminService) {
     super();
   }
 
   ngOnInit() {
-    this.answersService.getAnswers().pipe(
+    this.adminService.getAnswers().pipe(
       this.unsubsribeOnDestroy
     ).subscribe((res) => {
       this.questions = res;
@@ -23,7 +23,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   public saveChanges() {
-    this.answersService.saveQuestions(this.questions).pipe(
+    this.adminService.saveQuestions(this.questions).pipe(
       this.unsubsribeOnDestroy
     ).subscribe((res) => {
 

@@ -1,6 +1,0 @@
-{
-  "apiUrl": "/api/games",
-  "saveUrl": "/api/games/save",
-  "file": "answers.example.json",
-  "method": "server"
-}
