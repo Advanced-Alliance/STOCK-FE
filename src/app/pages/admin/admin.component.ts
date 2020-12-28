@@ -1,5 +1,5 @@
+import { AnswersService } from './../home/answers.service';
 import { Component, OnInit } from "@angular/core";
-import { AnswersService } from "../../answers.service";
 
 @Component({
   selector: "app-admin",

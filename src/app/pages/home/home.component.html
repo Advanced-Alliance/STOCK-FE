@@ -1,0 +1,136 @@
+<div class="pyro" *ngIf="showFireworks">
+  <div class="before"></div>
+  <div class="after"></div>
+</div>
+
+<div class="root-container" *ngIf="gameStarted && !adminStarted">
+  <div class="game-name">
+    <span>
+      {{getCurrentQuestion()}}
+    </span>
+  </div>
+
+  <!-- <div class="game-question text-large centered"
+       *ngIf="answers">
+    {{getCurrentQuestion()}}
+  </div> -->
+
+  <div class="team-element team-1 team-container"
+       [class.team-enabled]="isFirstTeamVisible() || isWinner(1)"
+       (click)="setActiveTeam(1)"
+       >
+    <span class="row-1 col-2 centered text-large team-red">
+      Red Team
+    </span>
+    <div id="odometer-red" class="odometer row-2 col-2 centered team-red"></div>
+    <div class="row-3 col-2 centered">
+      <img [src]="teamOneIcon">
+    </div>
+    <div class="row-4 col-2">
+      <app-indicator [indicatorColor]="failsTeam1"
+                     (failedAnswerCb)="onFailedAnswer($event, 1)"></app-indicator>
+    </div>
+  </div>
+
+  <div class="team-element team-2 team-container "
+       [class.team-enabled]="!isFirstTeamVisible() || isWinner(2)"
+        (click)="setActiveTeam(2)"
+       >
+    <span class="row-1 col-2 centered text-large team-blue">
+      Blue Team
+    </span>
+    <div id="odometer-blue" class="odometer row-2 col-2 centered team-blue"></div>
+    <div class="row-3 col-2 centered">
+      <img [src]="teamTwoIcon">
+    </div>
+    <div class="row-4 col-2">
+      <app-indicator [indicatorColor]="failsTeam2"
+                     (failedAnswerCb)="onFailedAnswer($event, 2)"></app-indicator>
+    </div>
+  </div>
+
+  <div class="choices choices-container"
+       *ngIf="answers">
+    <app-answer-card *ngFor="let answer of answers[currentQuestionIdx].answers; let i = index"
+                     class="single-choice single-choice-i"
+                     [num]="i+1"
+                     [answer]="getCurrentAnswer(i)"
+                     (answeredCb)="onSelected(i)"></app-answer-card>
+  </div>
+
+  <div class="controls controls-container"
+       *ngIf="answers">
+    <div class="col-2 row-1">
+      <div class="img-circular back-btn"
+           (click)="previousQuestion()"></div>
+    </div>
+    <div class="col-4 row-1">
+      <div class="img-circular next-btn"
+           (click)="nextQuestion()"></div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <button mat-button (click)="switchSound()">
+    <span *ngIf="isSoundOn">
+      Выключить звук
+    </span>
+    <span *ngIf="!isSoundOn">
+      Включить звук
+    </span>
+  </button>
+</div>
+
+<div class="container" *ngIf="!gameStarted && !adminStarted">
+  <span class="text-large-2x">
+    Хотите сыграть?
+  </span>
+  <p>Выберите раунд игры</p>
+  <div class="form-group">
+    <button mat-button type="button btn-lg" (click)="startGame(0)" class="btn btn-primary">Первый раунд</button>
+  </div>
+  <br>
+  <div class="form-group">
+    <button mat-button type="button btn-lg" (click)="startGame(1)" class="btn btn-secondary">Второй раунд</button>
+  </div>
+  <br>
+  <div class="form-group">
+    <button mat-button type="button btn-lg" (click)="startGame(2)" class="btn btn-success">Третий раунд</button>
+  </div>
+  <br>
+  <div class="form-group">
+    <button mat-button type="button btn-lg" (click)="startGame(3)" class="btn btn-danger"> Финал </button>
+  </div>
+  <br>
+  <div class="form-group">
+    <button mat-button type="button btn-lg" (click)="startAdmin()" class="btn btn-danger">Административная панель</button>
+  </div>
+</div>
+
+<br>
+<button mat-button *ngIf="adminStarted" type="button btn-lg" (click)="endAdmin()" class="btn btn-danger">Покинуть административную панель</button>
+
+<!--
+<div class='container' *ngIf="!gameStarted" (click)="startGame()">
+  <div>
+    <span class="text-large-2x">
+      Хотите сыграть?
+    </span>
+  </div>
+  <a href='#' class='playBut'>
+    <svg version="1.1"
+         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+      x="0px" y="0px" width="213.7px" height="213.7px" viewBox="0 0 213.7 213.7" enable-background="new 0 0 213.7 213.7"
+         xml:space="preserve">
+
+      <polygon class='triangle' id="XMLID_18_" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
+  73.5,62.5 148.5,105.8 73.5,149.1 "/>
+
+      <circle class='circle' id="XMLID_17_" fill="none"  stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"/>
+    </svg>
+
+
+  </a>
+</div>
+-->
