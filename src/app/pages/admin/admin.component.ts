@@ -1,4 +1,5 @@
-import { AnswersService } from './../home/answers.service';
+import { AdminService } from './admin.service';
+import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from "@angular/core";
 
 @Component({
@@ -6,18 +7,26 @@ import { Component, OnInit } from "@angular/core";
   templateUrl: "./admin.component.html",
   styleUrls: ["./admin.component.scss"],
 })
-export class AdminComponent implements OnInit {
+export class AdminComponent extends BaseComponent implements OnInit {
   questions: any;
 
-  constructor(private answersService: AnswersService) {}
+  constructor(private adminService: AdminService) {
+    super();
+  }
 
   ngOnInit() {
-    this.answersService.getAnswers().subscribe((res) => {
+    this.adminService.getAnswers().pipe(
+      this.unsubsribeOnDestroy
+    ).subscribe((res) => {
       this.questions = res;
     });
   }
 
   public saveChanges() {
-    this.answersService.saveQuestions(this.questions).subscribe((res) => {});
+    this.adminService.saveQuestions(this.questions).pipe(
+      this.unsubsribeOnDestroy
+    ).subscribe((res) => {
+
+    });
   }
 }

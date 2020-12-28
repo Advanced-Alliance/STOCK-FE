@@ -1,11 +1,21 @@
 Добавить новый вопрос:
 <div *ngFor="let q of questions">
-  <input type="text" width="140" [(ngModel)]="q.question"/>
+  <input [(ngModel)]="q.question"
+         type="text"
+         width="140" />
   <div *ngFor="let a of q.answers">
-    <input type="text" width="40" [(ngModel)]="a.answer"/>
-    <input type="text" width="40" [(ngModel)]="a.quantity"/>
-    <br/>
+    <input [(ngModel)]="a.answer"
+           type="text"
+           width="40" />
+    <input [(ngModel)]="a.quantity"
+           type="text"
+           width="40" />
+    <br />
   </div>
 </div>
 
-<button (click)="saveChanges()">Сохранить изменения</button>
+<button (click)="saveChanges()"
+        mat-stroked-button>Сохранить изменения</button>
+
+<a [routerLink]="['/']"
+   mat-raised-button>Закончить</a>

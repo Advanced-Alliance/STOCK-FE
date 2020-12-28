@@ -1,4 +1,5 @@
-import { AnswersService } from './../home/answers.service';
+import { AdminApiService } from './admin-api.service';
+import { AdminService } from './admin.service';
 import { AdminComponent } from './admin.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { SharedModule } from './../../shared/shared.module';
@@ -14,10 +15,11 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     SharedModule,
-    AdminRoutingModule,
+    AdminRoutingModule // Must be the last one
   ],
   providers: [
-    AnswersService,
+    AdminApiService,
+    AdminService,
   ]
 })
 export class AdminModule { }
