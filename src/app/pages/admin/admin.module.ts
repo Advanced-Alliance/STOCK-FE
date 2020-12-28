@@ -1,6 +1,5 @@
 import { AdminApiService } from './admin-api.service';
 import { AdminService } from './admin.service';
-import { AnswersService } from './../home/answers.service';
 import { AdminComponent } from './admin.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { SharedModule } from './../../shared/shared.module';
