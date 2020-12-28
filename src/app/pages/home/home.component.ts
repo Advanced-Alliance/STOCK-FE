@@ -11,7 +11,6 @@ export class HomeComponent implements OnInit {
 
   winnerTeamId: number;
   gameEnded: boolean;
-  adminStarted: boolean;
   answers: any;
   activeTeam: number;
   title: string;
@@ -38,6 +37,11 @@ export class HomeComponent implements OnInit {
   private audioCash: HTMLAudioElement;
   private audioWin: HTMLAudioElement;
 
+  constructor(
+    private answersService: AnswersService
+  ) {
+  }
+
   ngOnInit() {
     this.isSoundOn = true;
     this.teamOneIcon = '/assets/images/red.svg';
@@ -53,15 +57,14 @@ export class HomeComponent implements OnInit {
     this.showFireworks = false;
     this.gameStarted = false;
     this.startActiveTeam = this.activeTeam;
-    this.adminStarted = false;
-    this.initSounds();
 
-  }
 
-  constructor(private answersService: AnswersService) {
     this.title = 'Тхис баттл';
     this.activeTeam = 1;
     this.currentQuestionIdx = 0;
+
+    this.initSounds();
+
   }
 
   isFirstTeamVisible() {
@@ -236,15 +239,15 @@ export class HomeComponent implements OnInit {
       {
         name: '.mp3',
         type: 'audio/mpeg'
-      } , {
+      }, {
         name: '.wav',
         type: 'audio/wav'
-      } , {
+      }, {
         name: '.ogg',
         type: 'audio/ogg'
       }];
 
-    audioFormats.forEach(function(format) {
+    audioFormats.forEach(function (format) {
       const source = document.createElement('source');
       source.src = '/assets/sounds/' + fileName + format.name;
       source.type = format.type;
@@ -287,14 +290,6 @@ export class HomeComponent implements OnInit {
       });
 
     }, 1000);
-  }
-
-  startAdmin() {
-    this.adminStarted = true;
-  }
-
-  endAdmin() {
-    this.adminStarted = false;
   }
 
 }

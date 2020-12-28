@@ -1,9 +1,11 @@
-<div class="pyro" *ngIf="showFireworks">
+<div class="pyro"
+     *ngIf="showFireworks">
   <div class="before"></div>
   <div class="after"></div>
 </div>
 
-<div class="root-container" *ngIf="gameStarted && !adminStarted">
+<div class="root-container"
+     *ngIf="gameStarted">
   <div class="game-name">
     <span>
       {{getCurrentQuestion()}}
@@ -17,12 +19,12 @@
 
   <div class="team-element team-1 team-container"
        [class.team-enabled]="isFirstTeamVisible() || isWinner(1)"
-       (click)="setActiveTeam(1)"
-       >
+       (click)="setActiveTeam(1)">
     <span class="row-1 col-2 centered text-large team-red">
       Red Team
     </span>
-    <div id="odometer-red" class="odometer row-2 col-2 centered team-red"></div>
+    <div id="odometer-red"
+         class="odometer row-2 col-2 centered team-red"></div>
     <div class="row-3 col-2 centered">
       <img [src]="teamOneIcon">
     </div>
@@ -34,12 +36,12 @@
 
   <div class="team-element team-2 team-container "
        [class.team-enabled]="!isFirstTeamVisible() || isWinner(2)"
-        (click)="setActiveTeam(2)"
-       >
+       (click)="setActiveTeam(2)">
     <span class="row-1 col-2 centered text-large team-blue">
       Blue Team
     </span>
-    <div id="odometer-blue" class="odometer row-2 col-2 centered team-blue"></div>
+    <div id="odometer-blue"
+         class="odometer row-2 col-2 centered team-blue"></div>
     <div class="row-3 col-2 centered">
       <img [src]="teamTwoIcon">
     </div>
@@ -55,7 +57,8 @@
                      class="single-choice single-choice-i"
                      [num]="i+1"
                      [answer]="getCurrentAnswer(i)"
-                     (answeredCb)="onSelected(i)"></app-answer-card>
+                     (answeredCb)="onSelected(i)">
+    </app-answer-card>
   </div>
 
   <div class="controls controls-container"
@@ -72,7 +75,8 @@
 </div>
 
 <div>
-  <button mat-button (click)="switchSound()">
+  <button mat-button
+          (click)="switchSound()">
     <span *ngIf="isSoundOn">
       Выключить звук
     </span>
@@ -82,55 +86,43 @@
   </button>
 </div>
 
-<div class="container" *ngIf="!gameStarted && !adminStarted">
+<div class="container">
   <span class="text-large-2x">
-    Хотите сыграть?
+    СТОК
   </span>
-  <p>Выберите раунд игры</p>
+  <p>// beta</p>
   <div class="form-group">
-    <button mat-button type="button btn-lg" (click)="startGame(0)" class="btn btn-primary">Первый раунд</button>
+    <button mat-button
+            type="button btn-lg"
+            (click)="startGame(0)"
+            class="btn btn-primary">Первый раунд</button>
   </div>
   <br>
   <div class="form-group">
-    <button mat-button type="button btn-lg" (click)="startGame(1)" class="btn btn-secondary">Второй раунд</button>
+    <button mat-button
+            type="button btn-lg"
+            (click)="startGame(1)"
+            class="btn btn-secondary">Второй раунд</button>
   </div>
   <br>
   <div class="form-group">
-    <button mat-button type="button btn-lg" (click)="startGame(2)" class="btn btn-success">Третий раунд</button>
+    <button mat-button
+            type="button btn-lg"
+            (click)="startGame(2)"
+            class="btn btn-success">Третий раунд</button>
   </div>
   <br>
   <div class="form-group">
-    <button mat-button type="button btn-lg" (click)="startGame(3)" class="btn btn-danger"> Финал </button>
+    <button mat-button
+            type="button btn-lg"
+            (click)="startGame(3)"
+            class="btn btn-danger"> Финал </button>
   </div>
   <br>
   <div class="form-group">
-    <button mat-button type="button btn-lg" (click)="startAdmin()" class="btn btn-danger">Административная панель</button>
+    <a [routerLink]="['/admin']"
+       type="button btn-lg"
+       class="btn btn-danger"
+       mat-button>Административная панель</a>
   </div>
 </div>
-
-<br>
-<button mat-button *ngIf="adminStarted" type="button btn-lg" (click)="endAdmin()" class="btn btn-danger">Покинуть административную панель</button>
-
-<!--
-<div class='container' *ngIf="!gameStarted" (click)="startGame()">
-  <div>
-    <span class="text-large-2x">
-      Хотите сыграть?
-    </span>
-  </div>
-  <a href='#' class='playBut'>
-    <svg version="1.1"
-         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
-      x="0px" y="0px" width="213.7px" height="213.7px" viewBox="0 0 213.7 213.7" enable-background="new 0 0 213.7 213.7"
-         xml:space="preserve">
-
-      <polygon class='triangle' id="XMLID_18_" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="
-  73.5,62.5 148.5,105.8 73.5,149.1 "/>
-
-      <circle class='circle' id="XMLID_17_" fill="none"  stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"/>
-    </svg>
-
-
-  </a>
-</div>
--->

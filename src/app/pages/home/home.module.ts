@@ -1,3 +1,4 @@
+import { SharedModule } from './../../shared/shared.module';
 import { AnswerCardComponent } from './answer-card/answer-card.component';
 import { IndicatorComponent } from './indicator/indicator.component';
 import { AnswersService } from './answers.service';
@@ -16,7 +17,8 @@ import { HomeComponent } from './home.component';
   ],
   imports: [
     CommonModule,
-    HomeRoutingModule
+    SharedModule,
+    HomeRoutingModule,
   ],
   providers: [
     AnswersService,
