@@ -1,3 +1,5 @@
+import { BaseComponent } from './../../core/base.component';
+
 import { AnswersService } from './answers.service';
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
@@ -7,7 +9,7 @@ import * as _ from 'lodash';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent extends BaseComponent implements OnInit {
 
   winnerTeamId: number;
   gameEnded: boolean;
@@ -40,6 +42,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private answersService: AnswersService
   ) {
+    super();
   }
 
   ngOnInit() {
@@ -276,7 +279,9 @@ export class HomeComponent implements OnInit {
 
   startGame(Round) {
     this.answersService.round = Round;
-    this.answersService.getAnswers().subscribe(
+    this.answersService.getAnswers().pipe(
+      this.unsubsribeOnDestroy
+    ).subscribe(
       res => {
         this.answers = res;
         this.eraseAnswers();
