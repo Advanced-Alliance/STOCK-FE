@@ -3,27 +3,41 @@
   <h1 class="logo-header">
     СТОК
   </h1>
+  <p class="description">мнений обо всём // beta</p>
+  <div class="buttons-block"
+       fxLayout="column"
+       fxLayoutAlign="start stretch">
+    <div fxLayout="row"
+         fxLayoutAlign="start start"
+         fxLayoutGap="12px"
+         class="button-row">
+      <mat-form-field fxFlex>
+        <mat-label>ID комнаты</mat-label>
+        <input matInput
+               placeholder="XXXX">
+      </mat-form-field>
 
-  <p>мнений обо всём // beta</p>
-  <div fxLayout>
-    <mat-form-field appearance="outline">
-      <mat-label>ID комнаты</mat-label>
-      <input matInput
-             placeholder="XXXX">
-    </mat-form-field>
-    <a [routerLink]="['/game']"
-       color="accent"
-       mat-stroked-button>
-      <mat-icon>login</mat-icon> Войти
-    </a>
+      <a [routerLink]="['/game']"
+         color="primary"
+         mat-flat-button>
+        Войти <mat-icon>login</mat-icon>
+      </a>
+    </div>
+    <div class="button-row">
+      <a [routerLink]="['/admin']"
+         mat-stroked-button
+         fxFlex>
+        <mat-icon>add</mat-icon> Cоздать комнату
+      </a>
+    </div>
+    <div class="button-row">
+      <a [routerLink]="['/poll']"
+         color="primary"
+         mat-flat-button
+         fxFlex>
+        <mat-icon>bar_chart</mat-icon> Опросы
+      </a>
+    </div>
   </div>
-  <br>
-  <div fxLayout>
-    <a [routerLink]="['/admin']"
-       mat-stroked-button><mat-icon>add</mat-icon> Cоздать комнату</a>
-  </div>
-  <div fxLayout>
-    <a [routerLink]="['/poll']"
-       mat-stroked-button><mat-icon>bar_chart</mat-icon> Опросы</a>
-  </div>
+
 </div>

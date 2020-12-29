@@ -5,6 +5,20 @@ $font-sizes: (
   "logo-header": 144px,
 );
 
+$line-heights: (
+  "logo-header": 110px,
+);
+
+$sizes: (
+  "xs": 4px,
+  "sm": 12px,
+  "md": 16px,
+  "xl": 24px,
+);
+
+$margin: $sizes;
+$padding: $sizes;
+
 $colors: (
   "team-blue": #056cff,
   "team-red": #ff4255,
