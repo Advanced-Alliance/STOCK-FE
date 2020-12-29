@@ -7,22 +7,27 @@
   <div class="buttons-block"
        fxLayout="column"
        fxLayoutAlign="start stretch">
-    <div fxLayout="row"
-         fxLayoutAlign="start start"
-         fxLayoutGap="12px"
-         class="button-row">
+    <form (submit)="play()"
+          [formGroup]="gameFrom"
+          class="button-row"
+          matTooltip="Играть онлайн пока нельзя. Попробуй сам создать комнату"
+          fxLayout="row"
+          fxLayoutAlign="start start"
+          fxLayoutGap="12px">
       <mat-form-field fxFlex>
         <mat-label>ID комнаты</mat-label>
-        <input matInput
-               placeholder="XXXX">
+        <input formControlName="gameId"
+               placeholder="XXXX"
+               matInput>
       </mat-form-field>
 
-      <a [routerLink]="['/game']"
-         color="primary"
-         mat-flat-button>
+      <button [disabled]="!gameFrom.valid"
+              color="primary"
+              type="submit"
+              mat-flat-button>
         Войти <mat-icon>login</mat-icon>
-      </a>
-    </div>
+      </button>
+    </form>
     <div class="button-row">
       <a [routerLink]="['/admin']"
          mat-stroked-button
@@ -32,8 +37,10 @@
     </div>
     <div class="button-row">
       <a [routerLink]="['/poll']"
+         disabled
          color="primary"
          mat-flat-button
+         matTooltip="Когда-нибудь будет доступно"
          fxFlex>
         <mat-icon>bar_chart</mat-icon> Опросы
       </a>
