@@ -1,9 +1,10 @@
 import { MatButtonModule } from '@angular/material/button';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 const MATERIAL = [
   MatButtonModule,
@@ -17,6 +18,8 @@ const MATERIAL = [
     RouterModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
   ],
   exports: [
     ...MATERIAL,
@@ -24,6 +27,8 @@ const MATERIAL = [
     RouterModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
+    FlexLayoutModule,
   ]
 })
 export class SharedModule { }
