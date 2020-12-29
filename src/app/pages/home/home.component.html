@@ -1,19 +1,29 @@
-<div class="container">
-  <span class="text-large-2x">
+<div fxLayout="column"
+     fxLayoutAlign="center center">
+  <h1 class="logo-header">
     СТОК
-  </span>
-  <p>// beta</p>
-  <div class="form-group">
+  </h1>
+
+  <p>мнений обо всём // beta</p>
+  <div fxLayout>
+    <mat-form-field appearance="outline">
+      <mat-label>ID комнаты</mat-label>
+      <input matInput
+             placeholder="XXXX">
+    </mat-form-field>
     <a [routerLink]="['/game']"
-       type="button btn-lg"
-       class="btn btn-primary"
-       mat-button>Войти</a>
+       color="accent"
+       mat-stroked-button>
+      <mat-icon>login</mat-icon> Войти
+    </a>
   </div>
   <br>
-  <div class="form-group">
+  <div fxLayout>
     <a [routerLink]="['/admin']"
-       type="button btn-lg"
-       class="btn btn-danger"
-       mat-button>Административная панель</a>
+       mat-stroked-button><mat-icon>add</mat-icon> Cоздать комнату</a>
+  </div>
+  <div fxLayout>
+    <a [routerLink]="['/poll']"
+       mat-stroked-button><mat-icon>bar_chart</mat-icon> Опросы</a>
   </div>
 </div>

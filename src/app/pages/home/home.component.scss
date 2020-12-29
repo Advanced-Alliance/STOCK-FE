@@ -1,0 +1,5 @@
+@import "./../../styles/base.scss";
+
+.logo-header {
+  font-size: map-get($map: $font-sizes, $key: "logo-header");
+}
