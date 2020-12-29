@@ -22,6 +22,7 @@
       </mat-form-field>
 
       <button [disabled]="!gameFrom.valid"
+      class="capitalize"
               color="primary"
               type="submit"
               mat-flat-button>
@@ -30,6 +31,7 @@
     </form>
     <div class="button-row">
       <a [routerLink]="['/admin']"
+      class="capitalize"
          mat-stroked-button
          fxFlex>
         <mat-icon>add</mat-icon> Cоздать комнату
@@ -39,6 +41,7 @@
       <a [routerLink]="['/poll']"
          disabled
          color="primary"
+         class="capitalize"
          mat-flat-button
          matTooltip="Когда-нибудь будет доступно"
          fxFlex>
