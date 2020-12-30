@@ -1,0 +1,17 @@
+@import "./../../styles/base.scss";
+
+:host {
+  @include fullFlex(column);
+}
+
+.tab-icon {
+  margin-right: map-get($map: $margin, $key: "xs");
+}
+
+.button-mar {
+  margin: map-get($map: $margin, $key: "xs");
+}
+
+.header {
+  margin: 0;
+}

@@ -1,21 +1,57 @@
-Добавить новый вопрос:
-<div *ngFor="let q of questions">
-  <input [(ngModel)]="q.question"
-         type="text"
-         width="140" />
-  <div *ngFor="let a of q.answers">
-    <input [(ngModel)]="a.answer"
-           type="text"
-           width="40" />
-    <input [(ngModel)]="a.quantity"
-           type="text"
-           width="40" />
-    <br />
-  </div>
+<div fxLayout="row"
+     fxLayoutAlign="start center">
+  <button class="capitalize button-mar"
+          mat-icon-button>
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h1 class="header">Создание новой игры...</h1>
 </div>
 
-<button (click)="saveChanges()"
-        mat-stroked-button>Сохранить изменения</button>
+<div fxLayout="column"
+     fxFlex>
+  <mat-tab-group>
+    <mat-tab label="First">
+      Content 1
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">add</mat-icon>
+        Добавить
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
 
-<a [routerLink]="['/']"
-   mat-raised-button>Закончить</a>
+<div fxLayout="row"
+     fxLayoutAlign="space-between center">
+  <div>
+    <button (click)="saveChanges()"
+            color="primary"
+            class="capitalize button-mar"
+            mat-flat-button>
+      <mat-icon>get_app</mat-icon>
+      Сохранить
+    </button>
+    <button class="capitalize button-mar"
+            mat-stroked-button>
+      <mat-icon>publish</mat-icon>
+      Загрузить
+    </button>
+  </div>
+  <div>
+    <button [routerLink]="['/game']"
+            class="capitalize button-mar"
+            mat-stroked-button>
+      <mat-icon>public_off</mat-icon>
+      Играть локально
+    </button>
+    <button [routerLink]="['/']"
+            class="capitalize button-mar"
+            color="primary"
+            disabled
+            mat-flat-button>
+      <mat-icon>public</mat-icon>
+      Играть онлайн
+    </button>
+  </div>
+</div>

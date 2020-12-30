@@ -1,0 +1,12 @@
+@mixin full() {
+  width: 100%;
+  height: 100%;
+}
+
+@mixin fullFlex($direction: row, $wrap: nowrap, $justifyContent: start) {
+  @include full();
+  display: flex;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+  justify-content: $justifyContent;
+}
