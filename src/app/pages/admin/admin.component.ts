@@ -1,6 +1,7 @@
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from "@angular/core";
+import { IEditor, OrderBy } from './../../models/models';
 
 @Component({
   selector: "app-admin",
@@ -8,25 +9,55 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./admin.component.scss"],
 })
 export class AdminComponent extends BaseComponent implements OnInit {
-  questions: any;
+
+  editorConfiguration: IEditor;
 
   constructor(private adminService: AdminService) {
     super();
   }
 
   ngOnInit() {
-    this.adminService.getAnswers().pipe(
-      this.unsubsribeOnDestroy
-    ).subscribe((res) => {
-      this.questions = res;
-    });
+    this.initNewGame();
   }
 
-  public saveChanges() {
-    this.adminService.saveQuestions(this.questions).pipe(
-      this.unsubsribeOnDestroy
-    ).subscribe((res) => {
-
-    });
+  private initNewGame() {
+    this.editorConfiguration = {
+      createDate: Date.now(),
+      lastEditQuestion: 0,
+      gameSettings: {
+        commonPoints: 0,
+        currentStage: 0,
+        showQuestionsText: true,
+        teamLeft: {
+          points: 0,
+        },
+        teamRight: {
+          points: 0,
+        },
+        questions: [{
+          stageName: 'Простая игра',
+          orderBy: OrderBy.none,
+          answers: [
+            {
+              name: 'Частый ответ',
+              points: 60,
+            },
+            {
+              name: 'Средний ответ',
+              points: 30,
+            },
+            {
+              name: 'Редкий ответ',
+              points: 10,
+            },
+          ]
+        }],
+      }
+    }
   }
+
+  saveChanges() {
+
+  }
+
 }

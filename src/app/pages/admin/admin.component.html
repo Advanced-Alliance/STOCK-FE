@@ -10,7 +10,8 @@
 <div fxLayout="column"
      fxFlex>
   <mat-tab-group>
-    <mat-tab label="First">
+    <mat-tab *ngFor="let q of editorConfiguration.gameSettings.questions; trackBy:q.stageName"
+             label="q.stageName">
       Content 1
     </mat-tab>
     <mat-tab>
@@ -19,6 +20,7 @@
         Добавить
       </ng-template>
     </mat-tab>
+    Ну, скоро добавим
   </mat-tab-group>
 </div>
 
