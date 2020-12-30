@@ -128,11 +128,6 @@
   grid-row-end: span 1;
 }
 
-
-.odometer {
-  font-size: 50px;
-}
-
 .team-enabled {
   opacity: 1;
 }
@@ -191,13 +186,6 @@
   background-image: url('../assets/images/next.svg');
   float: right;
 }
-
-
-body {
-  margin: 0;
-  padding: 0;
-  background: #000;
-  overflow: hidden; }
 
 .pyro > .before, .pyro > .after {
   position: absolute;

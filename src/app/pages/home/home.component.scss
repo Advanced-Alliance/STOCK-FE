@@ -1,0 +1,26 @@
+@import "./../../styles/base.scss";
+
+:host {
+  display: flex;
+  justify-content: center;
+  flex-flow: column nowrap;
+  height: 100%;
+}
+
+.logo-header {
+  font-size: map-get($map: $font-sizes, $key: "logo-header");
+  line-height: map-get($map: $line-heights, $key: "logo-header");
+}
+
+.description {
+  font-size: map-get($map: $sizes, $key: "xl");
+  line-height: 28px;
+}
+
+.buttons-block {
+  width: 400px;
+}
+
+.button-row {
+  margin-bottom: map-get($map: $margin, $key: "xl");
+}

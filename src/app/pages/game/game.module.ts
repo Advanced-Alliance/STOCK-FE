@@ -1,3 +1,5 @@
+import { SharedModule } from './../../shared/shared.module';
+import { RouterModule } from '@angular/router';
 import { GameService } from './game.service';
 import { AnswerCardComponent } from './answer-card/answer-card.component';
 import { IndicatorComponent } from './indicator/indicator.component';
@@ -16,8 +18,8 @@ import { GameApiService } from './game-api.service';
     AnswerCardComponent,
   ],
   imports: [
-    CommonModule,
-    GameRoutingModule
+    SharedModule,
+    GameRoutingModule // Must be the last one
   ],
   providers: [
     GameApiService,

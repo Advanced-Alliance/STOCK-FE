@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
     AdminComponent,
   ],
   imports: [
-    CommonModule,
     SharedModule,
     AdminRoutingModule // Must be the last one
   ],

@@ -1,19 +1,72 @@
-<div class="container">
-  <span class="text-large-2x">
+<div fxLayout="column"
+     fxLayoutAlign="center center"
+     fxFlex>
+  <h1 class="logo-header">
     СТОК
-  </span>
-  <p>// beta</p>
-  <div class="form-group">
-    <a [routerLink]="['/game']"
-       type="button btn-lg"
-       class="btn btn-primary"
-       mat-button>Войти</a>
+  </h1>
+  <p class="description">мнений обо всём // beta</p>
+  <div class="buttons-block"
+       fxLayout="column"
+       fxLayoutAlign="start stretch">
+    <form (submit)="play()"
+          [formGroup]="gameFrom"
+          class="button-row"
+          matTooltip="Играть онлайн пока нельзя. Попробуй сам создать комнату"
+          fxLayout="row"
+          fxLayoutAlign="start start"
+          fxLayoutGap="12px">
+      <mat-form-field fxFlex>
+        <mat-label>ID комнаты</mat-label>
+        <input formControlName="gameId"
+               placeholder="XXXX"
+               matInput>
+      </mat-form-field>
+
+      <button [disabled]="!gameFrom.valid"
+              class="capitalize"
+              color="primary"
+              type="submit"
+              mat-flat-button>
+        Войти <mat-icon>login</mat-icon>
+      </button>
+    </form>
+    <div class="button-row">
+      <a [routerLink]="['/admin']"
+         class="capitalize"
+         mat-stroked-button
+         fxFlex>
+        <mat-icon>add</mat-icon> Cоздать комнату
+      </a>
+    </div>
+    <div class="button-row">
+      <a [routerLink]="['/poll']"
+         disabled
+         color="primary"
+         class="capitalize"
+         mat-flat-button
+         matTooltip="Когда-нибудь будет доступно"
+         fxFlex>
+        <mat-icon>bar_chart</mat-icon> Опросы
+      </a>
+    </div>
   </div>
-  <br>
-  <div class="form-group">
-    <a [routerLink]="['/admin']"
-       type="button btn-lg"
-       class="btn btn-danger"
-       mat-button>Административная панель</a>
+
+</div>
+<div fxLayout="row"
+     fxLayoutAlign="space-between center">
+  <div><a class="capitalize"
+       href="https://advall.org/"
+       target="_blank"
+       mat-button>Advenced Alliance</a>
+    |
+    <a class="capitalize"
+       href="https://shadowhd.ru/"
+       target="_blank"
+       mat-button>ShadowHD</a>
   </div>
+
+  <a class="capitalize"
+     href="https://github.com/Advanced-Alliance/STOCK-FE"
+     target="_blank"
+     mat-button>dev</a>
 </div>
