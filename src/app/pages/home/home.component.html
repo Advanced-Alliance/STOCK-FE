@@ -1,5 +1,6 @@
 <div fxLayout="column"
-     fxLayoutAlign="center center">
+     fxLayoutAlign="center center"
+     fxFlex>
   <h1 class="logo-header">
     СТОК
   </h1>
@@ -22,7 +23,7 @@
       </mat-form-field>
 
       <button [disabled]="!gameFrom.valid"
-      class="capitalize"
+              class="capitalize"
               color="primary"
               type="submit"
               mat-flat-button>
@@ -31,7 +32,7 @@
     </form>
     <div class="button-row">
       <a [routerLink]="['/admin']"
-      class="capitalize"
+         class="capitalize"
          mat-stroked-button
          fxFlex>
         <mat-icon>add</mat-icon> Cоздать комнату
@@ -50,4 +51,22 @@
     </div>
   </div>
 
+</div>
+<div fxLayout="row"
+     fxLayoutAlign="space-between center">
+  <div><a class="capitalize"
+       href="https://advall.org/"
+       target="_blank"
+       mat-button>Advenced Alliance</a>
+    |
+    <a class="capitalize"
+       href="https://shadowhd.ru/"
+       target="_blank"
+       mat-button>ShadowHD</a>
+  </div>
+
+  <a class="capitalize"
+     href="https://github.com/Advanced-Alliance/STOCK-FE"
+     target="_blank"
+     mat-button>dev</a>
 </div>
