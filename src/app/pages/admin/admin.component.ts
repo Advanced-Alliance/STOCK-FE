@@ -13,9 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class AdminComponent extends BaseComponent implements OnInit {
 
+  gameName: string;
   createDate = Date.now();
   currentQuestion = 0;
   showQuestionsText = true;
+  unsavedChanges = true;
 
   teamLeftName?: string | null;
   teamRightName?: string | null;
@@ -36,6 +38,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   private initNewGame() {
+    this.gameName = 'Новая игра';
     this.questions = [
       {
         stageName: 'Простая игра',
@@ -87,6 +90,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       createDate: this.createDate,
       lastEditQuestion: this.currentQuestion,
       gameSettings: {
+        name: this.gameName,
         commonPoints: 0,
         currentStage: 0,
         maxFails: 3,
@@ -108,6 +112,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   saveChanges(): void {
+    this.unsavedChanges = false;
     this.gameService.setGameSettings(this.getChanges());
     this.gameService.getGameSettings().pipe(
       this.unsubscribeOnDestroy
@@ -137,7 +142,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       reader.onload = (e: any) => {
         const json = e.target.result;
         const gameSettings = this.gameService.parseJSON(json);
-        console.log(gameSettings);
+        this.unsavedChanges = false;
       };
 
       reader.readAsText(inputNode.files[0]);

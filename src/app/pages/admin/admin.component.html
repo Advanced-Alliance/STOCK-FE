@@ -4,7 +4,7 @@
           mat-icon-button>
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h1 class="header">Создание новой игры...</h1>
+  <h1 class="header">{{ gameName }}<span *ngIf="unsavedChanges">*</span></h1>
 </div>
 
 <div fxLayout="column"

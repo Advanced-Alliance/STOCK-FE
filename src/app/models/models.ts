@@ -24,6 +24,7 @@ export interface ITeam {
 }
 
 export interface IGame {
+  name: string;
   questions: IQuestion[],
   showQuestionsText: boolean;
   maxFails: number;
