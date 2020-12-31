@@ -10,23 +10,19 @@
 <div fxLayout="column"
      fxFlex>
   <mat-tab-group>
-    <mat-tab *ngFor="let q of editorConfiguration.gameSettings.questions; trackBy:q.stageName"
-             label="q.stageName">
-      Content 1
+    <mat-tab *ngFor="let q of questions"
+             label="{{q.stageName}}">
+      <p>{{ q.questionText }}</p>
+      <div *ngFor="let a of q.answers">
+        <p>{{ a.name }} = {{ a.points }}</p>
+      </div>
     </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="tab-icon">add</mat-icon>
-        Добавить
-      </ng-template>
-    </mat-tab>
-    Ну, скоро добавим
   </mat-tab-group>
 </div>
 
 <div fxLayout="row"
      fxLayoutAlign="space-between center">
-  <div>
+  <div fxLayout="row" fxLayoutAlign="end start">
     <button (click)="saveChanges()"
             color="primary"
             class="capitalize button-mar"
@@ -40,7 +36,7 @@
       Загрузить
     </button>
   </div>
-  <div>
+  <div fxLayout="row" fxLayoutAlign="end start">
     <button [routerLink]="['/game']"
             class="capitalize button-mar"
             mat-stroked-button>

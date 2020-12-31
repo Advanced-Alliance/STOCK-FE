@@ -10,29 +10,32 @@ export interface IAnswer {
 }
 
 export interface IQuestion {
+  enable: boolean;
   stageName: string;
-  questionText?: string;
+  questionText?: string | null;
   answers: IAnswer[],
   orderBy: OrderBy,
 }
 
 export interface ITeam {
-  name?: string;
+  name?: string | null;
   points: number;
+  fails: number;
 }
 
 export interface IGame {
   questions: IQuestion[],
   showQuestionsText: boolean;
+  maxFails: number;
   teamLeft: ITeam;
   teamRight: ITeam;
   currentStage: number;
   commonPoints: number;
 }
 
-export interface IEditor {
+export interface IGameSettings {
   gameSettings: IGame;
   lastEditQuestion: number;
   createDate: number;
-  lastEditDate?: number;
+  lastEditDate?: number | null;
 }
