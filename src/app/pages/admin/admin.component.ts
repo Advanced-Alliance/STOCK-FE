@@ -1,7 +1,7 @@
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from "@angular/core";
-import { IEditor, OrderBy, IQuestion, IAnswer } from './../../models/models';
+import { IGameSettings, OrderBy, IQuestion, IAnswer } from './../../models/models';
 
 @Component({
   selector: "app-admin",
@@ -70,7 +70,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     return answers;
   }
 
-  private getChanges(): IEditor {
+  private getChanges(): IGameSettings {
     const questions = this.questions;
     if (this.questions.length === this.questionsCount) {
       delete questions[this.questionsCount];

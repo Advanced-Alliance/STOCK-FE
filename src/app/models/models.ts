@@ -31,7 +31,7 @@ export interface IGame {
   commonPoints: number;
 }
 
-export interface IEditor {
+export interface IGameSettings {
   gameSettings: IGame;
   lastEditQuestion: number;
   createDate: number;
