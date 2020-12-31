@@ -15,4 +15,10 @@ export class GameService {
   setGameSettings(gameSettings: IGameSettings): void {
     this.gameSettings = gameSettings;
   }
+
+  parseJSON(json: string): IGameSettings {
+    const resGameSettings = JSON.parse(json);
+
+    return resGameSettings;
+  }
 }

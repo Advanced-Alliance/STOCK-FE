@@ -4,13 +4,14 @@ import { AdminComponent } from './admin.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { SharedModule } from './../../shared/shared.module';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { OpenFileDialogComponent } from './open-file-dialog/open-file-dialog.component';
 
 
 
 @NgModule({
   declarations: [
     AdminComponent,
+    OpenFileDialogComponent,
   ],
   imports: [
     SharedModule,

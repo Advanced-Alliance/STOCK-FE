@@ -1,13 +1,15 @@
+import { OpenFileDialogComponent } from './open-file-dialog/open-file-dialog.component';
 import { GameService } from './../../services/game.service';
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 import { IGameSettings, OrderBy, IQuestion, IAnswer } from './../../models/models';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: "app-admin",
-  templateUrl: "./admin.component.html",
-  styleUrls: ["./admin.component.scss"],
+  selector: 'app-admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent extends BaseComponent implements OnInit {
 
@@ -24,6 +26,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private gameService: GameService,
+    public dialog: MatDialog,
   ) {
     super();
   }
@@ -104,13 +107,22 @@ export class AdminComponent extends BaseComponent implements OnInit {
     return editorData;
   }
 
-  saveChanges() {
+  saveChanges(): void {
     this.gameService.setGameSettings(this.getChanges());
     this.gameService.getGameSettings().pipe(
       this.unsubscribeOnDestroy
     ).subscribe((gameSettings) => {
       this.adminService.downloadSettingsFile(gameSettings);
     });
+  }
+
+  loadFromFile(): void {
+    const dialogRef = this.dialog.open(OpenFileDialogComponent);
+
+    dialogRef.afterClosed()
+      .subscribe((gameSettings: IGameSettings) => {
+        console.log(gameSettings);
+      });
   }
 
 }

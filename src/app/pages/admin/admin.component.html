@@ -11,7 +11,7 @@
      fxFlex>
   <mat-tab-group>
     <mat-tab *ngFor="let q of questions"
-             label="{{q.stageName}}">
+             label="{{ q.stageName }}">
       <p>{{ q.questionText }}</p>
       <div *ngFor="let a of q.answers">
         <p>{{ a.name }} = {{ a.points }}</p>
@@ -22,7 +22,8 @@
 
 <div fxLayout="row"
      fxLayoutAlign="space-between center">
-  <div fxLayout="row" fxLayoutAlign="end start">
+  <div fxLayout="row"
+       fxLayoutAlign="end start">
     <button (click)="saveChanges()"
             color="primary"
             class="capitalize button-mar"
@@ -30,13 +31,15 @@
       <mat-icon>get_app</mat-icon>
       Сохранить
     </button>
-    <button class="capitalize button-mar"
+    <button (click)="loadFromFile()"
+            class="capitalize button-mar"
             mat-stroked-button>
       <mat-icon>publish</mat-icon>
       Загрузить
     </button>
   </div>
-  <div fxLayout="row" fxLayoutAlign="end start">
+  <div fxLayout="row"
+       fxLayoutAlign="end start">
     <button [routerLink]="['/game']"
             class="capitalize button-mar"
             mat-stroked-button>
