@@ -16,7 +16,7 @@ export abstract class BaseComponent implements OnDestroy {
     this.isAlive$.complete();
   }
 
-  protected unsubsribeOnDestroy = (source: Observable<any>): Observable<any> => {
+  protected unsubscribeOnDestroy = (source: Observable<any>): Observable<any> => {
     return source.pipe(
       takeUntil(this.isAlive$)
     );

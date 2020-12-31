@@ -105,12 +105,12 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   saveChanges() {
-    this.gameService.setGameSettings(this.getChanges())
+    this.gameService.setGameSettings(this.getChanges());
     this.gameService.getGameSettings().pipe(
-      this.unsubsribeOnDestroy
+      this.unsubscribeOnDestroy
     ).subscribe((gameSettings) => {
-      console.log(gameSettings);
-    })
+      this.adminService.downloadSettingsFile(gameSettings);
+    });
   }
 
 }

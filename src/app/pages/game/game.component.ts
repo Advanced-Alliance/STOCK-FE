@@ -52,7 +52,7 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.initSounds();
   }
 
-  private init(): void{
+  private init(): void {
 
     this.isSoundOn = true;
     this.teamOneIcon = '/assets/images/red.svg';
@@ -284,7 +284,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
   startGame() {
     this.gameService.getGameSettings().pipe(
-      this.unsubsribeOnDestroy
+      this.unsubscribeOnDestroy
     ).subscribe(
       (gameSettings: IGameSettings) => {
         this.gameSettings = gameSettings;
