@@ -1,5 +1,6 @@
+import { IGameSettings } from './../../models/models';
+import { GameService } from './../../services/game.service';
 import { BaseComponent } from './../../core/base.component';
-import { GameService } from './game.service';
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 
@@ -9,6 +10,8 @@ import * as _ from 'lodash';
   styleUrls: ['./game.component.scss']
 })
 export class GameComponent extends BaseComponent implements OnInit {
+
+  gameSettings: IGameSettings;
 
   winnerTeamId: number;
   gameEnded: boolean;
@@ -279,12 +282,12 @@ export class GameComponent extends BaseComponent implements OnInit {
     return tries.length > 0;
   }
 
-  startGame(Round) {
-    this.gameService.getAnswers().pipe(
+  startGame() {
+    this.gameService.getGameSettings().pipe(
       this.unsubsribeOnDestroy
     ).subscribe(
-      res => {
-        this.answers = res;
+      (gameSettings: IGameSettings) => {
+        this.gameSettings = gameSettings;
         this.eraseAnswers();
       });
 

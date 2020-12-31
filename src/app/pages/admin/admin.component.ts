@@ -1,3 +1,4 @@
+import { GameService } from './../../services/game.service';
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from "@angular/core";
@@ -20,7 +21,10 @@ export class AdminComponent extends BaseComponent implements OnInit {
   questions: IQuestion[] = [];
   questionsCount: 1;
 
-  constructor(private adminService: AdminService) {
+  constructor(
+    private adminService: AdminService,
+    private gameService: GameService,
+  ) {
     super();
   }
 
@@ -98,7 +102,12 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   saveChanges() {
-    console.log(this.getChanges());
+    this.gameService.setGameSettings(this.getChanges())
+    this.gameService.getGameSettings().pipe(
+      this.unsubsribeOnDestroy
+    ).subscribe((gameSettings) => {
+      console.log(gameSettings);
+    })
   }
 
 }
