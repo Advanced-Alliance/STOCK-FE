@@ -17,6 +17,8 @@ export class GameService {
   }
 
   parseJSON(json: string): IGameSettings {
+
+    console.log(json);
     const resGameSettings = JSON.parse(json);
 
     return resGameSettings;

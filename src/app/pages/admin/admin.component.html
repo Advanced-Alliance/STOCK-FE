@@ -31,12 +31,17 @@
       <mat-icon>get_app</mat-icon>
       Сохранить
     </button>
-    <button (click)="loadFromFile()"
+    <button (click)="fileInput.click()"
             class="capitalize button-mar"
             mat-stroked-button>
       <mat-icon>publish</mat-icon>
       Загрузить
     </button>
+    <input #fileInput
+           (change)="onFileSelected()"
+           type="file"
+           id="fileInput"
+           hidden>
   </div>
   <div fxLayout="row"
        fxLayoutAlign="end start">

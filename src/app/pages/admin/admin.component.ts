@@ -116,6 +116,9 @@ export class AdminComponent extends BaseComponent implements OnInit {
     });
   }
 
+  /**
+   *  @deprecated
+   */
   loadFromFile(): void {
     const dialogRef = this.dialog.open(OpenFileDialogComponent);
 
@@ -123,6 +126,22 @@ export class AdminComponent extends BaseComponent implements OnInit {
       .subscribe((gameSettings: IGameSettings) => {
         console.log(gameSettings);
       });
+  }
+
+  onFileSelected(): void {
+    const inputNode: any = document.querySelector('#fileInput');
+
+    if (typeof (FileReader) !== 'undefined') {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        const json = e.target.result;
+        const gameSettings = this.gameService.parseJSON(json);
+        console.log(gameSettings);
+      };
+
+      reader.readAsText(inputNode.files[0]);
+    }
   }
 
 }
