@@ -20,11 +20,13 @@ export interface IQuestion {
 export interface ITeam {
   name?: string | null;
   points: number;
+  fails: number;
 }
 
 export interface IGame {
   questions: IQuestion[],
   showQuestionsText: boolean;
+  maxFails: number;
   teamLeft: ITeam;
   teamRight: ITeam;
   currentStage: number;

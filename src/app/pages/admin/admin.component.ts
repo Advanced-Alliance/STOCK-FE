@@ -80,20 +80,23 @@ export class AdminComponent extends BaseComponent implements OnInit {
       delete questions[this.questionsCount];
     }
 
-    const editorData = {
+    const editorData: IGameSettings = {
       createDate: this.createDate,
       lastEditQuestion: this.currentQuestion,
       gameSettings: {
         commonPoints: 0,
         currentStage: 0,
+        maxFails: 3,
         showQuestionsText: this.showQuestionsText,
         teamLeft: {
           name: this.teamLeftName,
           points: 0,
+          fails: 0,
         },
         teamRight: {
           name: this.teamRightName,
           points: 0,
+          fails: 0,
         },
         questions: questions,
       }
