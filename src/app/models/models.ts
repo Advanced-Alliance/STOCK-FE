@@ -10,14 +10,15 @@ export interface IAnswer {
 }
 
 export interface IQuestion {
+  enable: boolean;
   stageName: string;
-  questionText?: string;
+  questionText?: string | null;
   answers: IAnswer[],
   orderBy: OrderBy,
 }
 
 export interface ITeam {
-  name?: string;
+  name?: string | null;
   points: number;
 }
 
@@ -34,5 +35,5 @@ export interface IEditor {
   gameSettings: IGame;
   lastEditQuestion: number;
   createDate: number;
-  lastEditDate?: number;
+  lastEditDate?: number | null;
 }
