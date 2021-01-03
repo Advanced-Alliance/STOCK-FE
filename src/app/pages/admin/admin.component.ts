@@ -5,6 +5,7 @@ import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
 import { IGameSettings, OrderBy, IQuestion, IAnswer } from './../../models/models';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-admin',
@@ -18,12 +19,20 @@ export class AdminComponent extends BaseComponent implements OnInit {
   currentQuestion = 0;
   showQuestionsText = true;
   unsavedChanges = true;
+  selectedIndex = 0;
 
   teamLeftName?: string | null;
   teamRightName?: string | null;
 
   questions: IQuestion[] = [];
-  questionsCount: 1;
+  /**
+   * Костыль, необходимый чтобы отслеживать положение вопроса
+   * с именем "+ Добавить" и не учитывать его в игре.
+   * Если равен -1, то считается, что фиктивного вопроса нет.
+   */
+  fakeQuestionPos = 1;
+  readonly maxQuestions = 6;
+  readonly minQuestions = 1;
 
   constructor(
     private adminService: AdminService,
@@ -82,8 +91,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   private getChanges(): IGameSettings {
     const questions = this.questions;
-    if (this.questions.length === this.questionsCount) {
-      delete questions[this.questionsCount];
+    if (this.fakeQuestionPos >= 0) {
+      delete questions[this.fakeQuestionPos];
     }
 
     const editorData: IGameSettings = {
@@ -147,6 +156,38 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
       reader.readAsText(inputNode.files[0]);
     }
+  }
+
+  onSelectedTabChange($event: MatTabChangeEvent): void {
+    this.unsavedChanges = true;
+    if (
+      $event.index === this.fakeQuestionPos
+    ) {
+      this.fakeQuestionPos++;
+      this.questions[$event.index].stageName = `Вопрос ${$event.index + 1}`;
+      if (this.fakeQuestionPos === this.maxQuestions) {
+        this.fakeQuestionPos = -1;
+      } else {
+        this.questions.push(this.getAddTab());
+      }
+    }
+  }
+
+  onQuestionDelete(index: number): void {
+
+    const lastTab = (this.fakeQuestionPos > 0)
+      ? this.fakeQuestionPos - 1
+      : this.questions.length;
+
+    if (lastTab === this.selectedIndex) this.selectedIndex--;
+
+
+    // this.questions.splice(index, 1);
+    // if (this.fakeQuestionPos < 0) {
+    //   this.fakeQuestionPos = this.maxQuestions - 1;
+    //   this.questions.push(this.getAddTab());
+    // }
+    // this.fakeQuestionPos--;
   }
 
 }

@@ -9,10 +9,16 @@
 
 <div fxLayout="column"
      fxFlex>
-  <mat-tab-group>
-    <mat-tab *ngFor="let q of questions"
+  <mat-tab-group [(selectedIndex)]="selectedIndex"
+                 (selectedTabChange)="onSelectedTabChange($event)">
+    <mat-tab *ngFor="let q of questions; let i = index"
              label="{{ q.stageName }}">
       <p>{{ q.questionText }}</p>
+      <button *ngIf="questions.length != 2"
+              (click)="onQuestionDelete(i)"
+              class="capitalize"
+              color="accent"
+              mat-stroked-button>Удалить вопрос</button>
       <div *ngFor="let a of q.answers">
         <p>{{ a.name }} = {{ a.points }}</p>
       </div>
