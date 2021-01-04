@@ -142,7 +142,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       });
   }
 
-  onFileSelected(): void {
+  onOpenFile(): void {
     const inputNode: any = document.querySelector('#fileInput');
 
     if (typeof (FileReader) !== 'undefined') {

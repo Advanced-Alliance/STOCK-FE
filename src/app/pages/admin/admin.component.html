@@ -14,8 +14,9 @@
     <mat-tab *ngFor="let q of questions; let i = index"
              label="{{ q.stageName }}">
       <p>{{ q.questionText }}</p>
-      <button *ngIf="questions.length != 2"
-              (click)="onQuestionDelete(i)"
+      <!-- TODO: Переделать на нормальную длинну -->
+      <button (click)="onQuestionDelete(i)"
+              [disabled]="questions.length - 1 <= minQuestions"
               class="capitalize"
               color="accent"
               mat-stroked-button>Удалить вопрос</button>
@@ -44,7 +45,7 @@
       Загрузить
     </button>
     <input #fileInput
-           (change)="onFileSelected()"
+           (change)="onOpenFile()"
            type="file"
            id="fileInput"
            hidden>
