@@ -25,12 +25,6 @@ export class AdminComponent extends BaseComponent implements OnInit {
   teamRightName?: string | null;
 
   questions: IQuestion[] = [];
-  /**
-   * Костыль, необходимый чтобы отслеживать положение вопроса
-   * с именем "+ Добавить" и не учитывать его в игре.
-   * Если равен -1, то считается, что фиктивного вопроса нет.
-   */
-  fakeQuestionPos = 1;
   readonly maxQuestions = 6;
   readonly minQuestions = 1;
 
@@ -90,10 +84,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   private getChanges(): IGameSettings {
-    const questions = this.questions;
-    if (this.fakeQuestionPos >= 0) {
-      delete questions[this.fakeQuestionPos];
-    }
+    const questions = this.questions.slice(0, this.questions.length - 1)
 
     const editorData: IGameSettings = {
       createDate: this.createDate,
@@ -159,29 +150,31 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   onSelectedTabChange($event: MatTabChangeEvent): void {
-    this.unsavedChanges = true;
+
     if (
-      $event.index === this.fakeQuestionPos
+      $event.index === this.questions.length - 1
     ) {
-      this.fakeQuestionPos++;
+      this.unsavedChanges = true;
       this.questions[$event.index].stageName = `Вопрос ${$event.index + 1}`;
-      if (this.fakeQuestionPos === this.maxQuestions) {
-        this.fakeQuestionPos = -1;
-      } else {
-        this.questions.push(this.getAddTab());
-      }
+      this.questions.push(this.getAddTab());
+      // if (this.fakeQuestionPos === this.maxQuestions) {
+      //   this.fakeQuestionPos = -1;
+      // } else {
+      //   this.questions.push(this.getAddTab());
+      // }
     }
   }
 
   onQuestionDelete(index: number): void {
 
-    const lastTab = (this.fakeQuestionPos > 0)
-      ? this.fakeQuestionPos - 1
-      : this.questions.length;
-
-    if (lastTab === this.selectedIndex) this.selectedIndex--;
+    if (index === this.questions.length - 2) this.selectedIndex--;
 
 
+    for (let i = index; i < this.questions.length - 1; i++) {
+      this.questions[i] = this.questions[i + 1];
+    }
+
+    this.questions.pop();
     // this.questions.splice(index, 1);
     // if (this.fakeQuestionPos < 0) {
     //   this.fakeQuestionPos = this.maxQuestions - 1;
