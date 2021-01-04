@@ -17,16 +17,12 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   gameSettingsForm: FormGroup;
 
-  get questions_fb() {
-    return this.gameSettingsForm.get('questions') as FormArray;
-  }
-
   gameName: string;
   createDate = Date.now();
   currentQuestion = 0;
   showQuestionsText = true;
   unsavedChanges = true;
-  selectedIndex = 0;
+  // selectedIndex = 0;
 
   teamLeftName?: string | null;
   teamRightName?: string | null;
@@ -54,6 +50,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       questions: this.fb.array([
         this.fb.group({
           stageName: ['Простая игра'],
+          questionText: ['queston n=asd'],
           orderBy: this.fb.control(OrderBy.none),
           enable: this.fb.control(true),
           answers: this.fb.array(
@@ -70,6 +67,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     this.questions = [
       {
         stageName: 'Простая игра',
+        questionText: '',
         orderBy: OrderBy.none,
         enable: true,
         answers: this.getDefaultAnswers(),
@@ -191,7 +189,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
    */
   onQuestionDelete(index: number): void {
     if (index === this.questions.length - 2) {
-      this.selectedIndex--;
+      this.currentQuestion--;
     }
 
     for (let i = index; i < this.questions.length - 1; i++) {

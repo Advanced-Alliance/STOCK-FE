@@ -7,18 +7,54 @@
   <h1 class="header">{{ gameName }}<span *ngIf="unsavedChanges">*</span></h1>
 </div>
 
-<div fxLayout="column"
-     fxFlex>
-  <mat-tab-group [(selectedIndex)]="selectedIndex"
+<form [formGroup]="gameSettingsForm"
+      fxLayout="column"
+      fxFlex>
+  <mat-tab-group [(selectedIndex)]="currentQuestion"
                  (selectedTabChange)="onSelectedTabChange($event)">
-    <mat-tab *ngFor="let q of questions_fb.controls; let i = index"
+    <mat-tab *ngFor="let q of gameSettingsForm['controls'].questions['controls']; let i = index"
              [disabled]="i === maxQuestions"
-             label="{{ q.get }}">
-      <p>{{ q.questionText }}</p>
-      <div *ngFor="let a of q.answers">
-        <p>{{ a.name }} = {{ a.points }}</p>
+             formArrayName="questions"
+             label="{{ q['controls'].stageName.value }}">
+      <div formGroupName="{{i}}">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Название этапа игры</mat-label>
+          <input formControlName="stageName"
+                 type="text"
+                 maxlength="30"
+                 matInput>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="outline">
+          <mat-label>Текст вопроса</mat-label>
+          <textarea formControlName="questionText"
+                    matInput></textarea>
+        </mat-form-field>
+
+        <div *ngFor="let a of q['controls'].answers['controls']; let j = index"
+             formArrayName="answers">
+          <div formGroupName="{{j}}">
+            <mat-form-field appearance="outline">
+              <mat-label>Enter some input</mat-label>
+              <input formControlName="name"
+                     type="text"
+                     maxlength="30"
+                     placeholder="Ответ"
+                     matInput>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Очки</mat-label>
+              <input formControlName="points"
+                     type="number"
+                     maxlength="10"
+                     placeholder="00"
+                     matInput>
+            </mat-form-field>
+          </div>
+        </div>
       </div>
-      <!-- TODO: Переделать на нормальную длинну -->
       <button (click)="onQuestionDelete(i)"
               [disabled]="questions.length - 1 <= minQuestions"
               class="capitalize"
@@ -26,7 +62,7 @@
               mat-stroked-button>Удалить вопрос</button>
     </mat-tab>
   </mat-tab-group>
-</div>
+</form>
 
 <div fxLayout="row"
      fxLayoutAlign="space-between center">
