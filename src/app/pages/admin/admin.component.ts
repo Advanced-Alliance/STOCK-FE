@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { IGameSettings, OrderBy, IQuestion, IAnswer } from './../../models/models';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-admin',
@@ -13,6 +14,12 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
   styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent extends BaseComponent implements OnInit {
+
+  gameSettingsForm: FormGroup;
+
+  get questions_fb() {
+    return this.gameSettingsForm.get('questions') as FormArray;
+  }
 
   gameName: string;
   createDate = Date.now();
@@ -32,6 +39,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     private adminService: AdminService,
     private gameService: GameService,
     public dialog: MatDialog,
+    private fb: FormBuilder,
   ) {
     super();
   }
@@ -41,13 +49,30 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   private initNewGame() {
+    this.gameSettingsForm = this.fb.group({
+      gameName: ['Новая игра', Validators.required],
+      questions: this.fb.array([
+        this.fb.group({
+          stageName: ['Простая игра'],
+          orderBy: this.fb.control(OrderBy.none),
+          enable: this.fb.control(true),
+          answers: this.fb.array(
+            this.getDefaultAnswers().map((a) => this.fb.group({
+              name: this.fb.control(a.name),
+              points: this.fb.control(a.points),
+            }))
+          ),
+        }),
+      ]),
+    });
+
     this.gameName = 'Новая игра';
     this.questions = [
       {
         stageName: 'Простая игра',
         orderBy: OrderBy.none,
         enable: true,
-        answers: [...this.getDefaultAnswers()],
+        answers: this.getDefaultAnswers(),
       },
       this.getAddTab(),
     ];
@@ -59,7 +84,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       stageName: '+ Добавить',
       orderBy: OrderBy.none,
       enable: true,
-      answers: [...this.getDefaultAnswers()],
+      answers: this.getDefaultAnswers(),
     };
     return question;
   }
@@ -150,37 +175,30 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   onSelectedTabChange($event: MatTabChangeEvent): void {
-
     if (
       $event.index === this.questions.length - 1
     ) {
       this.unsavedChanges = true;
       this.questions[$event.index].stageName = `Вопрос ${$event.index + 1}`;
       this.questions.push(this.getAddTab());
-      // if (this.fakeQuestionPos === this.maxQuestions) {
-      //   this.fakeQuestionPos = -1;
-      // } else {
-      //   this.questions.push(this.getAddTab());
-      // }
     }
   }
 
+  /**
+   * This method is just manually copies the elements from
+   * next elements after index and removing last element
+   * @param index
+   */
   onQuestionDelete(index: number): void {
-
-    if (index === this.questions.length - 2) this.selectedIndex--;
-
+    if (index === this.questions.length - 2) {
+      this.selectedIndex--;
+    }
 
     for (let i = index; i < this.questions.length - 1; i++) {
       this.questions[i] = this.questions[i + 1];
     }
 
     this.questions.pop();
-    // this.questions.splice(index, 1);
-    // if (this.fakeQuestionPos < 0) {
-    //   this.fakeQuestionPos = this.maxQuestions - 1;
-    //   this.questions.push(this.getAddTab());
-    // }
-    // this.fakeQuestionPos--;
   }
 
 }
