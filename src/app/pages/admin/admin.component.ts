@@ -17,6 +17,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   gameSettingsForm: FormGroup;
 
+  editGameName = false;
+
   gameName: string;
   createDate = Date.now();
   currentQuestion = 0;

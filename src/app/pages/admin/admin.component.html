@@ -4,7 +4,29 @@
           mat-icon-button>
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h1 class="header">{{ gameName }}<span *ngIf="unsavedChanges">*</span></h1>
+  <h1 *ngIf="!editGameName"
+      class="header">{{ gameName }}<span *ngIf="unsavedChanges">*</span>
+    <button (click)="editGameName = true"
+            mat-button
+            mat-icon-button>
+      <mat-icon>create</mat-icon>
+    </button>
+  </h1>
+  <div *ngIf="editGameName">
+    <mat-form-field>
+      <input [(ngModel)]="gameName"
+             matInput>
+      <button (click)="editGameName = false"
+              mat-button
+              mat-icon-button
+              matSuffix>
+        <mat-icon>done</mat-icon>
+      </button>
+    </mat-form-field>
+
+
+  </div>
+
 </div>
 
 <form [formGroup]="gameSettingsForm"
