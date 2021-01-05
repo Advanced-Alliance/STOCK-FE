@@ -15,3 +15,7 @@
 .header {
   margin: 0;
 }
+
+.form-content {
+  margin: map-get($map: $margin, $key: "sm");
+}
