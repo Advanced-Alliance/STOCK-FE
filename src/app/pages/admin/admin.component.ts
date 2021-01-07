@@ -3,7 +3,7 @@ import { GameService } from './../../services/game.service';
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
-import { IGameSettings, OrderBy, IQuestion, IAnswer } from './../../models/models';
+import { IGameSettings, OrderBy, IQuestion, IAnswer, GameType } from './../../models/models';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
@@ -51,7 +51,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       questions: this.fb.array([
         this.fb.group({
           stageName: ['Простая игра'],
-          questionText: ['queston n=asd'],
+          questionText: [''],
           orderBy: this.fb.control(OrderBy.none),
           enable: this.fb.control(true),
           answers: this.fb.array(
@@ -119,15 +119,19 @@ export class AdminComponent extends BaseComponent implements OnInit {
         currentStage: 0,
         maxFails: 3,
         showQuestionsText: this.showQuestionsText,
+        players: [],
+        gameType: GameType.teamPlay,
         teamLeft: {
           name: this.teamLeftName,
           points: 0,
           fails: 0,
+          players: [],
         },
         teamRight: {
           name: this.teamRightName,
           points: 0,
           fails: 0,
+          players: [],
         },
         questions: questions,
       }

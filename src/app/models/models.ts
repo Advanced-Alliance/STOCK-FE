@@ -4,6 +4,11 @@ export enum OrderBy {
   backward,
 }
 
+export enum GameType {
+  teamPlay,
+  PvP,
+}
+
 export interface IAnswer {
   name: string;
   points: number;
@@ -21,6 +26,13 @@ export interface ITeam {
   name?: string | null;
   points: number;
   fails: number;
+  players: IPlayer[];
+}
+
+export interface IPlayer {
+  name?: string | null;
+  points: number;
+  fails: number;
 }
 
 export interface IGame {
@@ -32,6 +44,8 @@ export interface IGame {
   teamRight: ITeam;
   currentStage: number;
   commonPoints: number;
+  players: IPlayer[];
+  gameType: GameType;
 }
 
 export interface IGameSettings {
