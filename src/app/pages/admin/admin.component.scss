@@ -1,7 +1,7 @@
 @import "./../../styles.scss";
 
 :host {
-  @include fullFlex(column);
+  @include fullFlex();
 }
 
 .tab-icon {
@@ -21,6 +21,7 @@
 }
 
 .answers-block {
+  @include flex(column);
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: map-get($map: $sizes, $key: "xxs");
 }

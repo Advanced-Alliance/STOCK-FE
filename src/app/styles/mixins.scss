@@ -3,10 +3,14 @@
   height: 100%;
 }
 
-@mixin fullFlex($direction: row, $wrap: nowrap, $justifyContent: start) {
-  @include full();
+@mixin flex($direction: row, $justifyContent: start, $wrap: nowrap) {
   display: flex;
   flex-direction: $direction;
   flex-wrap: $wrap;
   justify-content: $justifyContent;
+}
+
+@mixin fullFlex($direction: row, $justifyContent: start, $wrap: nowrap) {
+  @include full();
+  @include flex($direction, $justifyContent, $wrap);
 }
