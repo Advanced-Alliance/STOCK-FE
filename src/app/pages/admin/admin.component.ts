@@ -24,7 +24,6 @@ export class AdminComponent extends BaseComponent implements OnInit {
   currentQuestion = 0;
   showQuestionsText = true;
   unsavedChanges = true;
-  // selectedIndex = 0;
 
   teamLeftName?: string | null;
   teamRightName?: string | null;
@@ -189,7 +188,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
    * next elements after index and removing last element
    * @param index
    */
-  onQuestionDelete(index: number): void {
+  onRemoveQuestion(index: number): void {
     if (index === this.questions.length - 2) {
       this.currentQuestion--;
     }
@@ -199,6 +198,10 @@ export class AdminComponent extends BaseComponent implements OnInit {
     }
 
     this.questions.pop();
+  }
+
+  onRemoveAnswer(questionIndex: number, answerIndex: number): void {
+
   }
 
 }

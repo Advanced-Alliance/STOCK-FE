@@ -1,20 +1,22 @@
-<div fxLayout="row"
-     fxLayoutAlign="start center">
+<div fxLayout="row">
   <button class="button-mar"
           mat-button
           mat-icon-button>
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h1 *ngIf="!editGameName"
-      class="header">{{ gameName }}<span *ngIf="unsavedChanges">*</span>
-
-  </h1>
-  <button (click)="editGameName = true"
-          class="button-mar"
-          mat-button
-          mat-icon-button>
-    <mat-icon>create</mat-icon>
-  </button>
+  <div *ngIf="!editGameName"
+       fxLayout="row"
+       fxLayoutAlign="start center">
+    <h1 class="header">{{ gameName }}
+      <span *ngIf="unsavedChanges">*</span>
+    </h1>
+    <button (click)="editGameName = true"
+            class="button-mar"
+            mat-button
+            mat-icon-button>
+      <mat-icon>create</mat-icon>
+    </button>
+  </div>
   <div *ngIf="editGameName">
     <mat-form-field>
       <input [(ngModel)]="gameName"
@@ -45,7 +47,7 @@
            formGroupName="{{i}}">
 
         <mat-form-field>
-          <mat-label>Название этапа игры</mat-label>
+          <mat-label>Название этапа</mat-label>
           <input formControlName="stageName"
                  type="text"
                  maxlength="30"
@@ -53,34 +55,41 @@
         </mat-form-field>
         <br>
         <mat-form-field>
-          <mat-label>Текст вопроса</mat-label>
+          <mat-label>Вопрос</mat-label>
           <textarea formControlName="questionText"
                     matInput></textarea>
         </mat-form-field>
 
-        <div *ngFor="let a of q['controls'].answers['controls']; let j = index"
-             formArrayName="answers">
-          <div formGroupName="{{j}}">
-            <mat-form-field appearance="outline">
-              <mat-label>Enter some input</mat-label>
-              <input formControlName="name"
-                     type="text"
-                     maxlength="30"
-                     placeholder="Ответ"
-                     matInput>
-            </mat-form-field>
+        <div class="answers-block">
+          <div class="answers-block__header">
+            <div fxFlex>Ответы</div>
+          </div>
+          <div *ngFor="let a of q['controls'].answers['controls']; let j = index"
+               formArrayName="answers">
+            <div formGroupName="{{j}}">
+              <mat-form-field class="form-content">
+                <input formControlName="name"
+                       type="text"
+                       maxlength="30"
+                       matInput>
+              </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Очки</mat-label>
-              <input formControlName="points"
-                     type="number"
-                     maxlength="10"
-                     placeholder="00"
-                     matInput>
-            </mat-form-field>
+              <mat-form-field class="form-content">
+                <input formControlName="points"
+                       type="number"
+                       maxlength="10"
+                       matInput>
+              </mat-form-field>
+              <button (click)="onRemoveAnswer(i,j)"
+                      class="form-content"
+                      mat-button
+                      mat-icon-button>
+                <mat-icon>remove_circle_outline</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
-        <button (click)="onQuestionDelete(i)"
+        <button (click)="onRemoveQuestion(i)"
                 [disabled]="questions.length - 1 <= minQuestions"
                 class="capitalize"
                 color="accent"
