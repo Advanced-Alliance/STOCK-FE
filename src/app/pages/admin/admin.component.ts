@@ -3,7 +3,7 @@ import { GameService } from './../../services/game.service';
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
-import { IGameSettings, OrderBy, IQuestion, IAnswer, GameType } from './../../models/models';
+import { IGameSettings, OrderBy, IGame, GameType } from './../../models/models';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
@@ -100,8 +100,10 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   private getChanges(): IGameSettings {
-    const gameData = this.gameForm.value;
+    const gameData = this.gameForm.value as IGame;
     gameData.questions = gameData.questions.slice(0, this.questions.length - 1)
+
+
 
     //   commonPoints: 0,
     //   currentStage: 0,
@@ -126,6 +128,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     const editorData: IGameSettings = {
       createDate: this.createDate,
       lastEditQuestion: this.currentQuestion,
+      lastEditDate: Date.now(),
       game: gameData
 
     };
@@ -163,6 +166,9 @@ export class AdminComponent extends BaseComponent implements OnInit {
       reader.onload = (e: any) => {
         const json = e.target.result;
         const gameSettings = this.gameService.parseJSON(json);
+        this.gameForm.setValue(gameSettings.game);
+        this.createDate = gameSettings.createDate;
+        this.currentQuestion = gameSettings.lastEditQuestion;
         this.unsavedChanges = false;
       };
 
