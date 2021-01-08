@@ -86,6 +86,7 @@
                          matInput>
                 </mat-form-field>
                 <button (click)="onRemoveAnswer(i,j)"
+                        [disabled]="q['controls'].answers['controls'].length === 1"
                         class="form-content"
                         mat-button
                         mat-icon-button>
