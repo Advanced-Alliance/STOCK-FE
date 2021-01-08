@@ -193,6 +193,11 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   onRemoveQuestion(index: number): void {
     if (this.questions.length <= 1) return;
+
+    if (this.questions.length - 2 === index) {
+      this.currentQuestion--;
+    }
+
     this.questions.removeAt(index);
   }
 
