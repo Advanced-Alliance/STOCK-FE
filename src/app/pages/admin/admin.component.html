@@ -1,4 +1,4 @@
-<form [formGroup]="gameSettingsForm"
+<form [formGroup]="gameForm"
       fxLayout="column"
       fxFlex>
 
@@ -12,7 +12,7 @@
     <div *ngIf="!editGameName"
          fxLayout="row"
          fxLayoutAlign="start center">
-      <h1 class="header">{{ gameName }}
+      <h1 class="header">{{ gameForm['controls'].gameName.value }}
         <span *ngIf="unsavedChanges">*</span>
       </h1>
       <button (click)="editGameName = true"
@@ -24,7 +24,7 @@
     </div>
     <div *ngIf="editGameName">
       <mat-form-field>
-        <input [(ngModel)]="gameName"
+        <input formControlName="gameName"
                matInput>
         <button (click)="editGameName = false"
                 mat-button
@@ -41,7 +41,7 @@
        fxFlex>
     <mat-tab-group [(selectedIndex)]="currentQuestion"
                    (selectedTabChange)="onSelectedTabChange($event)">
-      <mat-tab *ngFor="let q of gameSettingsForm['controls'].questions['controls']; let i = index"
+      <mat-tab *ngFor="let q of questions['controls']; let i = index"
                [disabled]="i === maxQuestions"
                formArrayName="questions"
                label="{{ q['controls'].stageName.value }}">
@@ -93,7 +93,8 @@
                 </button>
               </div>
             </div>
-            <button class="capitalize"
+            <button (click)="onAddAnswer(i)"
+                    class="capitalize button-mar"
                     mat-stroked-button>
               <mat-icon>add_circle_outline</mat-icon> Добавить ответ
             </button>

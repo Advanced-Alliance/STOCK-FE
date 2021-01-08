@@ -7,6 +7,7 @@ import { IGameSettings, OrderBy, IQuestion, IAnswer, GameType } from './../../mo
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-admin',
@@ -15,27 +16,27 @@ import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 })
 export class AdminComponent extends BaseComponent implements OnInit {
 
-  gameSettingsForm: FormGroup;
+  gameForm: FormGroup;
 
   editGameName = false;
 
-  gameName: string;
   createDate = Date.now();
   currentQuestion = 0;
-  showQuestionsText = true;
   unsavedChanges = true;
 
   teamLeftName?: string | null;
   teamRightName?: string | null;
 
-  questions: IQuestion[] = [];
+  get questions(): FormArray {
+    return this.gameForm.controls.questions as FormArray;
+  }
   readonly maxQuestions = 6;
   readonly minQuestions = 1;
 
   constructor(
+    public dialog: MatDialog,
     private adminService: AdminService,
     private gameService: GameService,
-    public dialog: MatDialog,
     private fb: FormBuilder,
   ) {
     super();
@@ -43,98 +44,90 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.initNewGame();
+    this.initSubs();
   }
 
   private initNewGame() {
-    this.gameSettingsForm = this.fb.group({
+    this.gameForm = this.fb.group({
       gameName: ['Новая игра', Validators.required],
+      showQuestionsText: [true],
+      maxFails: [3],
+      gameType: [GameType.teamPlay],
       questions: this.fb.array([
-        this.fb.group({
-          stageName: ['Простая игра'],
-          questionText: [''],
-          orderBy: this.fb.control(OrderBy.none),
-          enable: this.fb.control(true),
-          answers: this.fb.array(
-            this.getDefaultAnswers().map((a) => this.fb.group({
-              name: this.fb.control(a.name),
-              points: this.fb.control(a.points),
-            }))
-          ),
-        }),
+        this.getDefaultTab('Простая игра'),
+        this.getDefaultTab(),
       ]),
     });
-
-    this.gameName = 'Новая игра';
-    this.questions = [
-      {
-        stageName: 'Простая игра',
-        questionText: '',
-        orderBy: OrderBy.none,
-        enable: true,
-        answers: this.getDefaultAnswers(),
-      },
-      this.getAddTab(),
-    ];
   }
 
-  private getAddTab(): IQuestion {
+  private initSubs(): void {
+    this.gameForm.valueChanges.pipe(
+      this.unsubscribeOnDestroy
+    ).subscribe(
+      () => this.unsavedChanges = true
+    )
+  }
 
-    const question = {
-      stageName: '+ Добавить',
-      orderBy: OrderBy.none,
-      enable: true,
+  private getDefaultTab(stageName?: string): FormGroup {
+    if (_.isEmpty(stageName)) stageName = '+ Добавить'
+    const question = this.fb.group({
+      stageName: [stageName],
+      questionText: [''],
+      orderBy: this.fb.control(OrderBy.none),
+      enable: this.fb.control(true),
       answers: this.getDefaultAnswers(),
-    };
+    })
     return question;
   }
 
 
-  private getDefaultAnswers(): IAnswer[] {
-    const answers = [
-      {
-        name: 'Частый ответ',
-        points: 60,
-      },
-      {
-        name: 'Средний ответ',
-        points: 30,
-      },
-      {
-        name: 'Редкий ответ',
-        points: 10,
-      },
-    ]
-    return answers;
+  private getDefaultAnswers(): FormArray {
+
+    const formArrayAnswers =
+      this.fb.array([
+        this.getDefauldAnswer('Частый ответ', 60),
+        this.getDefauldAnswer('Средний ответ', 30),
+        this.getDefauldAnswer('Редкий ответ', 10),
+      ]);
+    return formArrayAnswers;
+  }
+
+  private getDefauldAnswer(name?: string, points?: number): FormGroup {
+    return this.fb.group({
+      name: this.fb.control(name),
+      points: this.fb.control(points),
+    })
   }
 
   private getChanges(): IGameSettings {
-    const questions = this.questions.slice(0, this.questions.length - 1)
+    const gameData = this.gameForm.value;
+    gameData.questions = gameData.questions.slice(0, this.questions.length - 1)
+
+    //   commonPoints: 0,
+    //   currentStage: 0,
+    //   showQuestionsText: true,
+    //   players: [],
+    //   gameType: GameType.teamPlay,
+    //   teamLeft: {
+    //     name: this.teamLeftName,
+    //     points: 0,
+    //     fails: 0,
+    //     players: [],
+    //   },
+    //   teamRight: {
+    //     name: this.teamRightName,
+    //     points: 0,
+    //     fails: 0,
+    //     players: [],
+    //   },
+    //   questions: questions,
+    // }
 
     const editorData: IGameSettings = {
       createDate: this.createDate,
       lastEditQuestion: this.currentQuestion,
-      gameSettings: {
-        name: this.gameName,
-        commonPoints: 0,
-        currentStage: 0,
-        maxFails: 3,
-        showQuestionsText: this.showQuestionsText,
-        players: [],
-        gameType: GameType.teamPlay,
-        teamLeft: {
-          name: this.teamLeftName,
-          points: 0,
-          fails: 0,
-          players: [],
-        },
-        teamRight: {
-          name: this.teamRightName,
-          points: 0,
-          fails: 0,
-          players: [],
-        },
-        questions: questions,
-      }
+      game: gameData
+
     };
     return editorData;
   }
@@ -181,31 +174,26 @@ export class AdminComponent extends BaseComponent implements OnInit {
     if (
       $event.index === this.questions.length - 1
     ) {
-      this.unsavedChanges = true;
-      this.questions[$event.index].stageName = `Вопрос ${$event.index + 1}`;
-      this.questions.push(this.getAddTab());
+      const currentQuestion = this.questions.controls[$event.index] as FormGroup;
+      currentQuestion.controls.stageName.setValue(`Вопрос ${$event.index + 1}`);
+      this.questions.push(this.getDefaultTab());
     }
   }
 
-  /**
-   * This method is just manually copies the elements from
-   * next elements after index and removing last element
-   * @param index
-   */
+  onAddAnswer(questionIndex: number) {
+    const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
+    answers.push(this.getDefauldAnswer('Новый ответ', 1));
+  }
+
   onRemoveQuestion(index: number): void {
-    if (index === this.questions.length - 2) {
-      this.currentQuestion--;
-    }
-
-    for (let i = index; i < this.questions.length - 1; i++) {
-      this.questions[i] = this.questions[i + 1];
-    }
-
-    this.questions.pop();
+    if (this.questions.length <= 1) return;
+    this.questions.removeAt(index);
   }
 
   onRemoveAnswer(questionIndex: number, answerIndex: number): void {
-
+    const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
+    if (answers.length <= 1) return;
+    answers.removeAt(answerIndex);
   }
 
 }

@@ -1,12 +1,12 @@
 export enum OrderBy {
-  none,
-  forward,
-  backward,
+  none = 'none',
+  forward = 'forward',
+  backward = 'backward',
 }
 
 export enum GameType {
-  teamPlay,
-  PvP,
+  teamPlay = 'teamplay',
+  PvP = 'pvp',
 }
 
 export interface IAnswer {
@@ -49,7 +49,7 @@ export interface IGame {
 }
 
 export interface IGameSettings {
-  gameSettings: IGame;
+  game: IGame;
   lastEditQuestion: number;
   createDate: number;
   lastEditDate?: number | null;
