@@ -1,0 +1,33 @@
+@import "./../../styles.scss";
+
+:host {
+  @include fullFlex();
+}
+
+.tab-icon {
+  margin-right: map-get($map: $margin, $key: "xs");
+}
+
+.button-mar {
+  margin: map-get($map: $margin, $key: "xs");
+}
+
+.header {
+  margin: 0;
+}
+
+.form-content {
+  margin: map-get($map: $margin, $key: "sm");
+}
+
+.answers-block {
+  @include flex(column);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: map-get($map: $sizes, $key: "xxs");
+}
+
+.answers-block__header {
+  color: rgba(0, 0, 0, 0.54);
+  padding: map-get($map: $padding, $key: "xs");
+  padding-left: map-get($map: $padding, $key: "sm");
+}

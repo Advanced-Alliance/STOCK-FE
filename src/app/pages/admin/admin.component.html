@@ -1,21 +1,160 @@
-Добавить новый вопрос:
-<div *ngFor="let q of questions">
-  <input [(ngModel)]="q.question"
-         type="text"
-         width="140" />
-  <div *ngFor="let a of q.answers">
-    <input [(ngModel)]="a.answer"
-           type="text"
-           width="40" />
-    <input [(ngModel)]="a.quantity"
-           type="text"
-           width="40" />
-    <br />
+<form [formGroup]="gameForm"
+      fxLayout="column"
+      fxFlex>
+
+  <!-- TODO: move to Header component of Editor component -->
+  <div fxLayout="row">
+    <button [routerLink]="['']"
+            class="button-mar"
+            mat-button
+            mat-icon-button>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div *ngIf="!editGameName"
+         fxLayout="row"
+         fxLayoutAlign="start center">
+      <h1 class="header">{{ gameForm['controls'].gameName.value }}
+        <span *ngIf="unsavedChanges">*</span>
+      </h1>
+      <button (click)="editGameName = true"
+              class="button-mar"
+              mat-button
+              mat-icon-button>
+        <mat-icon>create</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="editGameName">
+      <mat-form-field>
+        <input formControlName="gameName"
+               matInput>
+        <button (click)="editGameName = false"
+                mat-button
+                mat-icon-button
+                matSuffix>
+          <mat-icon>done</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
   </div>
-</div>
 
-<button (click)="saveChanges()"
-        mat-stroked-button>Сохранить изменения</button>
+  <!-- TODO: ceparate to some components of Editor component -->
+  <div fxLayout="column"
+       fxFlex>
+    <mat-tab-group [(selectedIndex)]="currentQuestion"
+                   (selectedTabChange)="onSelectedTabChange($event)">
+      <mat-tab *ngFor="let q of questions['controls']; let i = index"
+               [disabled]="i === maxQuestions"
+               formArrayName="questions"
+               label="{{ q['controls'].stageName.value }}">
+        <div class="form-content"
+             formGroupName="{{i}}"
+             fxLayout="column"
+             fxLayoutAlign="start start">
 
-<a [routerLink]="['/']"
-   mat-raised-button>Закончить</a>
+          <mat-form-field>
+            <mat-label>Название этапа</mat-label>
+            <input formControlName="stageName"
+                   type="text"
+                   maxlength="30"
+                   matInput>
+          </mat-form-field>
+          <br>
+          <mat-form-field>
+            <mat-label>Вопрос</mat-label>
+            <textarea formControlName="questionText"
+                      matInput></textarea>
+          </mat-form-field>
+
+          <div class="answers-block">
+            <div class="answers-block__header">
+              <div fxFlex>Ответы</div>
+              <div></div>
+            </div>
+            <div *ngFor="let a of q['controls'].answers['controls']; let j = index"
+                 formArrayName="answers">
+              <div formGroupName="{{j}}">
+                <mat-form-field class="form-content">
+                  <input formControlName="name"
+                         type="text"
+                         maxlength="30"
+                         matInput>
+                </mat-form-field>
+
+                <mat-form-field class="form-content">
+                  <input formControlName="points"
+                         type="number"
+                         maxlength="10"
+                         matInput>
+                </mat-form-field>
+                <button (click)="onRemoveAnswer(i,j)"
+                        [disabled]="q['controls'].answers['controls'].length === 1"
+                        class="form-content"
+                        mat-button
+                        mat-icon-button>
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+            <button (click)="onAddAnswer(i)"
+                    class="capitalize button-mar"
+                    mat-stroked-button>
+              <mat-icon>add_circle_outline</mat-icon> Добавить ответ
+            </button>
+          </div>
+          <button (click)="onRemoveQuestion(i)"
+                  [disabled]="questions.length - 1 <= minQuestions"
+                  class="capitalize"
+                  color="accent"
+                  mat-stroked-button>
+            Удалить вопрос
+          </button>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <!-- TODO: move to Footer component of Editor component -->
+  <div fxLayout="row"
+       fxLayoutAlign="space-between center">
+    <div fxLayout="row"
+         fxLayoutAlign="end start">
+      <button (click)="saveChanges()"
+              color="primary"
+              class="capitalize button-mar"
+              mat-flat-button>
+        <mat-icon>get_app</mat-icon>
+        Сохранить
+      </button>
+      <button (click)="fileInput.click()"
+              class="capitalize button-mar"
+              mat-stroked-button>
+        <mat-icon>publish</mat-icon>
+        Загрузить
+      </button>
+      <input #fileInput
+             (change)="onOpenFile()"
+             type="file"
+             id="fileInput"
+             hidden>
+    </div>
+    <div fxLayout="row"
+         fxLayoutAlign="end start">
+      <button [routerLink]="['/game']"
+              class="capitalize button-mar"
+              mat-stroked-button>
+        <mat-icon>public_off</mat-icon>
+        Играть локально
+      </button>
+      <button [routerLink]="['/']"
+              class="capitalize button-mar"
+              color="primary"
+              type="submit"
+              disabled
+              mat-flat-button>
+        <mat-icon>public</mat-icon>
+        Играть онлайн
+      </button>
+    </div>
+  </div>
+
+</form>
