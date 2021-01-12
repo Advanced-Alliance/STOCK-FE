@@ -3,7 +3,7 @@ import { GameService } from './../../services/game.service';
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
-import { IGameSettings, OrderBy, IGame, GameType } from './../../models/models';
+import { IGameSettings, OrderBy, IGame, GameType, IQuestion } from './../../models/models';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
@@ -71,32 +71,48 @@ export class AdminComponent extends BaseComponent implements OnInit {
   private getDefaultTab(stageName?: string): FormGroup {
     if (_.isEmpty(stageName)) stageName = '+ Добавить'
     const question = this.fb.group({
-      stageName: [stageName],
-      questionText: [''],
-      orderBy: this.fb.control(OrderBy.none),
-      enable: this.fb.control(true),
+      stageName: stageName,
+      questionText: '',
+      orderBy: OrderBy.none,
+      enable: true,
       answers: this.getDefaultAnswers(),
     })
     return question;
   }
 
-
   private getDefaultAnswers(): FormArray {
 
     const formArrayAnswers =
       this.fb.array([
-        this.getDefauldAnswer('Частый ответ', 60),
-        this.getDefauldAnswer('Средний ответ', 30),
-        this.getDefauldAnswer('Редкий ответ', 10),
+        this.createAnswer('Частый ответ', 60),
+        this.createAnswer('Средний ответ', 30),
+        this.createAnswer('Редкий ответ', 10),
       ]);
     return formArrayAnswers;
   }
 
-  private getDefauldAnswer(name?: string, points?: number): FormGroup {
+  private createAnswer(name?: string, points?: number): FormGroup {
     return this.fb.group({
       name: this.fb.control(name),
       points: this.fb.control(points),
     })
+  }
+
+  private createQuestion(question: IQuestion): FormGroup {
+    const qGroup = this.fb.group({
+      stageName: [question.stageName],
+      questionText: '',
+      orderBy: OrderBy.none,
+      enable: true,
+      answers: this.fb.array(
+        question.answers.map(
+          (a) => this.createAnswer(a.name, a.points)
+        )
+      ),
+    });
+
+    qGroup.patchValue(question);
+    return qGroup;
   }
 
   private getChanges(): IGameSettings {
@@ -164,12 +180,23 @@ export class AdminComponent extends BaseComponent implements OnInit {
       const reader = new FileReader();
 
       reader.onload = (e: any) => {
+
         const json = e.target.result;
         const gameSettings = this.gameService.parseJSON(json);
-        this.gameForm.setValue(gameSettings.game);
+
+        this.questions.clear();
+
+        gameSettings.game.questions.forEach((q) => {
+          this.questions.push(this.createQuestion(q));
+        })
+
+        this.questions.push(this.getDefaultTab());
+
+        this.gameForm.patchValue(gameSettings.game, { emitEvent: false });
+
+        this.unsavedChanges = false;
         this.createDate = gameSettings.createDate;
         this.currentQuestion = gameSettings.lastEditQuestion;
-        this.unsavedChanges = false;
       };
 
       reader.readAsText(inputNode.files[0]);
@@ -188,7 +215,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   onAddAnswer(questionIndex: number) {
     const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
-    answers.push(this.getDefauldAnswer('Новый ответ', 1));
+    answers.push(this.createAnswer('Новый ответ', 1));
   }
 
   onRemoveQuestion(index: number): void {
