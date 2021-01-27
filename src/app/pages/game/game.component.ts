@@ -1,4 +1,4 @@
-import { IGameSettings } from './../../models/models';
+import { IActivePlayer, IGameSettings } from './../../models/models';
 import { GameService } from './../../services/game.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
@@ -11,7 +11,11 @@ import * as _ from 'lodash';
 })
 export class GameComponent extends BaseComponent implements OnInit {
 
-  gameSettings: IGameSettings;
+  gameSettings?: IGameSettings;
+  isAdminMode: boolean;
+
+  stageIndex: number;
+  activePlayer: IActivePlayer;
 
   winnerTeamId: number;
   gameEnded: boolean;
@@ -47,11 +51,23 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.init();
+    this.initSubs();
 
     this.initSounds();
   }
 
+  private initSubs() {
+    // TODO: add error msg
+    this.gameService.getGameSettings().pipe(
+      this.unsubscribeOnDestroy
+    ).subscribe((gs: IGameSettings) => {
+      this.gameSettings = gs;
+    })
+  }
+
+  /**
+   * @deprecated
+   */
   private init(): void {
 
     this.isSoundOn = true;
