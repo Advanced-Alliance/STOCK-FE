@@ -17,6 +17,10 @@ export class GameComponent extends BaseComponent implements OnInit {
   stageIndex: number;
   activePlayer: IActivePlayer;
 
+  //TODO:
+  teamOneIcon: string = '/assets/images/red.svg';
+  teamTwoIcon: string = '/assets/images/blue.svg';
+
   winnerTeamId: number;
   gameEnded: boolean;
   answers: any;
@@ -24,10 +28,6 @@ export class GameComponent extends BaseComponent implements OnInit {
   title: string;
   counterTeam1: any;
   counterTeam2: any;
-  teamOneIcon: string;
-  teamTwoIcon: string;
-  backIcon: string;
-  nextIcon: string;
   placeholder: string;
   currentQuestionIdx: number;
   pointsTeam1: number;
@@ -63,6 +63,15 @@ export class GameComponent extends BaseComponent implements OnInit {
     ).subscribe((gs: IGameSettings) => {
       this.gameSettings = gs;
     })
+
+    setTimeout(() => {
+
+      setTimeout(() => {
+        this.counterTeam1 = this.createOdometer('#odometer-red');
+        this.counterTeam2 = this.createOdometer('#odometer-blue');
+      });
+
+    }, 1000);
   }
 
   /**
@@ -71,10 +80,6 @@ export class GameComponent extends BaseComponent implements OnInit {
   private init(): void {
 
     this.isSoundOn = true;
-    this.teamOneIcon = '/assets/images/red.svg';
-    this.teamTwoIcon = '/assets/images/blue.svg';
-    this.backIcon = '/assets/images/back.svg';
-    this.nextIcon = '/assets/images/next.svg';
     this.placeholder = 'Ответ';
     this.pointsTeam1 = 0;
     this.pointsTeam2 = 0;
@@ -296,25 +301,6 @@ export class GameComponent extends BaseComponent implements OnInit {
     // now check if another team has buffer
     const tries = _.reject(fails, (x) => x === 3);
     return tries.length > 0;
-  }
-
-  startGame() {
-    this.gameService.getGameSettings().pipe(
-      this.unsubscribeOnDestroy
-    ).subscribe(
-      (gameSettings: IGameSettings) => {
-        this.gameSettings = gameSettings;
-        this.eraseAnswers();
-      });
-
-    setTimeout(() => {
-
-      setTimeout(() => {
-        this.counterTeam1 = this.createOdometer('#odometer-red');
-        this.counterTeam2 = this.createOdometer('#odometer-blue');
-      });
-
-    }, 1000);
   }
 
 }
