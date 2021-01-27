@@ -1,17 +1,19 @@
-<div class="tp-box" (click)="toggleFlip()" [@flipState]="flip">
+<div class="tp-box"
+     (click)="toggleFlip()"
+     [@flipState]="flip">
   <div class="answer-container tp-box__side tp-box__front">
     <div class="col-2">
-      <span class="centered text-large">— {{num}} —</span>
+      <span class="centered text-large">— {{id}} —</span>
     </div>
   </div>
   <div class="answer-container tp-box__side tp-box__back">
     <div class="col-1">
-      <span class="centered text-large">{{answer.answer}}</span>
+      <span class="centered text-large">{{answer}}</span>
     </div>
     <div class="col-3">
-    <span class="centered text-large">
-      {{answer.quantity}}
-    </span>
+      <span class="centered text-large">
+        {{points}}
+      </span>
     </div>
   </div>
 </div>

@@ -51,8 +51,10 @@ export interface IGame {
 
 export interface IGameSettings {
   game: IGame;
-  lastEditQuestion: number;
+  authorName?: string;
+  authorDescription?: string;
   createDate: number;
+  lastEditQuestion: number;
   lastEditDate?: number | null;
 }
 

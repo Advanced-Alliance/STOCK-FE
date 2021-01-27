@@ -22,19 +22,19 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 })
 export class AnswerCardComponent {
   @Input()
-  answer: any;
+  answer: string;
 
   @Input()
-  num: number;
+  points: number;
 
   @Input()
   id: number;
 
   @Output()
-  answeredCb: EventEmitter<any> = new EventEmitter();
+  open: EventEmitter<any> = new EventEmitter();
 
+  // TODO: а жив ли мальчик?
   flip = 'inactive';
-  guessMe = 'Отгадай-ка!';
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.firstValue) {
@@ -51,7 +51,7 @@ export class AnswerCardComponent {
     }
     this.flip = (this.flip === 'inactive') ? 'active' : 'inactive';
     if (this.flip === 'active') {
-      this.answeredCb.emit(this.id);
+      this.open.emit(this.id);
     }
   }
 }

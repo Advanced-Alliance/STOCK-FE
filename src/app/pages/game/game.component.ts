@@ -130,6 +130,7 @@ export class GameComponent extends BaseComponent implements OnInit {
     return el;
   }
 
+  // НАХРЕНА????????? TODO:remove
   getCurrentAnswer(idx) {
     return this.answers[this.currentQuestionIdx].answers[idx];
   }
