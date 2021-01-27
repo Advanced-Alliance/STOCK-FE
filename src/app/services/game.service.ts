@@ -8,6 +8,7 @@ import { Injectable } from "@angular/core";
 export class GameService {
   private gameSettings: IGameSettings;
 
+  // TODO: add error msg
   getGameSettings(): Observable<IGameSettings | null> {
     return of(this.gameSettings);
   }

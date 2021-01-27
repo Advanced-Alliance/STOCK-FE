@@ -4,10 +4,17 @@
   <div class="after"></div>
 </div>
 
-<div class="root-container">
+<div *ngIf="gameSettings"
+     class="root-container">
+  <div>
+    TODO:Заголовок (добавить имя автора)
+    <span>
+      {{ gameSettings.game.gameName }}
+    </span>
+  </div>
   <div class="game-name">
     <span>
-      {{getCurrentQuestion()}}
+      {{ gameSettings.game.questions[stageIndex].stageName }}
     </span>
   </div>
 

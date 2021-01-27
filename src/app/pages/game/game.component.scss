@@ -5,6 +5,15 @@
   font-family: $font-family-odometer;
 }
 
+.root-container {
+  width: 99vw;
+  height: 95vh;
+  display: grid;
+  grid-template-columns: 350px auto 350px;
+  grid-template-rows: 50px 100px 50px auto 100px auto;
+  grid-row-gap: 30px;
+}
+
 .game-name {
   grid-column-start: 1;
   grid-column-end: span 3;

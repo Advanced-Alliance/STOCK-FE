@@ -14,7 +14,7 @@ export class GameComponent extends BaseComponent implements OnInit {
   gameSettings?: IGameSettings;
   isAdminMode: boolean;
 
-  stageIndex: number;
+  stageIndex: number = 0;
   activePlayer: IActivePlayer;
 
   //TODO:
@@ -57,21 +57,22 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   private initSubs() {
-    // TODO: add error msg
     this.gameService.getGameSettings().pipe(
       this.unsubscribeOnDestroy
     ).subscribe((gs: IGameSettings) => {
       this.gameSettings = gs;
-    })
 
-    setTimeout(() => {
+      console.log(this.gameSettings);
 
       setTimeout(() => {
-        this.counterTeam1 = this.createOdometer('#odometer-red');
-        this.counterTeam2 = this.createOdometer('#odometer-blue');
-      });
 
-    }, 1000);
+        setTimeout(() => {
+          this.counterTeam1 = this.createOdometer('#odometer-red');
+          this.counterTeam2 = this.createOdometer('#odometer-blue');
+        });
+
+      }, 1000);
+    })
   }
 
   /**
