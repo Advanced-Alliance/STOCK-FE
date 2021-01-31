@@ -201,7 +201,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     if (!game || !game.teamLeft || !game.teamRight) return;
 
-    const lowerTeam = (game.teamLeft.points >= game.teamRight.points)
+    const lowerTeam = (game.teamLeft.points <= game.teamRight.points)
       ? 0 : 1;
 
     this.activePlayer.team = lowerTeam;
