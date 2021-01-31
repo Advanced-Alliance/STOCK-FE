@@ -37,9 +37,9 @@
       <img [src]="teamOneIcon">
     </div>
     <div class="row-4 col-2">
-      <app-indicator [fails]="gameSettings.game.teamLeft.fails"
-                     [failsMax]="gameSettings.game.maxFails"
-                     (failed)="onFail($event, 0)"></app-indicator>
+      <fail-indicator [fails]="gameSettings.game.teamLeft.fails"
+                      [failsMax]="gameSettings.game.maxFails"
+                      (failed)="onFail($event, 0)"></fail-indicator>
     </div>
   </div>
 
@@ -56,9 +56,9 @@
       <img [src]="teamTwoIcon">
     </div>
     <div class="row-4 col-2">
-      <app-indicator [fails]="gameSettings.game.teamRight.fails"
-                     [failsMax]="gameSettings.game.maxFails"
-                     (failed)="onFail($event, 1)"></app-indicator>
+      <fail-indicator [fails]="gameSettings.game.teamRight.fails"
+                      [failsMax]="gameSettings.game.maxFails"
+                      (failed)="onFail($event, 1)"></fail-indicator>
     </div>
   </div>
 

@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'app-indicator',
-  styleUrls: ['indicator.component.scss'],
-  templateUrl: './indicator.component.html'
+  selector: 'fail-indicator',
+  styleUrls: ['fail-indicator.component.scss'],
+  templateUrl: './fail-indicator.component.html'
 })
 
-export class IndicatorComponent implements OnInit, OnChanges {
+export class FailIndicatorComponent implements OnInit, OnChanges {
 
   @Input() fails: number = 0;
   @Input() failsMax: number = 3;
