@@ -4,6 +4,14 @@ import { NgModule } from '@angular/core';
 
 const routes: Routes = [
   { path: '', component: AdminComponent, pathMatch: 'full' },
+  {
+    path: 'game',
+    data: {
+      admin: true,
+    },
+    loadChildren: () => import('../game/game.module').then(m => m.GameModule)
+  },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

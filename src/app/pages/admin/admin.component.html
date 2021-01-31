@@ -139,13 +139,13 @@
     </div>
     <div fxLayout="row"
          fxLayoutAlign="end start">
-      <button [routerLink]="['/game']"
+      <button (click)="startGame(false)"
               class="capitalize button-mar"
               mat-stroked-button>
         <mat-icon>public_off</mat-icon>
         Играть локально
       </button>
-      <button [routerLink]="['/']"
+      <button (click)="startGame(true)"
               class="capitalize button-mar"
               color="primary"
               type="submit"

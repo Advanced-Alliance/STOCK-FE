@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { OpenFileDialogComponent } from './open-file-dialog/open-file-dialog.component';
 import { GameService } from './../../services/game.service';
 import { AdminService } from './admin.service';
@@ -38,6 +39,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
     private adminService: AdminService,
     private gameService: GameService,
     private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {
     super();
   }
@@ -46,6 +49,100 @@ export class AdminComponent extends BaseComponent implements OnInit {
     this.initNewGame();
     this.initSubs();
   }
+
+  saveChanges(): void {
+    this.unsavedChanges = false;
+    this.gameService.setGameSettings(this.getChanges());
+    this.gameService.getGameSettings().pipe(
+      this.unsubscribeOnDestroy
+    ).subscribe((gameSettings) => {
+      this.adminService.downloadSettingsFile(gameSettings);
+    });
+  }
+
+  /**
+   *  @deprecated
+   */
+  loadFromFile(): void {
+    const dialogRef = this.dialog.open(OpenFileDialogComponent);
+
+    dialogRef.afterClosed()
+      .subscribe((gameSettings: IGameSettings) => {
+        console.log(gameSettings);
+      });
+  }
+
+  onOpenFile(): void {
+    const inputNode: any = document.querySelector('#fileInput');
+
+    if (typeof (FileReader) !== 'undefined') {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+
+        const json = e.target.result;
+        const gameSettings = this.gameService.parseJSON(json);
+
+        this.questions.clear();
+
+        gameSettings.game.questions.forEach((q) => {
+          this.questions.push(this.createQuestion(q));
+        })
+
+        this.questions.push(this.getDefaultTab());
+
+        this.gameForm.patchValue(gameSettings.game, { emitEvent: false });
+
+        this.unsavedChanges = false;
+        this.createDate = gameSettings.createDate;
+        this.currentQuestion = gameSettings.lastEditQuestion;
+      };
+
+      reader.readAsText(inputNode.files[0]);
+    }
+  }
+
+  onSelectedTabChange($event: MatTabChangeEvent): void {
+    if (
+      $event.index === this.questions.length - 1
+    ) {
+      const currentQuestion = this.questions.controls[$event.index] as FormGroup;
+      currentQuestion.controls.stageName.setValue(`Вопрос ${$event.index + 1}`);
+      this.questions.push(this.getDefaultTab());
+    }
+  }
+
+  onAddAnswer(questionIndex: number) {
+    const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
+    answers.push(this.createAnswer('Новый ответ', 1));
+  }
+
+  onRemoveQuestion(index: number): void {
+    if (this.questions.length <= 1) return;
+
+    if (this.questions.length - 2 === index) {
+      this.currentQuestion--;
+    }
+
+    this.questions.removeAt(index);
+  }
+
+  onRemoveAnswer(questionIndex: number, answerIndex: number): void {
+    const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
+    if (answers.length <= 1) return;
+    answers.removeAt(answerIndex);
+  }
+
+  startGame(online: boolean) {
+    this.gameService.setGameSettings(this.getChanges());
+    if (!online) {
+      this.router.navigate(['game'], { relativeTo: this.route });
+      return;
+    }
+    // TODO: change to real id from web server
+    this.router.navigate(['/game'], { queryParams: { id: 0 } });
+  }
+
 
   private initNewGame() {
     this.gameForm = this.fb.group({
@@ -149,89 +246,6 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
     };
     return editorData;
-  }
-
-  saveChanges(): void {
-    this.unsavedChanges = false;
-    this.gameService.setGameSettings(this.getChanges());
-    this.gameService.getGameSettings().pipe(
-      this.unsubscribeOnDestroy
-    ).subscribe((gameSettings) => {
-      this.adminService.downloadSettingsFile(gameSettings);
-    });
-  }
-
-  /**
-   *  @deprecated
-   */
-  loadFromFile(): void {
-    const dialogRef = this.dialog.open(OpenFileDialogComponent);
-
-    dialogRef.afterClosed()
-      .subscribe((gameSettings: IGameSettings) => {
-        console.log(gameSettings);
-      });
-  }
-
-  onOpenFile(): void {
-    const inputNode: any = document.querySelector('#fileInput');
-
-    if (typeof (FileReader) !== 'undefined') {
-      const reader = new FileReader();
-
-      reader.onload = (e: any) => {
-
-        const json = e.target.result;
-        const gameSettings = this.gameService.parseJSON(json);
-
-        this.questions.clear();
-
-        gameSettings.game.questions.forEach((q) => {
-          this.questions.push(this.createQuestion(q));
-        })
-
-        this.questions.push(this.getDefaultTab());
-
-        this.gameForm.patchValue(gameSettings.game, { emitEvent: false });
-
-        this.unsavedChanges = false;
-        this.createDate = gameSettings.createDate;
-        this.currentQuestion = gameSettings.lastEditQuestion;
-      };
-
-      reader.readAsText(inputNode.files[0]);
-    }
-  }
-
-  onSelectedTabChange($event: MatTabChangeEvent): void {
-    if (
-      $event.index === this.questions.length - 1
-    ) {
-      const currentQuestion = this.questions.controls[$event.index] as FormGroup;
-      currentQuestion.controls.stageName.setValue(`Вопрос ${$event.index + 1}`);
-      this.questions.push(this.getDefaultTab());
-    }
-  }
-
-  onAddAnswer(questionIndex: number) {
-    const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
-    answers.push(this.createAnswer('Новый ответ', 1));
-  }
-
-  onRemoveQuestion(index: number): void {
-    if (this.questions.length <= 1) return;
-
-    if (this.questions.length - 2 === index) {
-      this.currentQuestion--;
-    }
-
-    this.questions.removeAt(index);
-  }
-
-  onRemoveAnswer(questionIndex: number, answerIndex: number): void {
-    const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
-    if (answers.length <= 1) return;
-    answers.removeAt(answerIndex);
   }
 
 }

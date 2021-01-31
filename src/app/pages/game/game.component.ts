@@ -1,8 +1,9 @@
-import { IActivePlayer, IGame, IGameSettings, ITeam } from './../../models/models';
+import { IActivePlayer, IGameSettings } from './../../models/models';
 import { GameService } from './../../services/game.service';
 import { BaseComponent } from './../../core/base.component';
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -37,6 +38,8 @@ export class GameComponent extends BaseComponent implements OnInit {
 
   constructor(
     private gameService: GameService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {
     super();
   }
@@ -50,7 +53,11 @@ export class GameComponent extends BaseComponent implements OnInit {
   private initSubs() {
     this.gameService.getGameSettings().pipe(
       this.unsubscribeOnDestroy
-    ).subscribe((gs: IGameSettings) => {
+    ).subscribe((gs: IGameSettings | null) => {
+      if (!gs) {
+        this.router.navigate(['/']);
+        return;
+      };
       // TODO: (ShadowHD33RUS) move to gameService.getNewGame();
       gs.game.teamLeft = {
         fails: 0,
@@ -69,7 +76,9 @@ export class GameComponent extends BaseComponent implements OnInit {
         player: 0,
       }
 
-      console.log(this.gameSettings);
+      if ('admin' in this.route.snapshot.data) {
+        this.isAdminMode = this.route.snapshot.data['admin'];
+      }
 
       setTimeout(() => {
 
@@ -166,10 +175,6 @@ export class GameComponent extends BaseComponent implements OnInit {
       return;
     }
     this.stageIndex -= 1;
-  }
-
-  private isNextBtnEnabled() {
-    return _.find(this.openedAnswers, (x) => x === false) === undefined;
   }
 
   onFail(totalFails: number, teamId: number) {
