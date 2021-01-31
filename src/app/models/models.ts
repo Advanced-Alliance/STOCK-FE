@@ -65,6 +65,6 @@ export interface IGameSettings {
  * В режиме pvp обязательно должен быть указан только playerIndex.
  */
 export interface IActivePlayer {
-  team?: 'left' | 'right' | null;
-  playerIndex?: number | null;
+  team?: number | null; //TODO: remove undefined | null
+  player?: number | null;
 }

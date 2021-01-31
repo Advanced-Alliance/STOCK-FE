@@ -1,17 +1,9 @@
 <div class="misses misses-container">
-  <div class="col-1">
-    <div [className]="getIndicatorClassName(0)"
-         class="circle"
-         (click)="onFailed(0)"></div>
+  <div *ngFor="let failed of indicatorsFailed"
+       class="circle failed">
   </div>
-  <div class="col-2">
-    <div [className]="getIndicatorClassName(1)"
-         class="circle"
-         (click)="onFailed(1)"></div>
-  </div>
-  <div class="col-3">
-    <div [className]="getIndicatorClassName(2)"
-         class="circle"
-         (click)="onFailed(2)"></div>
+  <div *ngFor="let empty of indicatorsEmpty"
+       (click)="onFail()"
+       class="circle hover">
   </div>
 </div>

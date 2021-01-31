@@ -23,9 +23,11 @@
     {{getCurrentQuestion()}}
   </div> -->
 
-  <div class="team-element team-1 team-container"
-       [class.team-enabled]="isFirstTeamVisible() || isWinner(1)"
-       (click)="setActiveTeam(1)">
+  <!-- TODO: change to *ngFor() -->
+  <div *ngIf="gameSettings.game.teamLeft"
+       (click)="setActiveTeam(0)"
+       [class.team-enabled]="activePlayer.team === 0"
+       class="team-element team-1 team-container">
     <span class="row-1 col-2 centered text-large team-red">
       Red Team
     </span>
@@ -35,14 +37,16 @@
       <img [src]="teamOneIcon">
     </div>
     <div class="row-4 col-2">
-      <app-indicator [indicatorColor]="failsTeam1"
-                     (failedAnswerCb)="onFailedAnswer($event, 1)"></app-indicator>
+      <app-indicator [fails]="gameSettings.game.teamLeft.fails"
+                     [failsMax]="gameSettings.game.maxFails"
+                     (failed)="onFail($event, 0)"></app-indicator>
     </div>
   </div>
 
-  <div class="team-element team-2 team-container "
-       [class.team-enabled]="!isFirstTeamVisible() || isWinner(2)"
-       (click)="setActiveTeam(2)">
+  <div *ngIf="gameSettings.game.teamRight"
+       (click)="setActiveTeam(1)"
+       [class.team-enabled]="activePlayer.team === 1"
+       class="team-element team-2 team-container">
     <span class="row-1 col-2 centered text-large team-blue">
       Blue Team
     </span>
@@ -52,8 +56,9 @@
       <img [src]="teamTwoIcon">
     </div>
     <div class="row-4 col-2">
-      <app-indicator [indicatorColor]="failsTeam2"
-                     (failedAnswerCb)="onFailedAnswer($event, 2)"></app-indicator>
+      <app-indicator [fails]="gameSettings.game.teamRight.fails"
+                     [failsMax]="gameSettings.game.maxFails"
+                     (failed)="onFail($event, 1)"></app-indicator>
     </div>
   </div>
 

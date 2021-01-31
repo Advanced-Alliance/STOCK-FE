@@ -1,4 +1,4 @@
-import { IActivePlayer, IGameSettings } from './../../models/models';
+import { IActivePlayer, IGame, IGameSettings, ITeam } from './../../models/models';
 import { GameService } from './../../services/game.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
@@ -15,7 +15,7 @@ export class GameComponent extends BaseComponent implements OnInit {
   isAdminMode: boolean;
 
   stageIndex: number = 0;
-  activePlayer: IActivePlayer;
+  activePlayer: IActivePlayer; // TODO: change to activeTeam witch array
 
   //TODO:
   teamOneIcon: string = '/assets/images/red.svg';
@@ -24,7 +24,6 @@ export class GameComponent extends BaseComponent implements OnInit {
   winnerTeamId: number;
   gameEnded: boolean;
   answers: any;
-  activeTeam: number;
   title: string;
   counterTeam1: any;
   counterTeam2: any;
@@ -38,7 +37,6 @@ export class GameComponent extends BaseComponent implements OnInit {
   showFireworks: boolean;
   isSoundOn: boolean;
   private openedAnswers: boolean[];
-  private startActiveTeam: number;
   private audioFail: HTMLAudioElement;
   private audioFlip: HTMLAudioElement;
   private audioCash: HTMLAudioElement;
@@ -60,7 +58,23 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.gameService.getGameSettings().pipe(
       this.unsubscribeOnDestroy
     ).subscribe((gs: IGameSettings) => {
+      // TODO: (ShadowHD33RUS) move to gameService.getNewGame();
+      gs.game.teamLeft = {
+        fails: 0,
+        players: [],
+        points: 0,
+      };
+      gs.game.teamRight = {
+        fails: 0,
+        players: [],
+        points: 0,
+      };
       this.gameSettings = gs;
+
+      this.activePlayer = {
+        team: 0,
+        player: 0,
+      }
 
       console.log(this.gameSettings);
 
@@ -88,30 +102,20 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.failsTeam2 = [1, 1, 1];
     this.showAnswersMode = false;
     this.showFireworks = false;
-    this.startActiveTeam = this.activeTeam;
 
 
     this.title = 'Тхис баттл';
-    this.activeTeam = 1;
     this.currentQuestionIdx = 0;
 
   }
 
-  isFirstTeamVisible() {
-    return this.activeTeam === 1;
+  setActiveTeam(id: number) {
+    this.activePlayer.team = id;
   }
 
-
-  setActiveTeam(id) {
-    this.activeTeam = id;
-  }
-
+  // TODO: change to global
   switchSound() {
     this.isSoundOn = !this.isSoundOn;
-  }
-
-  isWinner(id) {
-    return this.activeTeam === id || this.activeTeam === 3;
   }
 
   private createOdometer(id) {
@@ -150,7 +154,7 @@ export class GameComponent extends BaseComponent implements OnInit {
       return;
     }
     const award = +(this.answers[this.currentQuestionIdx].answers[id].quantity);
-    if (this.activeTeam === 1) {
+    if (this.activePlayer.team === 1) {
       this.pointsTeam1 += award;
       this.counterTeam1.innerHTML = this.pointsTeam1;
     } else {
@@ -158,24 +162,26 @@ export class GameComponent extends BaseComponent implements OnInit {
       this.counterTeam2.innerHTML = this.pointsTeam2;
     }
 
-    const fails = this.activeTeam === 1 ? this.failsTeam2 : this.failsTeam1;
-    if (this.isAnotherTeamBuffer(fails)) {
-      // switch
-      this.activeTeam = this.activeTeam === 1 ? 2 : 1;
-    }
+    const fails = this.activePlayer.team === 1 ? this.failsTeam2 : this.failsTeam1;
+    // if (this.isAnotherTeamBuffer(fails)) {
+    //   // switch
+    //   this.activePlayer.team = this.activePlayer.team === 1 ? 2 : 1;
+    // }
   }
 
   nextQuestion() {
     if (this.currentQuestionIdx === this.answers.length - 1
-      && (this.isNextBtnEnabled() ||
-        (this.isAnotherTeamBuffer(this.failsTeam1)
-          && this.isAnotherTeamBuffer(this.failsTeam2)))) {
+      && (this.isNextBtnEnabled()
+        //   || (this.isAnotherTeamBuffer(this.failsTeam1)
+        //     && this.isAnotherTeamBuffer(this.failsTeam2)
+        //   )
+      )
+    ) {
       this.showFireworks = true;
-      this.activeTeam = this.pointsTeam1 > this.pointsTeam2 ? 1
+      this.activePlayer.team = this.pointsTeam1 > this.pointsTeam2 ? 1
         : this.pointsTeam1 === this.pointsTeam2 ? 1 : 2;
       this.gameEnded = true;
       this.winnerTeamId = this.pointsTeam1 > this.pointsTeam2 ? 1 : 2;
-      console.log(this.isWinner(1));
       this.playWinSound();
       return;
     } else if (this.currentQuestionIdx === this.answers.length - 1) {
@@ -183,13 +189,20 @@ export class GameComponent extends BaseComponent implements OnInit {
     } else if (!this.isNextBtnEnabled()) {
       return;
     }
-    this.currentQuestionIdx += 1;
-    const newTeam = this.activeTeam === 1 ? 2 : 1;
-    if (this.activeTeam === this.startActiveTeam) {
-      this.activeTeam = this.activeTeam === 1 ? 2 : 1;
-      this.startActiveTeam = this.activeTeam;
-    }
-    this.eraseAnswers();
+    this.currentQuestionIdx++;
+
+    const game = this.gameSettings?.game;
+
+    if (!game || !game.teamLeft || !game.teamRight) return;
+
+    const lowerTeam = (game.teamLeft.points >= game.teamRight.points)
+      ? 0 : 1;
+
+    this.activePlayer.team = lowerTeam;
+    this.showAnswersMode = false;
+
+    game.teamLeft.fails = 0;
+    game.teamRight.fails = 0;
   }
 
   previousQuestion() {
@@ -203,39 +216,25 @@ export class GameComponent extends BaseComponent implements OnInit {
     return _.find(this.openedAnswers, (x) => x === false) === undefined;
   }
 
-  private eraseAnswers() {
-    const l = _.range(this.answers[this.currentQuestionIdx].answers.length);
-    this.openedAnswers = _.map(l, x => false);
-    this.showAnswersMode = false;
-    this.failsTeam1 = [1, 1, 1];
-    this.failsTeam2 = [1, 1, 1];
-  }
-
-  onFailedAnswer(id, sourceTeam) {
-    if (this.activeTeam !== sourceTeam) {
-      return;
-    }
+  onFail(totalFails: number, teamId: number) {
+    // (ShadowHD33RUS) i think is not needed, or need to move to settings
+    // if (this.activePlayer.team !== teamId) {
+    //   return;
+    // }
 
     this.playFailSound();
 
-    if (this.activeTeam === 1) {
-      this.failsTeam1[id] = 3;
-    } else {
-      this.failsTeam2[id] = 3;
-    }
-    const fails = this.activeTeam === 1 ? this.failsTeam1 : this.failsTeam2;
-    const opponentsFails = this.activeTeam === 1 ? this.failsTeam2 : this.failsTeam1;
-    // now check if another team has buffer
-    const rej = _.reject(fails, (x) => x === 3);
-    if (rej.length === 0) {
-      this.showAnswersMode = true;
-    }
-    if (this.isAnotherTeamBuffer(opponentsFails)) {
-      // this means next step
-      this.activeTeam = this.activeTeam === 1 ? 2 : 1;
-    } else if (!this.isAnotherTeamBuffer(fails)) {
-      this.showAnswersMode = true;
-      this.activeTeam = this.activeTeam === 1 ? 2 : 1;
+    // TODO: replace with teams array;
+    const currTeam = (teamId == 0)
+      ? this.gameSettings?.game.teamLeft
+      : this.gameSettings?.game.teamRight;
+
+    if (!currTeam) return;
+
+    currTeam.fails = totalFails;
+
+    if (this.gameSettings && this.gameSettings.game.maxFails >= currTeam.fails) {
+      this.showAnswersMode = false;
     }
   }
 
@@ -297,12 +296,6 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.audioCash = this.loadAudio('cash');
 
     this.audioWin = this.loadAudio('win');
-  }
-
-  private isAnotherTeamBuffer(fails) {
-    // now check if another team has buffer
-    const tries = _.reject(fails, (x) => x === 3);
-    return tries.length > 0;
   }
 
 }

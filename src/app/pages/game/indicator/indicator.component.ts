@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-indicator',
@@ -6,27 +6,36 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './indicator.component.html'
 })
 
-export class IndicatorComponent {
-  @Input()
-  private indicatorColor: number[];
+export class IndicatorComponent implements OnInit, OnChanges {
+
+  @Input() fails: number = 0;
+  @Input() failsMax: number = 3;
 
   @Output()
-  private failedAnswerCb: EventEmitter<any> = new EventEmitter();
+  private failed: EventEmitter<number> = new EventEmitter();
 
-  indicatorClassNameMap = new Map<number, string>([
-    [1, 'indicator-green circle'],
-    [2, 'indicator-yellow circle'],
-    [3, 'indicator-red circle']
-  ]);
+  indicatorsEmpty: number[];
+  indicatorsFailed: number[];
 
-  public getIndicatorClassName(id: number): string {
-    return this.indicatorClassNameMap.get(this.indicatorColor[id]) || 'indicator-green circle';
+  ngOnInit(): void {
+    this.initArrays();
   }
 
-  public onFailed(id: number) {
-    if (this.indicatorColor[id] === 3) {
-      return;
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('failsMax' in changes || 'fails' in changes) {
+      this.initArrays();
     }
-    this.failedAnswerCb.emit(id);
+  }
+
+  private initArrays() {
+    if (this.fails > this.failsMax) this.fails = this.failsMax;
+    this.indicatorsFailed = Array(this.fails).fill(0).map((x, i) => i);
+    this.indicatorsEmpty = Array(this.failsMax - this.fails)
+      .fill(0).map((x, i) => i);
+  }
+
+  onFail() {
+    this.fails++;
+    this.failed.emit(this.fails);
   }
 }

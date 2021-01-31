@@ -3,38 +3,20 @@
   grid-template-columns: repeat(3, auto);
 }
 
-.col-1 {
-  grid-column-start: 1;
-  grid-column-end: span 1;
-}
-
-.col-2 {
-  grid-column-start: 2;
-  grid-column-end: span 1;
-}
-
-.col-3 {
-  grid-column-start: 3;
-  grid-column-end: span 1;
-}
-
 .circle {
   width: 50px;
   height: 50px;
   background-color: #a0a0a0;
   border-radius: 50%;
-  display:block;
-  margin:auto;
+  display: block;
+  margin: auto;
 }
 
-.misses-container .indicator-green {
-  background-color: #056CFF;
+.failed {
+  background-color: #ff4255;
 }
 
-.misses-container .indicator-yellow {
-  background-color: #FF0;
-}
-
-.misses-container .indicator-red {
-  background-color: #FF4255;
+.hover:hover {
+  cursor: pointer;
+  background-color: #767676;
 }
