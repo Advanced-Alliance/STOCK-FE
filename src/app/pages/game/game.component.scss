@@ -149,18 +149,6 @@
   grid-column: 2 / span 1;
 }
 
-.controls {
-  grid-column-start: 2;
-  grid-column-end: span 1;
-  grid-row-start: 5;
-  grid-row-end: span 1;
-}
-
-.controls-container {
-  display: grid;
-  grid-template-columns: 30px repeat(3, auto) 30px;
-}
-
 .col-1 img {
   height: 100px;
   width: auto;
@@ -178,20 +166,6 @@
   width: 100px;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
-}
-
-.img-circular:hover {
-  opacity: 0.8;
-  cursor: pointer;
-}
-
-.back-btn {
-  background-image: url($icon-back);
-}
-
-.next-btn {
-  background-image: url($icon-next);
-  float: right;
 }
 
 .pyro > .before,

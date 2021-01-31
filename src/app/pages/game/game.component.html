@@ -1,5 +1,5 @@
 <div class="pyro"
-     *ngIf="showFireworks">
+     *ngIf="gameEnded">
   <div class="before"></div>
   <div class="after"></div>
 </div>
@@ -26,7 +26,7 @@
   <!-- TODO: change to *ngFor() -->
   <div *ngIf="gameSettings.game.teamLeft"
        (click)="setActiveTeam(0)"
-       [class.team-enabled]="activePlayer.team === 0"
+       [class.team-enabled]="activePlayer.team === 0 && !showAnswersMode"
        class="team-element team-1 team-container">
     <span class="row-1 col-2 centered text-large team-red">
       Red Team
@@ -45,7 +45,7 @@
 
   <div *ngIf="gameSettings.game.teamRight"
        (click)="setActiveTeam(1)"
-       [class.team-enabled]="activePlayer.team === 1"
+       [class.team-enabled]="activePlayer.team === 1 && !showAnswersMode"
        class="team-element team-2 team-container">
     <span class="row-1 col-2 centered text-large team-blue">
       Blue Team
@@ -73,13 +73,7 @@
   </div>
 
   <div class="controls controls-container">
-    <div class="col-2 row-1">
-      <div class="img-circular back-btn"
-           (click)="previousQuestion()"></div>
-    </div>
-    <div class="col-4 row-1">
-      <div class="img-circular next-btn"
-           (click)="nextQuestion()"></div>
-    </div>
+    <button (click)="nextQuestion()"
+            mat-raised-button>Дальше!</button>
   </div>
 </div>

@@ -12,7 +12,9 @@ import * as _ from 'lodash';
 export class GameComponent extends BaseComponent implements OnInit {
 
   gameSettings?: IGameSettings;
-  isAdminMode: boolean;
+  isAdminMode: boolean = false;
+  gameEnded: boolean = false;
+  showAnswersMode: boolean = false;
 
   stageIndex: number = 0;
   activePlayer: IActivePlayer; // TODO: change to activeTeam witch array
@@ -22,18 +24,10 @@ export class GameComponent extends BaseComponent implements OnInit {
   teamOneIcon: string = '/assets/images/red.svg';
   teamTwoIcon: string = '/assets/images/blue.svg';
 
-  winnerTeamId: number;
-  gameEnded: boolean;
   answers: any;
   title: string;
   placeholder: string;
   currentQuestionIdx: number;
-  pointsTeam1: number;
-  pointsTeam2: number;
-  failsTeam1: number[];
-  failsTeam2: number[];
-  showAnswersMode: boolean;
-  showFireworks: boolean;
   isSoundOn: boolean;
   private openedAnswers: boolean[];
   private audioFail: HTMLAudioElement;
@@ -96,12 +90,6 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     this.isSoundOn = true;
     this.placeholder = 'Ответ';
-    this.pointsTeam1 = 0;
-    this.pointsTeam2 = 0;
-    this.failsTeam1 = [1, 1, 1];
-    this.failsTeam2 = [1, 1, 1];
-    this.showAnswersMode = false;
-    this.showFireworks = false;
 
   }
 
@@ -120,7 +108,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     const od = new trueOdometer({
       el: el,
-      value: this.pointsTeam1,
+      value: 0,
 
       // Any option (other than auto and selector) can be passed in here
       theme: 'minimal',
@@ -162,40 +150,16 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   nextQuestion() {
-    if (this.stageIndex === this.answers.length - 1
-      && (this.isNextBtnEnabled()
-        //   || (this.isAnotherTeamBuffer(this.failsTeam1)
-        //     && this.isAnotherTeamBuffer(this.failsTeam2)
-        //   )
-      )
-    ) {
-      this.showFireworks = true;
-      this.activePlayer.team = this.pointsTeam1 > this.pointsTeam2 ? 1
-        : this.pointsTeam1 === this.pointsTeam2 ? 1 : 2;
-      this.gameEnded = true;
-      this.winnerTeamId = this.pointsTeam1 > this.pointsTeam2 ? 1 : 2;
-      this.playWinSound();
-      return;
-    } else if (this.stageIndex === this.answers.length - 1) {
-      return;
-    } else if (!this.isNextBtnEnabled()) {
+    if (!this.gameSettings) return;
+
+    if (this.stageIndex === this.gameSettings.game.questions.length - 1) {
+      this.endgame();
       return;
     }
-    this.stageIndex++;
-
-    const game = this.gameSettings?.game;
-
-    if (!game || !game.teamLeft || !game.teamRight) return;
-
-    const lowerTeam = (game.teamLeft.points >= game.teamRight.points)
-      ? 0 : 1;
-
-    this.activePlayer.team = lowerTeam;
-    this.showAnswersMode = false;
-
-    game.teamLeft.fails = 0;
-    game.teamRight.fails = 0;
+    this.nextRound();
   }
+
+
 
   previousQuestion() {
     if (this.stageIndex === 0) {
@@ -226,8 +190,39 @@ export class GameComponent extends BaseComponent implements OnInit {
     currTeam.fails = totalFails;
 
     if (this.gameSettings && this.gameSettings.game.maxFails >= currTeam.fails) {
-      this.showAnswersMode = false;
+      this.showAnswersMode = true;
     }
+  }
+
+  private nextRound() {
+    this.stageIndex++;
+
+    const game = this.gameSettings?.game;
+
+    if (!game || !game.teamLeft || !game.teamRight) return;
+
+    const lowerTeam = (game.teamLeft.points >= game.teamRight.points)
+      ? 0 : 1;
+
+    this.activePlayer.team = lowerTeam;
+    this.showAnswersMode = false;
+
+    game.teamLeft.fails = 0;
+    game.teamRight.fails = 0;
+  }
+
+  private endgame() {
+
+    this.gameEnded = true;
+    this.playWinSound();
+
+    const teamLeftPoints = this.gameSettings?.game.teamLeft?.points;
+    const teamRightPoints = this.gameSettings?.game.teamRight?.points;
+
+    if (!teamLeftPoints || !teamRightPoints) return;
+
+    this.activePlayer.team = teamLeftPoints > teamRightPoints ? 0 : 1;
+
   }
 
   private playFailSound() {
