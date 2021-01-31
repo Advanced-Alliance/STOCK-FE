@@ -1,7 +1,7 @@
 import { IActivePlayer, IGame, IGameSettings, ITeam } from './../../models/models';
 import { GameService } from './../../services/game.service';
 import { BaseComponent } from './../../core/base.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 
 @Component({
@@ -16,6 +16,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
   stageIndex: number = 0;
   activePlayer: IActivePlayer; // TODO: change to activeTeam witch array
+  counters: any[] = [] // TODO: move to HTML Element type
 
   //TODO:
   teamOneIcon: string = '/assets/images/red.svg';
@@ -25,8 +26,6 @@ export class GameComponent extends BaseComponent implements OnInit {
   gameEnded: boolean;
   answers: any;
   title: string;
-  counterTeam1: any;
-  counterTeam2: any;
   placeholder: string;
   currentQuestionIdx: number;
   pointsTeam1: number;
@@ -81,8 +80,9 @@ export class GameComponent extends BaseComponent implements OnInit {
       setTimeout(() => {
 
         setTimeout(() => {
-          this.counterTeam1 = this.createOdometer('#odometer-red');
-          this.counterTeam2 = this.createOdometer('#odometer-blue');
+          // TODO: suck some ducks
+          this.counters.push(this.createOdometer('#odometer0'));
+          this.counters.push(this.createOdometer('#odometer1'));
         });
 
       }, 1000);
@@ -102,10 +102,6 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.failsTeam2 = [1, 1, 1];
     this.showAnswersMode = false;
     this.showFireworks = false;
-
-
-    this.title = 'Тхис баттл';
-    this.currentQuestionIdx = 0;
 
   }
 
@@ -136,41 +132,37 @@ export class GameComponent extends BaseComponent implements OnInit {
 
   // НАХРЕНА????????? TODO:remove
   getCurrentAnswer(idx) {
-    return this.answers[this.currentQuestionIdx].answers[idx];
+    return this.answers[this.stageIndex].answers[idx];
   }
 
   getCurrentQuestion() {
-    const question = this.answers[this.currentQuestionIdx].question;
+    const question = this.answers[this.stageIndex].question;
     /*const addition = `${question.indexOf('?') !== -1 ? '' : '?'}`;
-    return `${this.placeholder} ${this.currentQuestionIdx + 1}: ${question}${addition}`;*/
+    return `${this.placeholder} ${this.stageIndex + 1}: ${question}${addition}`;*/
     return `${question}`;
   }
 
   onSelected(id: number) {
-    this.openedAnswers[id] = true;
+    // this.openedAnswers[id] = true;
     this.playFlipSound();
     this.playCashSound();
-    if (this.showAnswersMode) {
-      return;
-    }
-    const award = +(this.answers[this.currentQuestionIdx].answers[id].quantity);
-    if (this.activePlayer.team === 1) {
-      this.pointsTeam1 += award;
-      this.counterTeam1.innerHTML = this.pointsTeam1;
-    } else {
-      this.pointsTeam2 += award;
-      this.counterTeam2.innerHTML = this.pointsTeam2;
-    }
+    if (this.showAnswersMode) return;
 
-    const fails = this.activePlayer.team === 1 ? this.failsTeam2 : this.failsTeam1;
-    // if (this.isAnotherTeamBuffer(fails)) {
-    //   // switch
-    //   this.activePlayer.team = this.activePlayer.team === 1 ? 2 : 1;
-    // }
+    const game = this.gameSettings?.game;
+    if (!game) return;
+
+    const award = game.questions[this.stageIndex].answers[id].points;
+    const currentTeam = this.activePlayer.team == 0 ? game.teamLeft : game.teamRight;
+    if (!currentTeam) return;
+
+    currentTeam.points += award;
+    this.counters[this.activePlayer.team || 0].innerHTML = currentTeam.points;
+
+    this.activePlayer.team = this.activePlayer.team == 0 ? 1 : 0;
   }
 
   nextQuestion() {
-    if (this.currentQuestionIdx === this.answers.length - 1
+    if (this.stageIndex === this.answers.length - 1
       && (this.isNextBtnEnabled()
         //   || (this.isAnotherTeamBuffer(this.failsTeam1)
         //     && this.isAnotherTeamBuffer(this.failsTeam2)
@@ -184,12 +176,12 @@ export class GameComponent extends BaseComponent implements OnInit {
       this.winnerTeamId = this.pointsTeam1 > this.pointsTeam2 ? 1 : 2;
       this.playWinSound();
       return;
-    } else if (this.currentQuestionIdx === this.answers.length - 1) {
+    } else if (this.stageIndex === this.answers.length - 1) {
       return;
     } else if (!this.isNextBtnEnabled()) {
       return;
     }
-    this.currentQuestionIdx++;
+    this.stageIndex++;
 
     const game = this.gameSettings?.game;
 
@@ -206,10 +198,10 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   previousQuestion() {
-    if (this.currentQuestionIdx === 0) {
+    if (this.stageIndex === 0) {
       return;
     }
-    this.currentQuestionIdx -= 1;
+    this.stageIndex -= 1;
   }
 
   private isNextBtnEnabled() {

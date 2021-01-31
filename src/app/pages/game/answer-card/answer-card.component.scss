@@ -22,26 +22,25 @@
   color: #fff;
   font-size: 24px;
   font-weight: 700;
-  cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border-radius: .2em;
-  box-shadow: 0 2.5em .9em -2em #555;
-  background-color: #056CFF;
-  transition: transform .8s cubic-bezier(.63, -0.32, .4, 1.39);
+  border-radius: 0.2em;
+  box-shadow: 0 2.5em 0.9em -2em #555;
+  background-color: #056cff;
+  transition: transform 0.8s cubic-bezier(0.63, -0.32, 0.4, 1.39);
 }
 
 .tp-box__front {
   -webkit-transform: rotateX(0deg);
   -ms-transform: rotateX(0deg);
   transform: rotateX(0deg);
-
+  cursor: pointer;
 }
 
 .tp-box__back {
-  background: #FF4255;
+  background: #ff4255;
   -webkit-transform: rotateX(180deg);
   -ms-transform: rotateX(180deg);
   transform: rotateX(180deg);

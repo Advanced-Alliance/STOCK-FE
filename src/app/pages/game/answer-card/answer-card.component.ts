@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
-  selector: 'app-answer-card',
+  selector: 'answer-card',
   templateUrl: './answer-card.component.html',
   styleUrls: ['./answer-card.component.scss'],
   animations: [
@@ -21,17 +21,12 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   ]
 })
 export class AnswerCardComponent {
-  @Input()
-  answer: string;
 
-  @Input()
-  points: number;
+  @Input() answer: string;
+  @Input() points: number;
+  @Input() id: number;
 
-  @Input()
-  id: number;
-
-  @Output()
-  open: EventEmitter<any> = new EventEmitter();
+  @Output() open: EventEmitter<any> = new EventEmitter();
 
   // TODO: а жив ли мальчик?
   flip = 'inactive';
@@ -49,9 +44,7 @@ export class AnswerCardComponent {
     if (this.flip === 'active') {
       return;
     }
-    this.flip = (this.flip === 'inactive') ? 'active' : 'inactive';
-    if (this.flip === 'active') {
-      this.open.emit(this.id);
-    }
+    this.flip = 'active';
+    this.open.emit(this.id);
   }
 }

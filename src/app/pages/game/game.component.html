@@ -31,7 +31,7 @@
     <span class="row-1 col-2 centered text-large team-red">
       Red Team
     </span>
-    <div id="odometer-red"
+    <div id="odometer0"
          class="odometer row-2 col-2 centered team-red"></div>
     <div class="row-3 col-2 centered">
       <img [src]="teamOneIcon">
@@ -50,7 +50,7 @@
     <span class="row-1 col-2 centered text-large team-blue">
       Blue Team
     </span>
-    <div id="odometer-blue"
+    <div id="odometer1"
          class="odometer row-2 col-2 centered team-blue"></div>
     <div class="row-3 col-2 centered">
       <img [src]="teamTwoIcon">
@@ -63,13 +63,13 @@
   </div>
 
   <div class="choices choices-container">
-    <app-answer-card *ngFor="let answer of gameSettings.game.questions[stageIndex].answers; let i = index"
-                     (open)="onSelected(i)"
-                     [id]="i+1"
-                     [answer]="answer.name"
-                     [points]="answer.points"
-                     class="single-choice single-choice-i">
-    </app-answer-card>
+    <answer-card *ngFor="let answer of gameSettings.game.questions[stageIndex].answers; let i = index"
+                 (open)="onSelected(i)"
+                 [id]="i+1"
+                 [answer]="answer.name"
+                 [points]="answer.points"
+                 class="single-choice single-choice-i">
+    </answer-card>
   </div>
 
   <div class="controls controls-container">
