@@ -37,7 +37,7 @@ export class GameComponent extends BaseComponent implements OnInit {
   title: string;
   placeholder: string;
   currentQuestionIdx: number;
-  isSoundOn: boolean;
+  isSoundOn = true;
   private openedAnswers: boolean[];
   private audioFail: HTMLAudioElement;
   private audioFlip: HTMLAudioElement;
@@ -120,14 +120,14 @@ export class GameComponent extends BaseComponent implements OnInit {
     const trueOdometer = _.get(window, 'Odometer');
     const el = document.querySelector(id);
 
-    const od = new trueOdometer({
-      el: el,
-      value: 0,
+    // const od = new trueOdometer({
+    //   el: el,
+    //   value: 0,
 
-      // Any option (other than auto and selector) can be passed in here
-      theme: 'minimal',
-      format: 'd',
-    });
+    //   // Any option (other than auto and selector) can be passed in here
+    //   theme: 'minimal',
+    //   format: 'd',
+    // });
 
     return el;
   }
@@ -263,18 +263,18 @@ export class GameComponent extends BaseComponent implements OnInit {
     const audio = new Audio();
     audio.controls = true;
     const audioFormats = [
-      {
-        name: '.mp3',
-        type: 'audio/mpeg',
-      },
+      // {
+      //   name: '.mp3',
+      //   type: 'audio/mpeg',
+      // },
       {
         name: '.wav',
         type: 'audio/wav',
       },
-      {
-        name: '.ogg',
-        type: 'audio/ogg',
-      },
+      // {
+      //   name: '.ogg',
+      //   type: 'audio/ogg',
+      // },
     ];
 
     audioFormats.forEach(function (format) {
