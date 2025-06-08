@@ -1,5 +1,8 @@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -23,21 +26,20 @@ const MATERIAL = [
 
 @NgModule({
   declarations: [],
-  imports: [
-    ...MATERIAL,
-    CommonModule,
-    RouterModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-  ],
   exports: [
     ...MATERIAL,
     CommonModule,
     RouterModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-  ]
+  ],
+  imports: [
+    ...MATERIAL,
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
 })
-export class SharedModule { }
+export class SharedModule {}

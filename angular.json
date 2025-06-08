@@ -9,13 +9,16 @@
 			"projectType": "application",
 			"architect": {
 				"build": {
-					"builder": "@angular-devkit/build-angular:browser",
+					"builder": "@angular-devkit/build-angular:application",
 					"options": {
-						"outputPath": "dist",
-						"index": "src/index.html",
-						"main": "src/main.ts",
+						"outputPath": {
+              "base": "dist"
+            },
+            "index": "src/index.html",
 						"tsConfig": "src/tsconfig.app.json",
-						"polyfills": "src/polyfills.ts",
+						"polyfills": [
+              "src/polyfills.ts"
+            ],
 						"assets": [
 							"src/assets",
 							"src/favicon.ico"
@@ -27,13 +30,12 @@
 						],
 						"scripts": [
 							"node_modules/odometer/odometer.js"
-						],
-						"vendorChunk": true,
-						"extractLicenses": false,
-						"buildOptimizer": false,
+            ],
+            "extractLicenses": false,
 						"sourceMap": true,
 						"optimization": false,
-						"namedChunks": true
+            "namedChunks": true,
+            "browser": "src/main.ts"
 					},
 					"configurations": {
 						"production": {
@@ -47,9 +49,7 @@
 							"outputHashing": "all",
 							"sourceMap": false,
 							"namedChunks": false,
-							"extractLicenses": true,
-							"vendorChunk": false,
-							"buildOptimizer": true,
+              "extractLicenses": true,
 							"fileReplacements": [
 								{
 									"replace": "src/environments/environment.ts",
