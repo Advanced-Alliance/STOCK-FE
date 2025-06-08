@@ -4,6 +4,26 @@
   @include fullFlex();
 }
 
+.content {
+  @include flex(column);
+
+  flex: 1 1 auto;
+}
+
+.navbar {
+  @include flex(row, start, center);
+}
+
+.constructor {
+  @include flex(column);
+
+  flex: 1 1 auto;
+}
+
+.footer-controls {
+  @include flex(row, space-between, center);
+}
+
 .tab-icon {
   margin-right: map-get($map: $margin, $key: "xs");
 }
@@ -14,6 +34,11 @@
 
 .header {
   margin: 0;
+}
+
+.question {
+  @include flex(column, start, start);
+  margin: map-get($map: $margin, $key: "sm");
 }
 
 .form-content {

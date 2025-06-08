@@ -1,72 +1,54 @@
-<div fxLayout="column"
-     fxLayoutAlign="center center"
-     fxFlex>
-  <h1 class="logo-header">
-    СТОК
-  </h1>
+<div class="content">
+  <h1 class="logo-header">СТОК</h1>
   <p class="description">мнений обо всём // beta</p>
-  <div class="buttons-block"
-       fxLayout="column"
-       fxLayoutAlign="start stretch">
-    <form (submit)="play()"
-          [formGroup]="gameFrom"
-          class="button-row"
-          matTooltip="Играть онлайн пока нельзя. Попробуй сам создать комнату"
-          fxLayout="row"
-          fxLayoutAlign="start start"
-          fxLayoutGap="12px">
-      <mat-form-field fxFlex>
+  <div class="buttons-block">
+    <form (submit)="play()" [formGroup]="gameFrom" class="joining-from">
+      <mat-form-field class="joining-from__id-field">
         <mat-label>ID комнаты</mat-label>
-        <input formControlName="gameId"
-               placeholder="XXXX"
-               matInput>
+        <input formControlName="gameId" placeholder="XXXX" matInput />
       </mat-form-field>
 
-      <button [disabled]="!gameFrom.valid"
-              class="capitalize"
-              color="primary"
-              type="submit"
-              mat-flat-button>
+      <button
+        [disabled]="!gameFrom.valid"
+        class="capitalize"
+        color="primary"
+        type="submit"
+        mat-flat-button
+      >
         Войти <mat-icon>login</mat-icon>
       </button>
     </form>
-    <div class="button-row">
-      <a [routerLink]="['/admin']"
-         class="capitalize"
-         mat-stroked-button
-         fxFlex>
-        <mat-icon>add</mat-icon> Создать комнату
-      </a>
-    </div>
-    <div class="button-row">
-      <a [routerLink]="['/poll']"
-         disabled
-         color="primary"
-         class="capitalize"
-         mat-flat-button
-         matTooltip="Когда-нибудь будет доступно"
-         fxFlex>
-        <mat-icon>bar_chart</mat-icon> Опросы
-      </a>
-    </div>
+    <a [routerLink]="['/admin']" class="capitalize" mat-stroked-button>
+      <mat-icon>add</mat-icon> Создать комнату
+    </a>
+    <a
+      [routerLink]="['/poll']"
+      disabled
+      color="primary"
+      class="capitalize"
+      mat-flat-button
+      matTooltip="Когда-нибудь будет доступно"
+    >
+      <mat-icon>bar_chart</mat-icon> Опросы
+    </a>
   </div>
-
 </div>
-<div fxLayout="row"
-     fxLayoutAlign="space-between center">
-  <div><a class="capitalize"
-       href="https://advall.org/"
-       target="_blank"
-       mat-button>Advanced Alliance</a>
+<footer class="footer">
+  <div>
+    <a class="capitalize" href="https://advall.org/" target="_blank" mat-button
+      >Advanced Alliance</a
+    >
     |
-    <a class="capitalize"
-       href="https://shadowhd.ru/"
-       target="_blank"
-       mat-button>ShadowHD</a>
+    <a class="capitalize" href="https://shadowhd.ru/" target="_blank" mat-button
+      >ShadowHD</a
+    >
   </div>
 
-  <a class="capitalize"
-     href="https://github.com/Advanced-Alliance/STOCK-FE"
-     target="_blank"
-     mat-button>dev</a>
-</div>
+  <a
+    class="capitalize"
+    href="https://github.com/Advanced-Alliance/STOCK-FE"
+    target="_blank"
+    mat-button
+    >dev</a
+  >
+</footer>

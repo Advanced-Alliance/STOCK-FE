@@ -4,6 +4,12 @@
   @include fullFlex(column);
 }
 
+.content {
+  @include flex(column, center, center);
+
+  flex: 1 1 auto;
+}
+
 .logo-header {
   font-size: map-get($map: $font-sizes, $key: "logo-header");
   line-height: map-get($map: $line-heights, $key: "logo-header");
@@ -15,9 +21,28 @@
 }
 
 .buttons-block {
+  @include flex(column);
+
+  gap: map-get($map: $margin, $key: "sm");
   width: 400px;
 }
 
-.button-row {
+.joining-from {
+  @include flex(row, start, start);
+
+  &__id-field {
+    flex: 1 1 auto;
+    margin-right: map-get($map: $margin, $key: "sm");
+  }
+
+  flex: 1 1 auto;
+}
+
+.button {
   margin-bottom: map-get($map: $margin, $key: "xl");
+}
+
+.footer {
+  @include flex(row, space-between, center);
+
 }

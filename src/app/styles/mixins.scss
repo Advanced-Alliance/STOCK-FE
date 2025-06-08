@@ -3,14 +3,15 @@
   height: 100%;
 }
 
-@mixin flex($direction: row, $justifyContent: flex-start, $wrap: nowrap) {
+@mixin flex($direction: row, $justifyContent: flex-start, $alignItems: stretch, $wrap: nowrap) {
   display: flex;
   flex-direction: $direction;
   flex-wrap: $wrap;
   justify-content: $justifyContent;
+  align-items: $alignItems;
 }
 
-@mixin fullFlex($direction: row, $justifyContent: flex-start, $wrap: nowrap) {
+@mixin fullFlex($direction: row, $justifyContent: flex-start, $alignItems: stretch, $wrap: nowrap) {
   @include full();
-  @include flex($direction, $justifyContent, $wrap);
+  @include flex($direction, $justifyContent, $alignItems, $wrap);
 }

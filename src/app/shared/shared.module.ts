@@ -4,7 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,7 +30,6 @@ const MATERIAL = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
   ],
   exports: [
     ...MATERIAL,
@@ -40,7 +38,6 @@ const MATERIAL = [
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
   ]
 })
 export class SharedModule { }

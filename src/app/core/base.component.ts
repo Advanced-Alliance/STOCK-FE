@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
   template: ''
 })
 export abstract class BaseComponent implements OnDestroy {
-  private isAlive$ = new Subject<any>();
+  private isAlive$ = new Subject<void>();
 
   /**
    * Auto-unsubscribe all subscriptions
