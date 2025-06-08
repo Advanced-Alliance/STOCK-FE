@@ -4,7 +4,7 @@ import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgIf, NgFor } from '@angular/common';
+
 import { FailIndicatorComponent } from './fail-indicator/fail-indicator.component';
 import { AnswerCardComponent } from './answer-card/answer-card.component';
 import { MatButton } from '@angular/material/button';
@@ -14,12 +14,10 @@ import { MatButton } from '@angular/material/button';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
   imports: [
-    NgIf,
     FailIndicatorComponent,
-    NgFor,
     AnswerCardComponent,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class GameComponent extends BaseComponent implements OnInit {
   gameSettings?: IGameSettings;

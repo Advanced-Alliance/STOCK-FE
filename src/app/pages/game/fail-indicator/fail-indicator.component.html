@@ -1,9 +1,13 @@
 <div class="misses misses-container">
-  <div *ngFor="let failed of indicatorsFailed"
-       class="circle failed">
-  </div>
-  <div *ngFor="let empty of indicatorsEmpty"
-       (click)="onFail()"
-       class="circle hover">
-  </div>
+  @for (failed of indicatorsFailed; track failed) {
+    <div
+      class="circle failed">
+    </div>
+  }
+  @for (empty of indicatorsEmpty; track empty) {
+    <div
+      (click)="onFail()"
+      class="circle hover">
+    </div>
+  }
 </div>

@@ -24,7 +24,7 @@ import {
 import * as _ from 'lodash';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
@@ -38,15 +38,13 @@ import { MatInput } from '@angular/material/input';
     MatIconButton,
     RouterLink,
     MatIcon,
-    NgIf,
     MatFormField,
     MatInput,
     MatTabGroup,
-    NgFor,
     MatTab,
     MatLabel,
-    MatButton,
-  ],
+    MatButton
+],
 })
 export class AdminComponent extends BaseComponent implements OnInit {
   gameForm: UntypedFormGroup;

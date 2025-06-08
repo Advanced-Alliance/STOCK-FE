@@ -7,13 +7,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { NgFor } from '@angular/common';
+
 
 @Component({
   selector: 'fail-indicator',
   styleUrls: ['fail-indicator.component.scss'],
   templateUrl: './fail-indicator.component.html',
-  imports: [NgFor],
+  imports: [],
 })
 export class FailIndicatorComponent implements OnInit, OnChanges {
   @Input() fails: number = 0;
