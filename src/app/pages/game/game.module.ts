@@ -1,20 +1,13 @@
-import { SharedModule } from './../../shared/shared.module';
-import { AnswerCardComponent } from './answer-card/answer-card.component';
-import { FailIndicatorComponent } from './fail-indicator/fail-indicator.component';
 import { NgModule } from '@angular/core';
 
-import { GameRoutingModule } from './game-routing.module';
 import { GameComponent } from './game.component';
+import { RouterModule, Routes } from '@angular/router';
 
+const routes: Routes = [{ path: '', component: GameComponent }];
 
 @NgModule({
     imports: [
-        SharedModule,
-        GameRoutingModule // Must be the last one
-        ,
-        GameComponent,
-        FailIndicatorComponent,
-        AnswerCardComponent
+        RouterModule.forChild(routes)
     ],
     providers: []
 })

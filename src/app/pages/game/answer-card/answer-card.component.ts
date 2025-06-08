@@ -9,11 +9,9 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
         trigger('flipState', [
             state('active', style({
                 transform: 'rotateX(179deg)'
-                //transform: 'rotateY(179deg)'
             })),
             state('inactive', style({
                 transform: 'rotateX(0)'
-                //transform: 'rotateY(0)'
             })),
             transition('active => inactive', animate('400ms ease-out')),
             transition('inactive => active', animate('400ms ease-in'))

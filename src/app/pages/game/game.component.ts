@@ -8,16 +8,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FailIndicatorComponent } from './fail-indicator/fail-indicator.component';
 import { AnswerCardComponent } from './answer-card/answer-card.component';
 import { MatButton } from '@angular/material/button';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
-  imports: [
-    FailIndicatorComponent,
-    AnswerCardComponent,
-    MatButton
-],
+  imports: [FailIndicatorComponent, AnswerCardComponent, MatButton],
 })
 export class GameComponent extends BaseComponent implements OnInit {
   gameSettings?: IGameSettings;
@@ -62,23 +59,23 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.gameService
       .getGameSettings()
       .pipe(this.unsubscribeOnDestroy)
-      .subscribe((gs: IGameSettings | null) => {
-        if (!gs) {
+      .subscribe((gameSettings: IGameSettings | null) => {
+        if (!gameSettings) {
           this.router.navigate(['/']);
           return;
         }
-        // TODO: (ShadowHD33RUS) move to gameService.getNewGame();
-        gs.game.teamLeft = {
+        // TODO: move to gameService.getNewGame();
+        gameSettings.game.teamLeft = {
           fails: 0,
           players: [],
           points: 0,
         };
-        gs.game.teamRight = {
+        gameSettings.game.teamRight = {
           fails: 0,
           players: [],
           points: 0,
         };
-        this.gameSettings = gs;
+        this.gameSettings = gameSettings;
 
         this.activePlayer = {
           team: 0,
@@ -296,5 +293,22 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.audioCash = this.loadAudio('cash');
 
     this.audioWin = this.loadAudio('win');
+  }
+
+  private storage(
+    gameSettings: IGameSettings | null
+  ): Observable<IGameSettings | null> {
+    const storageName = 'gameSettings';
+
+    if (gameSettings) {
+      window.localStorage.setItem(storageName, JSON.stringify(gameSettings));
+      return of(gameSettings);
+    }
+
+    const gameString = window.localStorage.getItem(storageName);
+
+    if (gameString) return JSON.parse(gameString);
+
+    return of(null);
   }
 }

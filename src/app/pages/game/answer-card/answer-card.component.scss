@@ -1,7 +1,5 @@
-/*.tp-wrapper {*/
-/*-webkit-perspective: 800px;*/
-/*perspective: 800px;*/
-/*}*/
+@import "./../../../styles.scss";
+
 
 .tp-box {
   width: 100%;
@@ -37,6 +35,10 @@
   -ms-transform: rotateX(0deg);
   transform: rotateX(0deg);
   cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tp-box__back {
@@ -44,10 +46,16 @@
   -webkit-transform: rotateX(180deg);
   -ms-transform: rotateX(180deg);
   transform: rotateX(180deg);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.answer-container {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  grid-template-rows: repeat(1, auto);
+.answer {
+  flex: 1 1 auto;
+}
+
+.answer-price {
+  margin-right: map-get($map: $margin, $key: "sm");
 }
