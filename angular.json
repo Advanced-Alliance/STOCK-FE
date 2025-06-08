@@ -62,19 +62,19 @@
 				},
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
-					"options": {
-						"browserTarget": "game-hundred-to-one:build"
+          "options": {
+            "buildTarget": "game-hundred-to-one:build"
 					},
 					"configurations": {
-						"production": {
-							"browserTarget": "game-hundred-to-one:build:production"
+            "production": {
+              "buildTarget": "game-hundred-to-one:build:production"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
-					"options": {
-						"browserTarget": "game-hundred-to-one:build"
+          "options": {
+            "buildTarget": "game-hundred-to-one:build"
 					}
 				},
 				"test": {
