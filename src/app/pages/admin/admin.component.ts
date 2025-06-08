@@ -5,8 +5,8 @@ import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
 import { IGameSettings, OrderBy, IGame, GameType, IQuestion } from './../../models/models';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormArray } from '@angular/forms';
 import * as _ from 'lodash';
 
