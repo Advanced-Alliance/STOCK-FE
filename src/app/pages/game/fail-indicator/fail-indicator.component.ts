@@ -1,16 +1,21 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { NgFor } from '@angular/common';
 
 @Component({
-    selector: 'fail-indicator',
-    styleUrls: ['fail-indicator.component.scss'],
-    templateUrl: './fail-indicator.component.html',
-    standalone: true,
-    imports: [NgFor]
+  selector: 'fail-indicator',
+  styleUrls: ['fail-indicator.component.scss'],
+  templateUrl: './fail-indicator.component.html',
+  imports: [NgFor],
 })
-
 export class FailIndicatorComponent implements OnInit, OnChanges {
-
   @Input() fails: number = 0;
   @Input() failsMax: number = 3;
 
@@ -32,9 +37,12 @@ export class FailIndicatorComponent implements OnInit, OnChanges {
 
   private initArrays() {
     if (this.fails > this.failsMax) this.fails = this.failsMax;
-    this.indicatorsFailed = Array(this.fails).fill(0).map((x, i) => i);
+    this.indicatorsFailed = Array(this.fails)
+      .fill(0)
+      .map((x, i) => i);
     this.indicatorsEmpty = Array(this.failsMax - this.fails)
-      .fill(0).map((x, i) => i);
+      .fill(0)
+      .map((x, i) => i);
   }
 
   onFail() {

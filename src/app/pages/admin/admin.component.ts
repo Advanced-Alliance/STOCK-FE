@@ -4,10 +4,23 @@ import { GameService } from './../../services/game.service';
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
-import { IGameSettings, OrderBy, IGame, GameType, IQuestion } from './../../models/models';
+import {
+  IGameSettings,
+  OrderBy,
+  IGame,
+  GameType,
+  IQuestion,
+} from './../../models/models';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent, MatTabGroup, MatTab } from '@angular/material/tabs';
-import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  Validators,
+  UntypedFormGroup,
+  UntypedFormArray,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import * as _ from 'lodash';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -16,28 +29,26 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 
 @Component({
-    selector: 'app-admin',
-    templateUrl: './admin.component.html',
-    styleUrls: ['./admin.component.scss'],
-    standalone: true,
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatIconButton,
-        RouterLink,
-        MatIcon,
-        NgIf,
-        MatFormField,
-        MatInput,
-        MatTabGroup,
-        NgFor,
-        MatTab,
-        MatLabel,
-        MatButton,
-    ],
+  selector: 'app-admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.scss'],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatIconButton,
+    RouterLink,
+    MatIcon,
+    NgIf,
+    MatFormField,
+    MatInput,
+    MatTabGroup,
+    NgFor,
+    MatTab,
+    MatLabel,
+    MatButton,
+  ],
 })
 export class AdminComponent extends BaseComponent implements OnInit {
-
   gameForm: UntypedFormGroup;
 
   editGameName = false;
@@ -61,7 +72,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     private gameService: GameService,
     private fb: UntypedFormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     super();
   }
@@ -74,11 +85,12 @@ export class AdminComponent extends BaseComponent implements OnInit {
   saveChanges(): void {
     this.unsavedChanges = false;
     this.gameService.setGameSettings(this.getChanges());
-    this.gameService.getGameSettings().pipe(
-      this.unsubscribeOnDestroy
-    ).subscribe((gameSettings) => {
-      this.adminService.downloadSettingsFile(gameSettings);
-    });
+    this.gameService
+      .getGameSettings()
+      .pipe(this.unsubscribeOnDestroy)
+      .subscribe((gameSettings) => {
+        this.adminService.downloadSettingsFile(gameSettings);
+      });
   }
 
   /**
@@ -87,20 +99,18 @@ export class AdminComponent extends BaseComponent implements OnInit {
   loadFromFile(): void {
     const dialogRef = this.dialog.open(OpenFileDialogComponent);
 
-    dialogRef.afterClosed()
-      .subscribe((gameSettings: IGameSettings) => {
-        console.log(gameSettings);
-      });
+    dialogRef.afterClosed().subscribe((gameSettings: IGameSettings) => {
+      console.log(gameSettings);
+    });
   }
 
   onOpenFile(): void {
     const inputNode: any = document.querySelector('#fileInput');
 
-    if (typeof (FileReader) !== 'undefined') {
+    if (typeof FileReader !== 'undefined') {
       const reader = new FileReader();
 
       reader.onload = (e: any) => {
-
         const json = e.target.result;
         const gameSettings = this.gameService.parseJSON(json);
 
@@ -108,7 +118,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
         gameSettings.game.questions.forEach((q) => {
           this.questions.push(this.createQuestion(q));
-        })
+        });
 
         this.questions.push(this.getDefaultTab());
 
@@ -124,17 +134,18 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   onSelectedTabChange($event: MatTabChangeEvent): void {
-    if (
-      $event.index === this.questions.length - 1
-    ) {
-      const currentQuestion = this.questions.controls[$event.index] as UntypedFormGroup;
+    if ($event.index === this.questions.length - 1) {
+      const currentQuestion = this.questions.controls[
+        $event.index
+      ] as UntypedFormGroup;
       currentQuestion.controls.stageName.setValue(`Вопрос ${$event.index + 1}`);
       this.questions.push(this.getDefaultTab());
     }
   }
 
   onAddAnswer(questionIndex: number) {
-    const answers = (this.questions.controls[questionIndex] as UntypedFormGroup).controls.answers as UntypedFormArray;
+    const answers = (this.questions.controls[questionIndex] as UntypedFormGroup)
+      .controls.answers as UntypedFormArray;
     answers.push(this.createAnswer('Новый ответ', 1));
   }
 
@@ -149,7 +160,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   onRemoveAnswer(questionIndex: number, answerIndex: number): void {
-    const answers = (this.questions.controls[questionIndex] as UntypedFormGroup).controls.answers as UntypedFormArray;
+    const answers = (this.questions.controls[questionIndex] as UntypedFormGroup)
+      .controls.answers as UntypedFormArray;
     if (answers.length <= 1) return;
     answers.removeAt(answerIndex);
   }
@@ -163,7 +175,6 @@ export class AdminComponent extends BaseComponent implements OnInit {
     // TODO: change to real id from web server
     this.router.navigate(['/game'], { queryParams: { id: 0 } });
   }
-
 
   private initNewGame() {
     this.gameForm = this.fb.group({
@@ -179,33 +190,29 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   private initSubs(): void {
-    this.gameForm.valueChanges.pipe(
-      this.unsubscribeOnDestroy
-    ).subscribe(
-      () => this.unsavedChanges = true
-    )
+    this.gameForm.valueChanges
+      .pipe(this.unsubscribeOnDestroy)
+      .subscribe(() => (this.unsavedChanges = true));
   }
 
   private getDefaultTab(stageName?: string): UntypedFormGroup {
-    if (_.isEmpty(stageName)) stageName = '+ Добавить'
+    if (_.isEmpty(stageName)) stageName = '+ Добавить';
     const question = this.fb.group({
       stageName: stageName,
       questionText: '',
       orderBy: OrderBy.none,
       enable: true,
       answers: this.getDefaultAnswers(),
-    })
+    });
     return question;
   }
 
   private getDefaultAnswers(): UntypedFormArray {
-
-    const formArrayAnswers =
-      this.fb.array([
-        this.createAnswer('Частый ответ', 60),
-        this.createAnswer('Средний ответ', 30),
-        this.createAnswer('Редкий ответ', 10),
-      ]);
+    const formArrayAnswers = this.fb.array([
+      this.createAnswer('Частый ответ', 60),
+      this.createAnswer('Средний ответ', 30),
+      this.createAnswer('Редкий ответ', 10),
+    ]);
     return formArrayAnswers;
   }
 
@@ -213,7 +220,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     return this.fb.group({
       name: this.fb.control(name),
       points: this.fb.control(points),
-    })
+    });
   }
 
   private createQuestion(question: IQuestion): UntypedFormGroup {
@@ -223,9 +230,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       orderBy: OrderBy.none,
       enable: true,
       answers: this.fb.array(
-        question.answers.map(
-          (a) => this.createAnswer(a.name, a.points)
-        )
+        question.answers.map((a) => this.createAnswer(a.name, a.points))
       ),
     });
 
@@ -235,9 +240,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   private getChanges(): IGameSettings {
     const gameData = this.gameForm.value as IGame;
-    gameData.questions = gameData.questions.slice(0, this.questions.length - 1)
-
-
+    gameData.questions = gameData.questions.slice(0, this.questions.length - 1);
 
     //   commonPoints: 0,
     //   currentStage: 0,
@@ -263,10 +266,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
       createDate: this.createDate,
       lastEditQuestion: this.currentQuestion,
       lastEditDate: Date.now(),
-      game: gameData
-
+      game: gameData,
     };
     return editorData;
   }
-
 }

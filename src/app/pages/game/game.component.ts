@@ -10,14 +10,18 @@ import { AnswerCardComponent } from './answer-card/answer-card.component';
 import { MatButton } from '@angular/material/button';
 
 @Component({
-    selector: 'app-game',
-    templateUrl: './game.component.html',
-    styleUrls: ['./game.component.scss'],
-    standalone: true,
-    imports: [NgIf, FailIndicatorComponent, NgFor, AnswerCardComponent, MatButton]
+  selector: 'app-game',
+  templateUrl: './game.component.html',
+  styleUrls: ['./game.component.scss'],
+  imports: [
+    NgIf,
+    FailIndicatorComponent,
+    NgFor,
+    AnswerCardComponent,
+    MatButton,
+  ],
 })
 export class GameComponent extends BaseComponent implements OnInit {
-
   gameSettings?: IGameSettings;
   isAdminMode: boolean = false;
   gameEnded: boolean = false;
@@ -25,7 +29,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
   stageIndex: number = 0;
   activePlayer: IActivePlayer; // TODO: change to activeTeam witch array
-  counters: any[] = [] // TODO: move to HTML Element type
+  counters: any[] = []; // TODO: move to HTML Element type
 
   //TODO:
   teamOneIcon: string = '/assets/images/red.svg';
@@ -45,7 +49,7 @@ export class GameComponent extends BaseComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     super();
   }
@@ -57,55 +61,52 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   private initSubs() {
-    this.gameService.getGameSettings().pipe(
-      this.unsubscribeOnDestroy
-    ).subscribe((gs: IGameSettings | null) => {
-      if (!gs) {
-        this.router.navigate(['/']);
-        return;
-      };
-      // TODO: (ShadowHD33RUS) move to gameService.getNewGame();
-      gs.game.teamLeft = {
-        fails: 0,
-        players: [],
-        points: 0,
-      };
-      gs.game.teamRight = {
-        fails: 0,
-        players: [],
-        points: 0,
-      };
-      this.gameSettings = gs;
+    this.gameService
+      .getGameSettings()
+      .pipe(this.unsubscribeOnDestroy)
+      .subscribe((gs: IGameSettings | null) => {
+        if (!gs) {
+          this.router.navigate(['/']);
+          return;
+        }
+        // TODO: (ShadowHD33RUS) move to gameService.getNewGame();
+        gs.game.teamLeft = {
+          fails: 0,
+          players: [],
+          points: 0,
+        };
+        gs.game.teamRight = {
+          fails: 0,
+          players: [],
+          points: 0,
+        };
+        this.gameSettings = gs;
 
-      this.activePlayer = {
-        team: 0,
-        player: 0,
-      }
+        this.activePlayer = {
+          team: 0,
+          player: 0,
+        };
 
-      if ('admin' in this.route.snapshot.data) {
-        this.isAdminMode = this.route.snapshot.data['admin'];
-      }
-
-      setTimeout(() => {
+        if ('admin' in this.route.snapshot.data) {
+          this.isAdminMode = this.route.snapshot.data['admin'];
+        }
 
         setTimeout(() => {
-          // TODO: suck some ducks
-          this.counters.push(this.createOdometer('#odometer0'));
-          this.counters.push(this.createOdometer('#odometer1'));
-        });
-
-      }, 1000);
-    })
+          setTimeout(() => {
+            // TODO: suck some ducks
+            this.counters.push(this.createOdometer('#odometer0'));
+            this.counters.push(this.createOdometer('#odometer1'));
+          });
+        }, 1000);
+      });
   }
 
   /**
    * @deprecated
    */
   private init(): void {
-
     this.isSoundOn = true;
     this.placeholder = 'Ответ';
-
   }
 
   setActiveTeam(id: number) {
@@ -127,7 +128,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
       // Any option (other than auto and selector) can be passed in here
       theme: 'minimal',
-      format: 'd'
+      format: 'd',
     });
 
     return el;
@@ -155,7 +156,8 @@ export class GameComponent extends BaseComponent implements OnInit {
     if (!game) return;
 
     const award = game.questions[this.stageIndex].answers[id].points;
-    const currentTeam = this.activePlayer.team == 0 ? game.teamLeft : game.teamRight;
+    const currentTeam =
+      this.activePlayer.team == 0 ? game.teamLeft : game.teamRight;
     if (!currentTeam) return;
 
     currentTeam.points += award;
@@ -174,8 +176,6 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.nextRound();
   }
 
-
-
   previousQuestion() {
     if (this.stageIndex === 0) {
       return;
@@ -192,15 +192,19 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.playFailSound();
 
     // TODO: replace with teams array;
-    const currTeam = (teamId == 0)
-      ? this.gameSettings?.game.teamLeft
-      : this.gameSettings?.game.teamRight;
+    const currTeam =
+      teamId == 0
+        ? this.gameSettings?.game.teamLeft
+        : this.gameSettings?.game.teamRight;
 
     if (!currTeam) return;
 
     currTeam.fails = totalFails;
 
-    if (this.gameSettings && this.gameSettings.game.maxFails >= currTeam.fails) {
+    if (
+      this.gameSettings &&
+      this.gameSettings.game.maxFails >= currTeam.fails
+    ) {
       this.showAnswersMode = true;
     }
   }
@@ -212,8 +216,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     if (!game || !game.teamLeft || !game.teamRight) return;
 
-    const lowerTeam = (game.teamLeft.points <= game.teamRight.points)
-      ? 0 : 1;
+    const lowerTeam = game.teamLeft.points <= game.teamRight.points ? 0 : 1;
 
     this.activePlayer.team = lowerTeam;
     this.showAnswersMode = false;
@@ -223,7 +226,6 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   private endgame() {
-
     this.gameEnded = true;
     this.playWinSound();
 
@@ -233,7 +235,6 @@ export class GameComponent extends BaseComponent implements OnInit {
     if (!teamLeftPoints || !teamRightPoints) return;
 
     this.activePlayer.team = teamLeftPoints > teamRightPoints ? 0 : 1;
-
   }
 
   private playFailSound() {
@@ -266,14 +267,17 @@ export class GameComponent extends BaseComponent implements OnInit {
     const audioFormats = [
       {
         name: '.mp3',
-        type: 'audio/mpeg'
-      }, {
+        type: 'audio/mpeg',
+      },
+      {
         name: '.wav',
-        type: 'audio/wav'
-      }, {
+        type: 'audio/wav',
+      },
+      {
         name: '.ogg',
-        type: 'audio/ogg'
-      }];
+        type: 'audio/ogg',
+      },
+    ];
 
     audioFormats.forEach(function (format) {
       const source = document.createElement('source');
@@ -295,5 +299,4 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     this.audioWin = this.loadAudio('win');
   }
-
 }

@@ -20,7 +20,6 @@ import { MatTooltip } from '@angular/material/tooltip';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

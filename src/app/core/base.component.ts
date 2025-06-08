@@ -3,7 +3,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 
 @Component({
-  template: ''
+  template: '',
+  standalone: false,
 })
 export abstract class BaseComponent implements OnDestroy {
   private isAlive$ = new Subject<void>();
@@ -16,9 +17,9 @@ export abstract class BaseComponent implements OnDestroy {
     this.isAlive$.complete();
   }
 
-  protected unsubscribeOnDestroy = (source: Observable<any>): Observable<any> => {
-    return source.pipe(
-      takeUntil(this.isAlive$)
-    );
-  }
+  protected unsubscribeOnDestroy = (
+    source: Observable<any>
+  ): Observable<any> => {
+    return source.pipe(takeUntil(this.isAlive$));
+  };
 }
