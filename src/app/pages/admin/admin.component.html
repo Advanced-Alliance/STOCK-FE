@@ -1,7 +1,7 @@
 <div class="content" [formGroup]="gameForm">
   <!-- TODO: move to Header component of Editor component -->
   <div class="navbar">
-    <button [routerLink]="['']" class="button-mar" mat-button mat-icon-button>
+    <button [routerLink]="['']" class="button-mar" mat-icon-button>
       <mat-icon>arrow_back</mat-icon>
     </button>
 
@@ -16,7 +16,6 @@
     <button
       (click)="editGameName = !editGameName"
       class="button-mar"
-      mat-button
       mat-icon-button
     >
       <mat-icon *ngIf="!editGameName">create</mat-icon>
@@ -80,7 +79,6 @@
                   (click)="onRemoveAnswer(i, j)"
                   [disabled]="q['controls'].answers['controls'].length === 1"
                   class="form-content"
-                  mat-button
                   mat-icon-button
                 >
                   <mat-icon>remove_circle_outline</mat-icon>
