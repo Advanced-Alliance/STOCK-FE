@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 import { IGameSettings, OrderBy, IGame, GameType, IQuestion } from './../../models/models';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormArray } from '@angular/forms';
 import * as _ from 'lodash';
 
 @Component({
@@ -17,7 +17,7 @@ import * as _ from 'lodash';
 })
 export class AdminComponent extends BaseComponent implements OnInit {
 
-  gameForm: FormGroup;
+  gameForm: UntypedFormGroup;
 
   editGameName = false;
 
@@ -28,8 +28,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
   teamLeftName?: string | null;
   teamRightName?: string | null;
 
-  get questions(): FormArray {
-    return this.gameForm.controls.questions as FormArray;
+  get questions(): UntypedFormArray {
+    return this.gameForm.controls.questions as UntypedFormArray;
   }
   readonly maxQuestions = 6;
   readonly minQuestions = 1;
@@ -38,7 +38,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     public dialog: MatDialog,
     private adminService: AdminService,
     private gameService: GameService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private router: Router,
     private route: ActivatedRoute,
   ) {
@@ -106,14 +106,14 @@ export class AdminComponent extends BaseComponent implements OnInit {
     if (
       $event.index === this.questions.length - 1
     ) {
-      const currentQuestion = this.questions.controls[$event.index] as FormGroup;
+      const currentQuestion = this.questions.controls[$event.index] as UntypedFormGroup;
       currentQuestion.controls.stageName.setValue(`Вопрос ${$event.index + 1}`);
       this.questions.push(this.getDefaultTab());
     }
   }
 
   onAddAnswer(questionIndex: number) {
-    const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
+    const answers = (this.questions.controls[questionIndex] as UntypedFormGroup).controls.answers as UntypedFormArray;
     answers.push(this.createAnswer('Новый ответ', 1));
   }
 
@@ -128,7 +128,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   }
 
   onRemoveAnswer(questionIndex: number, answerIndex: number): void {
-    const answers = (this.questions.controls[questionIndex] as FormGroup).controls.answers as FormArray;
+    const answers = (this.questions.controls[questionIndex] as UntypedFormGroup).controls.answers as UntypedFormArray;
     if (answers.length <= 1) return;
     answers.removeAt(answerIndex);
   }
@@ -165,7 +165,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     )
   }
 
-  private getDefaultTab(stageName?: string): FormGroup {
+  private getDefaultTab(stageName?: string): UntypedFormGroup {
     if (_.isEmpty(stageName)) stageName = '+ Добавить'
     const question = this.fb.group({
       stageName: stageName,
@@ -177,7 +177,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
     return question;
   }
 
-  private getDefaultAnswers(): FormArray {
+  private getDefaultAnswers(): UntypedFormArray {
 
     const formArrayAnswers =
       this.fb.array([
@@ -188,14 +188,14 @@ export class AdminComponent extends BaseComponent implements OnInit {
     return formArrayAnswers;
   }
 
-  private createAnswer(name?: string, points?: number): FormGroup {
+  private createAnswer(name?: string, points?: number): UntypedFormGroup {
     return this.fb.group({
       name: this.fb.control(name),
       points: this.fb.control(points),
     })
   }
 
-  private createQuestion(question: IQuestion): FormGroup {
+  private createQuestion(question: IQuestion): UntypedFormGroup {
     const qGroup = this.fb.group({
       stageName: [question.stageName],
       questionText: '',

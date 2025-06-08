@@ -2,7 +2,7 @@ import { BaseComponent } from './../../core/base.component';
 
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +11,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class HomeComponent extends BaseComponent implements OnInit {
 
-  gameFrom = new FormGroup({
-    gameId: new FormControl('', [
+  gameFrom = new UntypedFormGroup({
+    gameId: new UntypedFormControl('', [
       Validators.required,
       Validators.pattern(/^(\d){4}$/)
     ]),
