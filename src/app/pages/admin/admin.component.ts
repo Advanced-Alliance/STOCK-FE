@@ -1,4 +1,4 @@
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { OpenFileDialogComponent } from './open-file-dialog/open-file-dialog.component';
 import { GameService } from './../../services/game.service';
 import { AdminService } from './admin.service';
@@ -6,14 +6,35 @@ import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
 import { IGameSettings, OrderBy, IGame, GameType, IQuestion } from './../../models/models';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormArray } from '@angular/forms';
+import { MatTabChangeEvent, MatTabGroup, MatTab } from '@angular/material/tabs';
+import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as _ from 'lodash';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
+    selector: 'app-admin',
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.scss'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconButton,
+        RouterLink,
+        MatIcon,
+        NgIf,
+        MatFormField,
+        MatInput,
+        MatTabGroup,
+        NgFor,
+        MatTab,
+        MatLabel,
+        MatButton,
+    ],
 })
 export class AdminComponent extends BaseComponent implements OnInit {
 

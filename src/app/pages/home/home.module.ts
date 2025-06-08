@@ -8,14 +8,11 @@ import { HomeComponent } from './home.component';
 
 
 @NgModule({
-  declarations: [
-    HomeComponent,
-  ],
-  imports: [
-    SharedModule,
-    HomeRoutingModule,
-  ],
-  providers: [
-  ]
+    imports: [
+        SharedModule,
+        HomeRoutingModule,
+        HomeComponent,
+    ],
+    providers: []
 })
 export class HomeModule { }

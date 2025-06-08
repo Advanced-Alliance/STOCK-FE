@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { NgFor } from '@angular/common';
 
 @Component({
-  selector: 'fail-indicator',
-  styleUrls: ['fail-indicator.component.scss'],
-  templateUrl: './fail-indicator.component.html'
+    selector: 'fail-indicator',
+    styleUrls: ['fail-indicator.component.scss'],
+    templateUrl: './fail-indicator.component.html',
+    standalone: true,
+    imports: [NgFor]
 })
 
 export class FailIndicatorComponent implements OnInit, OnChanges {

@@ -8,16 +8,14 @@ import { GameComponent } from './game.component';
 
 
 @NgModule({
-  declarations: [
-    GameComponent,
-    FailIndicatorComponent,
-    AnswerCardComponent,
-  ],
-  imports: [
-    SharedModule,
-    GameRoutingModule // Must be the last one
-  ],
-  providers: [
-  ]
+    imports: [
+        SharedModule,
+        GameRoutingModule // Must be the last one
+        ,
+        GameComponent,
+        FailIndicatorComponent,
+        AnswerCardComponent
+    ],
+    providers: []
 })
 export class GameModule { }

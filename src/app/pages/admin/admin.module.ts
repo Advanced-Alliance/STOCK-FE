@@ -9,17 +9,16 @@ import { OpenFileDialogComponent } from './open-file-dialog/open-file-dialog.com
 
 
 @NgModule({
-  declarations: [
-    AdminComponent,
-    OpenFileDialogComponent,
-  ],
-  imports: [
-    SharedModule,
-    AdminRoutingModule // Must be the last one
-  ],
-  providers: [
-    AdminApiService,
-    AdminService,
-  ]
+    imports: [
+        SharedModule,
+        AdminRoutingModule // Must be the last one
+        ,
+        AdminComponent,
+        OpenFileDialogComponent
+    ],
+    providers: [
+        AdminApiService,
+        AdminService,
+    ]
 })
 export class AdminModule { }

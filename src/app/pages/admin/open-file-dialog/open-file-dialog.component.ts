@@ -1,11 +1,21 @@
 import { GameService } from './../../../services/game.service';
 import { IGameSettings } from './../../../models/models';
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-open-file-dialog',
-  templateUrl: './open-file-dialog.component.html',
+    selector: 'app-open-file-dialog',
+    templateUrl: './open-file-dialog.component.html',
+    standalone: true,
+    imports: [
+        MatDialogTitle,
+        CdkScrollable,
+        MatDialogContent,
+        MatDialogActions,
+        MatButton,
+    ],
 })
 export class OpenFileDialogComponent {
 

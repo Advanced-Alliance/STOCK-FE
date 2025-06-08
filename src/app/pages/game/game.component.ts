@@ -4,11 +4,17 @@ import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgIf, NgFor } from '@angular/common';
+import { FailIndicatorComponent } from './fail-indicator/fail-indicator.component';
+import { AnswerCardComponent } from './answer-card/answer-card.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss']
+    selector: 'app-game',
+    templateUrl: './game.component.html',
+    styleUrls: ['./game.component.scss'],
+    standalone: true,
+    imports: [NgIf, FailIndicatorComponent, NgFor, AnswerCardComponent, MatButton]
 })
 export class GameComponent extends BaseComponent implements OnInit {
 
