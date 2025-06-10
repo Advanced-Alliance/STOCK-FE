@@ -1,0 +1,15 @@
+@import "../../../styles.scss";
+
+:host {
+  text-align: center;
+}
+
+.icon {
+  width: 200px;
+}
+
+.count {
+  font-size: 50px;
+  line-height: 50px;
+  font-family: $font-family-odometer;
+}

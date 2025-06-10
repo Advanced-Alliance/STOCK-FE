@@ -1,26 +1,28 @@
-import { IActivePlayer, IGameSettings } from './../../models/models';
+import { IActivePlayer, IGameSettings, TeamTypes } from './../../models/models';
 import { GameService } from './../../services/game.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { FailIndicatorComponent } from './fail-indicator/fail-indicator.component';
 import { AnswerCardComponent } from './answer-card/answer-card.component';
 import { MatButton } from '@angular/material/button';
 import { Observable, of } from 'rxjs';
+import { TeamComponent } from './team/team.component';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
-  imports: [FailIndicatorComponent, AnswerCardComponent, MatButton],
+  imports: [TeamComponent, AnswerCardComponent, MatButton],
 })
 export class GameComponent extends BaseComponent implements OnInit {
   gameSettings?: IGameSettings;
   isAdminMode: boolean = false;
   gameEnded: boolean = false;
   showAnswersMode: boolean = false;
+
+  bank = 0;
 
   stageIndex: number = 0;
   activePlayer: IActivePlayer; // TODO: change to activeTeam witch array
@@ -78,21 +80,13 @@ export class GameComponent extends BaseComponent implements OnInit {
         this.gameSettings = gameSettings;
 
         this.activePlayer = {
-          team: 0,
+          team: 'teamLeft',
           player: 0,
         };
 
         if ('admin' in this.route.snapshot.data) {
           this.isAdminMode = this.route.snapshot.data['admin'];
         }
-
-        setTimeout(() => {
-          setTimeout(() => {
-            // TODO: suck some ducks
-            this.counters.push(this.createOdometer('#odometer0'));
-            this.counters.push(this.createOdometer('#odometer1'));
-          });
-        }, 1000);
       });
   }
 
@@ -104,29 +98,13 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.placeholder = 'Ответ';
   }
 
-  setActiveTeam(id: number) {
-    this.activePlayer.team = id;
+  setActiveTeam(team: TeamTypes) {
+    this.activePlayer.team = team;
   }
 
   // TODO: change to global
   switchSound() {
     this.isSoundOn = !this.isSoundOn;
-  }
-
-  private createOdometer(id) {
-    const trueOdometer = _.get(window, 'Odometer');
-    const el = document.querySelector(id);
-
-    // const od = new trueOdometer({
-    //   el: el,
-    //   value: 0,
-
-    //   // Any option (other than auto and selector) can be passed in here
-    //   theme: 'minimal',
-    //   format: 'd',
-    // });
-
-    return el;
   }
 
   // НАХРЕНА????????? TODO:remove
@@ -144,21 +122,21 @@ export class GameComponent extends BaseComponent implements OnInit {
   onSelected(id: number) {
     // this.openedAnswers[id] = true;
     this.playFlipSound();
-    this.playCashSound();
+    // this.playCashSound();
     if (this.showAnswersMode) return;
 
     const game = this.gameSettings?.game;
     if (!game) return;
 
     const award = game.questions[this.stageIndex].answers[id].points;
-    const currentTeam =
-      this.activePlayer.team == 0 ? game.teamLeft : game.teamRight;
-    if (!currentTeam) return;
+    // const currentTeam =
+      // this.activePlayer.team == 0 ? game.teamLeft : game.teamRight;
+    if (!this.activePlayer) return;
 
-    currentTeam.points += award;
-    this.counters[this.activePlayer.team || 0].innerHTML = currentTeam.points;
+    game[this.activePlayer.team].points += award;
+    // this.counters[this.activePlayer.team || 0].innerHTML = currentTeam.points;
 
-    this.activePlayer.team = this.activePlayer.team == 0 ? 1 : 0;
+    this.activePlayer.team = this.activePlayer.team == 'teamLeft' ? 'teamRight' : 'teamLeft';
   }
 
   nextQuestion() {
@@ -211,7 +189,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     if (!game || !game.teamLeft || !game.teamRight) return;
 
-    const lowerTeam = game.teamLeft.points <= game.teamRight.points ? 0 : 1;
+    const lowerTeam = game.teamLeft.points <= game.teamRight.points ? 'teamLeft' : 'teamRight';
 
     this.activePlayer.team = lowerTeam;
     this.showAnswersMode = false;
@@ -229,7 +207,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     if (!teamLeftPoints || !teamRightPoints) return;
 
-    this.activePlayer.team = teamLeftPoints > teamRightPoints ? 0 : 1;
+    this.activePlayer.team = teamLeftPoints > teamRightPoints ? 'teamLeft' : 'teamRight';
   }
 
   private playFailSound() {

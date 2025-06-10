@@ -1,0 +1,11 @@
+<span class="row-1 col-2 centered text-large team-red">{{ name }}</span>
+<!-- <div id="odometer0" class="odometer row-2 col-2 centered team-red"></div> -->
+<div class="count">{{ count }}</div>
+<img class="icon row-3 col-2 centered" [src]="icon" />
+<div class="row-4 col-2">
+  <fail-indicator
+    [fails]="fails"
+    [failsMax]="maxFails"
+    (failed)="failed.emit($event)"
+  ></fail-indicator>
+</div>

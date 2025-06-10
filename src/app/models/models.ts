@@ -19,8 +19,8 @@ export interface IQuestion {
   enable: boolean;
   stageName: string;
   questionText?: string | null;
-  answers: IAnswer[],
-  orderBy: OrderBy,
+  answers: IAnswer[];
+  orderBy: OrderBy;
 }
 
 export interface ITeam {
@@ -38,11 +38,11 @@ export interface IPlayer {
 
 export interface IGame {
   name: string;
-  questions: IQuestion[],
+  questions: IQuestion[];
   showQuestionsText: boolean;
   maxFails: number;
-  teamLeft?: ITeam | null;
-  teamRight?: ITeam | null;
+  teamLeft: ITeam;
+  teamRight: ITeam;
   currentStage: number;
   commonPoints: number;
   players: IPlayer[];
@@ -65,6 +65,8 @@ export interface IGameSettings {
  * В режиме pvp обязательно должен быть указан только playerIndex.
  */
 export interface IActivePlayer {
-  team?: number | null; //TODO: remove undefined | null
+  team: TeamTypes;
   player?: number | null;
 }
+
+export type TeamTypes = 'teamLeft' | 'teamRight';

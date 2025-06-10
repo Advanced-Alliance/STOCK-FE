@@ -1,84 +1,59 @@
 @if (gameEnded) {
-  <div class="pyro"
-    >
-    <div class="before"></div>
-    <div class="after"></div>
-  </div>
-}
+<div class="pyro">
+  <div class="before"></div>
+  <div class="after"></div>
+</div>
+} @if (gameSettings) {
+<div class="root-container">
+  <h1 class="center-row header">
+    {{ gameSettings.game.questions[stageIndex].stageName }}
+  </h1>
 
-@if (gameSettings) {
-  <div
-    class="root-container">
-    <div>
-      TODO:Заголовок (добавить имя автора)
-      <span>
-        {{ gameSettings.game.gameName }}
-      </span>
-    </div>
-    <div class="game-name">
-      <span>
-        {{ gameSettings.game.questions[stageIndex].stageName }}
-      </span>
-    </div>
-    <!-- <div class="game-question text-large centered"
-    *ngIf="answers">
-    {{getCurrentQuestion()}}
-  </div> -->
-  <!-- TODO: change to *ngFor() -->
+  <div class="center-row bank">
+    <span>
+      {{ bank }}
+    </span>
+  </div>
   @if (gameSettings.game.teamLeft) {
-    <div
-      (click)="setActiveTeam(0)"
-      [class.team-enabled]="activePlayer.team === 0 && !showAnswersMode"
-      class="team-element team-1 team-container">
-      <span class="row-1 col-2 centered text-large team-red">
-        Red Team
-      </span>
-      <div id="odometer0"
-      class="odometer row-2 col-2 centered team-red"></div>
-      <div class="row-3 col-2 centered">
-        <img [src]="teamOneIcon">
-      </div>
-      <div class="row-4 col-2">
-        <fail-indicator [fails]="gameSettings.game.teamLeft.fails"
-          [failsMax]="gameSettings.game.maxFails"
-        (failed)="onFail($event, 0)"></fail-indicator>
-      </div>
-    </div>
-  }
-  @if (gameSettings.game.teamRight) {
-    <div
-      (click)="setActiveTeam(1)"
-      [class.team-enabled]="activePlayer.team === 1 && !showAnswersMode"
-      class="team-element team-2 team-container">
-      <span class="row-1 col-2 centered text-large team-blue">
-        Blue Team
-      </span>
-      <div id="odometer1"
-      class="odometer row-2 col-2 centered team-blue"></div>
-      <div class="row-3 col-2 centered">
-        <img [src]="teamTwoIcon">
-      </div>
-      <div class="row-4 col-2">
-        <fail-indicator [fails]="gameSettings.game.teamRight.fails"
-          [failsMax]="gameSettings.game.maxFails"
-        (failed)="onFail($event, 1)"></fail-indicator>
-      </div>
-    </div>
+  <app-team
+    (click)="setActiveTeam('teamLeft')"
+    [name]="'Red Team'"
+    [icon]="teamOneIcon"
+    [fails]="gameSettings.game.teamLeft.fails"
+    [maxFails]="gameSettings.game.maxFails"
+    [count]="gameSettings.game.teamLeft.points"
+    [class.team--active]="activePlayer.team === 'teamLeft' && !showAnswersMode"
+    class="team"
+  />
   }
   <div class="choices choices-container">
-    @for (answer of gameSettings.game.questions[stageIndex].answers; track answer; let i = $index) {
-      <answer-card
-        (open)="onSelected(i)"
-        [id]="i+1"
-        [answer]="answer.name"
-        [points]="answer.points"
-        class="single-choice single-choice-i">
-      </answer-card>
+    @for (answer of gameSettings.game.questions[stageIndex].answers; track
+    answer; let i = $index) {
+    <answer-card
+      (open)="onSelected(i)"
+      [id]="i + 1"
+      [answer]="answer.name"
+      [points]="answer.points"
+      class="single-choice single-choice-i"
+    >
+    </answer-card>
     }
   </div>
+  @if (gameSettings.game.teamRight) {
+
+  <app-team
+    (click)="setActiveTeam('teamRight')"
+    [name]="'Blue Team'"
+    [icon]="teamTwoIcon"
+    [fails]="gameSettings.game.teamRight.fails"
+    [maxFails]="gameSettings.game.maxFails"
+    [count]="gameSettings.game.teamRight.points"
+    [class.team--active]="activePlayer.team === 'teamRight' && !showAnswersMode"
+    class="team"
+  />
+  }
   <div class="controls controls-container">
-    <button (click)="nextQuestion()"
-    mat-raised-button>Дальше!</button>
+    <button (click)="nextQuestion()" mat-raised-button>Дальше!</button>
   </div>
 </div>
 }
