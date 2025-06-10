@@ -4,6 +4,7 @@
 	"newProjectRoot": "projects",
 	"projects": {
 		"game-hundred-to-one": {
+      "prefix": "app",
 			"root": "",
 			"sourceRoot": "src",
 			"projectType": "application",
@@ -25,12 +26,8 @@
 						],
 						"styles": [
 							"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-							"node_modules/odometer/themes/odometer-theme-slot-machine.css",
 							"src/styles.scss"
 						],
-						"scripts": [
-							"node_modules/odometer/odometer.js"
-            ],
             "extractLicenses": false,
 						"sourceMap": true,
 						"optimization": false,
@@ -84,12 +81,8 @@
 						"karmaConfig": "./karma.conf.js",
 						"polyfills": "src/polyfills.ts",
 						"tsConfig": "src/tsconfig.spec.json",
-						"scripts": [
-							"node_modules/odometer/odometer.js"
-						],
 						"styles": [
 							"./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-							"node_modules/odometer/themes/odometer-theme-slot-machine.css",
 							"src/styles.scss"
 						],
 						"assets": [
