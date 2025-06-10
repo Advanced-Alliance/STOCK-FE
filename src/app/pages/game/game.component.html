@@ -14,46 +14,42 @@
       {{ bank }}
     </span>
   </div>
-  @if (gameSettings.game.teamLeft) {
+
+  @let teamLeft = gameSettings.game.teamLeft; @if (teamLeft) {
   <app-team
     (click)="setActiveTeam('teamLeft')"
+    (failed)="onFail('teamLeft')"
     [name]="'Red Team'"
     [icon]="teamOneIcon"
-    [fails]="gameSettings.game.teamLeft.fails"
+    [fails]="teamLeft.fails"
     [maxFails]="gameSettings.game.maxFails"
-    [count]="gameSettings.game.teamLeft.points"
-    [class.team--active]="activePlayer.team === 'teamLeft' && !showAnswersMode"
+    [count]="teamLeft.points"
+    [class.team--active]="activePlayer.team === 'teamLeft' || showAnswersMode"
     class="team"
   />
   }
-  <div class="choices choices-container">
-    @for (answer of gameSettings.game.questions[stageIndex].answers; track
-    answer; let i = $index) {
-    <answer-card
-      (open)="onSelected(i)"
-      [id]="i + 1"
-      [answer]="answer.name"
-      [points]="answer.points"
-      class="single-choice single-choice-i"
-    >
-    </answer-card>
-    }
-  </div>
-  @if (gameSettings.game.teamRight) {
 
+  <answers
+    [count]="gameSettings.game.questions[stageIndex].answers.length"
+    (open)="onSelected($event)"
+  />
+
+  @let teamRight = gameSettings.game.teamRight; @if (teamRight) {
   <app-team
     (click)="setActiveTeam('teamRight')"
+    (failed)="onFail('teamRight')"
     [name]="'Blue Team'"
     [icon]="teamTwoIcon"
-    [fails]="gameSettings.game.teamRight.fails"
+    [fails]="teamRight.fails"
     [maxFails]="gameSettings.game.maxFails"
-    [count]="gameSettings.game.teamRight.points"
-    [class.team--active]="activePlayer.team === 'teamRight' && !showAnswersMode"
+    [count]="teamRight.points"
+    [class.team--active]="activePlayer.team === 'teamRight' || showAnswersMode"
     class="team"
   />
   }
   <div class="controls controls-container">
     <button (click)="nextQuestion()" mat-raised-button>Дальше!</button>
+    <button (click)="closeall()" mat-raised-button>Закрыть всё!</button>
   </div>
 </div>
 }

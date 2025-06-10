@@ -1,0 +1,12 @@
+<div class="choices choices-container">
+  @for (answer of answerList$ | async; track answer; let i = $index) {
+  <card
+    (click)="open.emit(i)"
+    [id]="i"
+    [text]="answer.text"
+    [points]="answer.points"
+    class="single-choice single-choice-i"
+  />
+  }
+</div>
+

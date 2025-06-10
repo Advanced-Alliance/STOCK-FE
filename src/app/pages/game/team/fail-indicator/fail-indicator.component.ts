@@ -20,7 +20,7 @@ export class FailIndicatorComponent implements OnInit, OnChanges {
   @Input() failsMax: number = 3;
 
   @Output()
-  private failed: EventEmitter<number> = new EventEmitter();
+  private failed: EventEmitter<void> = new EventEmitter();
 
   indicatorsEmpty: number[];
   indicatorsFailed: number[];
@@ -47,6 +47,6 @@ export class FailIndicatorComponent implements OnInit, OnChanges {
 
   onFail() {
     this.fails++;
-    this.failed.emit(this.fails);
+    this.failed.emit();
   }
 }

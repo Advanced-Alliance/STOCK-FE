@@ -66,47 +66,6 @@
   grid-row-end: span 1;
 }
 
-.choices {
-  text-align: center;
-}
-
-.choices-container {
-  display: grid;
-  grid-row-gap: 10px;
-  grid-template-columns: 30px auto 30px;
-  grid-template-rows: repeat(5, auto);
-}
-
-.single-choice {
-  grid-column-start: 2;
-  grid-column-end: 2;
-  text-align: center;
-}
-
-.single-choice-1 {
-  grid-row-start: 1;
-  grid-row-end: span 1;
-}
-
-.single-choice-2 {
-  grid-row-start: 2;
-  grid-row-end: span 1;
-}
-
-.single-choice-3 {
-  grid-row-start: 3;
-  grid-row-end: span 1;
-}
-
-.single-choice-4 {
-  grid-row-start: 4;
-  grid-row-end: span 1;
-}
-
-.single-choice-5 {
-  grid-row-start: 5;
-  grid-row-end: span 1;
-}
 
 .pyro > .before,
 .pyro > .after {

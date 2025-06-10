@@ -10,9 +10,10 @@ export enum GameType {
 }
 
 export interface IAnswer {
-  name: string;
-  points: number;
-  open: boolean;
+  id: number;
+  text?: string;
+  points?: number;
+  opened: boolean;
 }
 
 export interface IQuestion {

@@ -1,6 +1,6 @@
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { OpenFileDialogComponent } from './open-file-dialog/open-file-dialog.component';
-import { GameService } from './../../services/game.service';
+import { GameSettingService } from '../../services/game-setting.service';
 import { AdminService } from './admin.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
@@ -67,7 +67,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private adminService: AdminService,
-    private gameService: GameService,
+    private gameService: GameSettingService,
     private fb: UntypedFormBuilder,
     private router: Router,
     private route: ActivatedRoute
@@ -144,7 +144,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   onAddAnswer(questionIndex: number) {
     const answers = (this.questions.controls[questionIndex] as UntypedFormGroup)
       .controls.answers as UntypedFormArray;
-    answers.push(this.createAnswer('Новый ответ', 1));
+    answers.push(this.createAnswer(answers.length, 'Новый ответ', 1));
   }
 
   onRemoveQuestion(index: number): void {
@@ -182,6 +182,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       gameType: [GameType.teamPlay],
       questions: this.fb.array([
         this.getDefaultTab('Простая игра'),
+        this.getDefaultTab('Двойная игра'),
         this.getDefaultTab(),
       ]),
     });
@@ -207,16 +208,17 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   private getDefaultAnswers(): UntypedFormArray {
     const formArrayAnswers = this.fb.array([
-      this.createAnswer('Частый ответ', 60),
-      this.createAnswer('Средний ответ', 30),
-      this.createAnswer('Редкий ответ', 10),
+      this.createAnswer(0, 'Частый ответ', 60),
+      this.createAnswer(1, 'Средний ответ', 30),
+      this.createAnswer(2, 'Редкий ответ', 10),
     ]);
     return formArrayAnswers;
   }
 
-  private createAnswer(name?: string, points?: number): UntypedFormGroup {
+  private createAnswer(id: number, name?: string, points?: number): UntypedFormGroup {
     return this.fb.group({
-      name: this.fb.control(name),
+      id: this.fb.control(id),
+      text: this.fb.control(name),
       points: this.fb.control(points),
     });
   }
@@ -228,7 +230,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       orderBy: OrderBy.none,
       enable: true,
       answers: this.fb.array(
-        question.answers.map((a) => this.createAnswer(a.name, a.points))
+        question.answers.map((a, i) => this.createAnswer(i, a.text, a.points))
       ),
     });
 

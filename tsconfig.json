@@ -21,5 +21,8 @@
     "module": "es2020",
     "baseUrl": "./",
     "useDefineForClassFields": false
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
   }
 }

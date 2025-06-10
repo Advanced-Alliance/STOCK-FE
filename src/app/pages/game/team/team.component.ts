@@ -20,5 +20,5 @@ export class TeamComponent {
   @Input() name: string;
 
 
-  @Output() failed: EventEmitter<number> = new EventEmitter();
+  @Output() failed: EventEmitter<void> = new EventEmitter();
 }

@@ -1,4 +1,4 @@
-import { GameService } from './../../../services/game.service';
+import { GameSettingService } from '../../../services/game-setting.service';
 import { IGameSettings } from './../../../models/models';
 import { Component, Inject } from '@angular/core';
 import {
@@ -26,7 +26,7 @@ export class OpenFileDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<OpenFileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IGameSettings,
-    private gameService: GameService
+    private gameService: GameSettingService
   ) {}
 
   onNoClick(): void {

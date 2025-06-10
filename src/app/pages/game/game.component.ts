@@ -1,20 +1,23 @@
 import { IActivePlayer, IGameSettings, TeamTypes } from './../../models/models';
-import { GameService } from './../../services/game.service';
+import { GameSettingService } from '../../services/game-setting.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { AnswerCardComponent } from './answer-card/answer-card.component';
+import { CardComponent } from './answers/card/card.component';
 import { MatButton } from '@angular/material/button';
 import { Observable, of } from 'rxjs';
 import { TeamComponent } from './team/team.component';
+import { AnswersComponent } from './answers/answers.component';
+import { GameService } from './game.service';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
-  imports: [TeamComponent, AnswerCardComponent, MatButton],
+  providers: [GameService],
+  imports: [TeamComponent, AnswersComponent, MatButton, AnswersComponent],
 })
 export class GameComponent extends BaseComponent implements OnInit {
   gameSettings?: IGameSettings;
@@ -44,6 +47,7 @@ export class GameComponent extends BaseComponent implements OnInit {
   private audioWin: HTMLAudioElement;
 
   constructor(
+    private gameSettingService: GameSettingService,
     private gameService: GameService,
     private router: Router,
     private route: ActivatedRoute
@@ -58,7 +62,7 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   private initSubs() {
-    this.gameService
+    this.gameSettingService
       .getGameSettings()
       .pipe(this.unsubscribeOnDestroy)
       .subscribe((gameSettings: IGameSettings | null) => {
@@ -120,23 +124,29 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   onSelected(id: number) {
-    // this.openedAnswers[id] = true;
-    this.playFlipSound();
-    // this.playCashSound();
-    if (this.showAnswersMode) return;
-
     const game = this.gameSettings?.game;
     if (!game) return;
 
-    const award = game.questions[this.stageIndex].answers[id].points;
-    // const currentTeam =
-      // this.activePlayer.team == 0 ? game.teamLeft : game.teamRight;
+    const answer = game.questions[this.stageIndex].answers[id];
+
+    if (answer.opened) return;
+    answer.opened = true;
+
+    this.gameService.answerInstant$.next(answer);
+
+    const award = answer.points || 0;
+
     if (!this.activePlayer) return;
 
     game[this.activePlayer.team].points += award;
     // this.counters[this.activePlayer.team || 0].innerHTML = currentTeam.points;
 
-    this.activePlayer.team = this.activePlayer.team == 'teamLeft' ? 'teamRight' : 'teamLeft';
+    this.activePlayer.team =
+      this.activePlayer.team == 'teamLeft' ? 'teamRight' : 'teamLeft';
+
+    if (this.showAnswersMode) return;
+
+    this.playFlipSound();
   }
 
   nextQuestion() {
@@ -146,7 +156,12 @@ export class GameComponent extends BaseComponent implements OnInit {
       this.endgame();
       return;
     }
+    this.closeAnswersAll();
     this.nextRound();
+  }
+
+  closeall(): void {
+    this.closeAnswersAll();
   }
 
   previousQuestion() {
@@ -156,7 +171,7 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.stageIndex -= 1;
   }
 
-  onFail(totalFails: number, teamId: number) {
+  onFail(team: TeamTypes) {
     // (ShadowHD33RUS) i think is not needed, or need to move to settings
     // if (this.activePlayer.team !== teamId) {
     //   return;
@@ -164,20 +179,12 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     this.playFailSound();
 
+    if (!this.gameSettings || this.showAnswersMode) return;
+
     // TODO: replace with teams array;
-    const currTeam =
-      teamId == 0
-        ? this.gameSettings?.game.teamLeft
-        : this.gameSettings?.game.teamRight;
+    this.gameSettings.game[team].fails++;
 
-    if (!currTeam) return;
-
-    currTeam.fails = totalFails;
-
-    if (
-      this.gameSettings &&
-      this.gameSettings.game.maxFails >= currTeam.fails
-    ) {
+    if (this.gameSettings.game.maxFails <= this.gameSettings.game[team].fails) {
       this.showAnswersMode = true;
     }
   }
@@ -189,7 +196,8 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     if (!game || !game.teamLeft || !game.teamRight) return;
 
-    const lowerTeam = game.teamLeft.points <= game.teamRight.points ? 'teamLeft' : 'teamRight';
+    const lowerTeam =
+      game.teamLeft.points <= game.teamRight.points ? 'teamLeft' : 'teamRight';
 
     this.activePlayer.team = lowerTeam;
     this.showAnswersMode = false;
@@ -207,7 +215,18 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     if (!teamLeftPoints || !teamRightPoints) return;
 
-    this.activePlayer.team = teamLeftPoints > teamRightPoints ? 'teamLeft' : 'teamRight';
+    this.activePlayer.team =
+      teamLeftPoints > teamRightPoints ? 'teamLeft' : 'teamRight';
+  }
+
+  private closeAnswersAll(): void {
+    const answers = this.gameSettings?.game.questions[this.stageIndex].answers;
+    if (!this.gameSettings) return;
+    if (!answers) return;
+    for (const { id } of this.gameSettings.game.questions[this.stageIndex]
+      .answers) {
+      this.gameService.answerInstant$.next({ id, opened: false });
+    }
   }
 
   private playFailSound() {

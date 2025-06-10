@@ -1,11 +1,9 @@
 import { Observable, of } from 'rxjs';
-import { IGameSettings } from './../models/models';
+import { IGameSettings } from '../models/models';
 import { Injectable } from "@angular/core";
 
-@Injectable({
-  providedIn: 'root'
-})
-export class GameService {
+@Injectable()
+export class GameSettingService {
   private gameSettings: IGameSettings;
 
   // TODO: add error msg

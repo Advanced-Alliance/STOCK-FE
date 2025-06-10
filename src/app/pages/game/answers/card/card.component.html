@@ -1,12 +1,11 @@
 <div class="tp-box"
-     (click)="toggleFlip()"
      [@flipState]="flip">
   <div class="tp-box__side tp-box__front">
-      <span class="centered text-large">— {{id}} —</span>
+      <span class="centered text-large">— {{id + 1}} —</span>
   </div>
   <div class="tp-box__side tp-box__back">
     <div class="answer">
-      <span class="centered text-large">{{answer}}</span>
+      <span class="centered text-large">{{text}}</span>
     </div>
     <div class="answer-price">
       <span class="centered text-large">

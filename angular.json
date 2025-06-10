@@ -115,12 +115,10 @@
 	},
 	"schematics": {
 		"@schematics/angular:component": {
-			"prefix": "app",
       "style": "scss",
       "type": "component"
 		},
 		"@schematics/angular:directive": {
-      "prefix": "app",
       "type": "directive"
     },
     "@schematics/angular:service": {
