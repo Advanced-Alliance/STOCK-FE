@@ -1,4 +1,9 @@
-import { GameType, IActivePlayer, IGameSettings, TeamTypes } from './../../models/models';
+import {
+  GameType,
+  IActivePlayer,
+  IGameSettings,
+  TeamTypes,
+} from './../../models/models';
 import { GameSettingService } from '../../services/game-setting.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
@@ -7,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { CardComponent } from './answers/card/card.component';
 import { MatButton } from '@angular/material/button';
-import { Observable, of } from 'rxjs';
+import { delay, Observable, of } from 'rxjs';
 import { TeamComponent } from './team/team.component';
 import { AnswersComponent } from './answers/answers.component';
 import { GameService } from './game.service';
@@ -109,7 +114,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     this.gameServerService
       .openCard$()
-      .pipe(this.unsubscribeOnDestroy)
+      .pipe(delay(1500), this.unsubscribeOnDestroy)
       .subscribe((answer) => {
         console.log('got answer', answer);
 
@@ -127,7 +132,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     this.gameServerService
       .setFail$()
-      .pipe(this.unsubscribeOnDestroy)
+      .pipe(delay(1500), this.unsubscribeOnDestroy)
       .subscribe((team) => {
         console.log('Team failed:', team);
 
@@ -194,7 +199,7 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.activePlayer.team =
       this.activePlayer.team == 'teamLeft' ? 'teamRight' : 'teamLeft';
 
-    if (this.showAnswersMode || (this.isOnline && this.isAdminMode)) return;
+    if (this.showAnswersMode) return;
 
     this.playFlipSound();
   }
@@ -301,25 +306,25 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   private playFailSound() {
-    if (this.isSoundOn) {
+    if (this.isSoundOn && !(this.isAdminMode && this.isOnline)) {
       this.audioFail.play();
     }
   }
 
   private playFlipSound() {
-    if (this.isSoundOn) {
+    if (this.isSoundOn && !(this.isAdminMode && this.isOnline)) {
       this.audioFlip.play();
     }
   }
 
   private playCashSound() {
-    if (this.isSoundOn) {
+    if (this.isSoundOn && !(this.isAdminMode && this.isOnline)) {
       this.audioCash.play();
     }
   }
 
   private playWinSound() {
-    if (this.isSoundOn) {
+    if (this.isSoundOn && !(this.isAdminMode && this.isOnline)) {
       this.audioWin.play();
     }
   }
