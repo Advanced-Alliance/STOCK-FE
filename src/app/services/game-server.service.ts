@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
-import { IAnswer, IGameSettings } from '../models/models';
+import { IAnswer, IGameSettings, TeamTypes } from '../models/models';
 
 @Injectable()
 export class GameServerService {
@@ -43,5 +43,21 @@ export class GameServerService {
 
   changeQuestion$(): Observable<boolean> {
     return this.socket.fromEvent<boolean, 'changeQuestion'>('changeQuestion');
+  }
+
+  setFail(gameId: string, team: TeamTypes): void {
+    this.socket.emit('setFail', gameId, team);
+  }
+
+  setFail$(): Observable<TeamTypes> {
+    return this.socket.fromEvent<TeamTypes, 'setFail'>('setFail');
+  }
+
+  changeTeam(gameId: string, team: TeamTypes): void {
+    this.socket.emit('changeTeam', gameId, team);
+  }
+
+  changeTeam$(): Observable<TeamTypes> {
+    return this.socket.fromEvent<TeamTypes, 'changeTeam'>('changeTeam');
   }
 }

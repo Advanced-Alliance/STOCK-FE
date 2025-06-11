@@ -1,4 +1,4 @@
-import { IActivePlayer, IGameSettings, TeamTypes } from './../../models/models';
+import { GameType, IActivePlayer, IGameSettings, TeamTypes } from './../../models/models';
 import { GameSettingService } from '../../services/game-setting.service';
 import { BaseComponent } from './../../core/base.component';
 import { Component, OnInit } from '@angular/core';
@@ -21,6 +21,7 @@ import { GameServerService } from '../../services/game-server.service';
   imports: [TeamComponent, AnswersComponent, MatButton, AnswersComponent],
 })
 export class GameComponent extends BaseComponent implements OnInit {
+  readonly GameType = GameType;
   gameSettings?: IGameSettings;
   isAdminMode = false;
   gameEnded = false;
@@ -123,6 +124,24 @@ export class GameComponent extends BaseComponent implements OnInit {
 
         next ? this.nextQuestion() : this.previousQuestion();
       });
+
+    this.gameServerService
+      .setFail$()
+      .pipe(this.unsubscribeOnDestroy)
+      .subscribe((team) => {
+        console.log('Team failed:', team);
+
+        this.onFail(team);
+      });
+
+    this.gameServerService
+      .changeTeam$()
+      .pipe(this.unsubscribeOnDestroy)
+      .subscribe((team) => {
+        console.log('Force changed team:', team);
+
+        this.setActiveTeam(team);
+      });
   }
 
   /**
@@ -134,24 +153,16 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   setActiveTeam(team: TeamTypes) {
+    if (!this.gameSettings) return;
+    if (this.isOnline) {
+      this.gameServerService.changeTeam(this.gameSettings.onlineId || '', team);
+    }
     this.activePlayer.team = team;
   }
 
   // TODO: change to global
   switchSound() {
     this.isSoundOn = !this.isSoundOn;
-  }
-
-  // НАХРЕНА????????? TODO:remove
-  getCurrentAnswer(idx) {
-    return this.answers[this.stageIndex].answers[idx];
-  }
-
-  getCurrentQuestion() {
-    const question = this.answers[this.stageIndex].question;
-    /*const addition = `${question.indexOf('?') !== -1 ? '' : '?'}`;
-    return `${this.placeholder} ${this.stageIndex + 1}: ${question}${addition}`;*/
-    return `${question}`;
   }
 
   onSelected(id: number) {
@@ -232,10 +243,10 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   onFail(team: TeamTypes) {
-    // (ShadowHD33RUS) i think is not needed, or need to move to settings
-    // if (this.activePlayer.team !== teamId) {
-    //   return;
-    // }
+    if (!this.gameSettings) return;
+    if (this.isOnline) {
+      this.gameServerService.setFail(this.gameSettings.onlineId || '', team);
+    }
 
     this.playFailSound();
 

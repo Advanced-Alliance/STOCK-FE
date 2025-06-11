@@ -12,14 +12,13 @@
     {{ gameSettings.game.questions[stageIndex].stageName }}
   </h1>
   <div>{{ gameSettings.game.name }}</div>
-
+  @if(gameSettings.game.gameType === GameType.Classic) {
   <div class="center-row bank">
     <span>
       {{ bank }}
     </span>
   </div>
-
-  @let teamLeft = gameSettings.game.teamLeft; @if (teamLeft) {
+  } @let teamLeft = gameSettings.game.teamLeft; @if (teamLeft) {
   <app-team
     (click)="setActiveTeam('teamLeft')"
     (failed)="onFail('teamLeft')"
@@ -33,10 +32,20 @@
   />
   }
 
-  <answers
-    [count]="gameSettings.game.questions[stageIndex].answers.length"
-    (open)="onSelected($event)"
-  />
+  <div>
+    <answers
+      [count]="gameSettings.game.questions[stageIndex].answers.length"
+      (open)="onSelected($event)"
+    />
+    @if (isAdminMode) {
+    <ol>
+      @for (answer of gameSettings.game.questions[stageIndex].answers; track
+      answer;) {
+      <li>{{ answer.text }}</li>
+      }
+    </ol>
+    }
+  </div>
 
   @let teamRight = gameSettings.game.teamRight; @if (teamRight) {
   <app-team

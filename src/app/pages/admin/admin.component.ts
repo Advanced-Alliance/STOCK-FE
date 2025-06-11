@@ -56,6 +56,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
   currentQuestion = 0;
   unsavedChanges = true;
 
+  isModernType = true; // TODO: make it normal
+
   teamLeftName?: string | null;
   teamRightName?: string | null;
 
@@ -128,6 +130,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
         this.unsavedChanges = false;
         this.createDate = gameSettings.createDate;
         this.currentQuestion = gameSettings.lastEditQuestion;
+        this.isModernType = gameSettings.game.gameType === GameType.Modern;
       };
 
       reader.readAsText(inputNode.files[0]);
@@ -190,7 +193,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       name: ['Новая игра', Validators.required],
       showQuestionsText: [true],
       maxFails: [3],
-      gameType: [GameType.Classic],
+      gameType: [GameType.Modern],
       questions: this.fb.array([
         this.getDefaultTab('Простая игра'),
         this.getDefaultTab('Двойная игра'),
@@ -256,6 +259,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
   private getChanges(): IGameSettings {
     const gameData = this.gameForm.value as IGame;
     gameData.questions = gameData.questions.slice(0, this.questions.length - 1);
+    gameData.gameType = this.isModernType ? GameType.Modern : GameType.Classic;
 
     //   commonPoints: 0,
     //   currentStage: 0,
