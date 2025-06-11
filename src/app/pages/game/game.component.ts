@@ -114,6 +114,15 @@ export class GameComponent extends BaseComponent implements OnInit {
 
         this.onSelected(answer.id);
       });
+
+    this.gameServerService
+      .changeQuestion$()
+      .pipe(this.unsubscribeOnDestroy)
+      .subscribe((next) => {
+        console.log('changed question, next:', next);
+
+        next ? this.nextQuestion() : this.previousQuestion();
+      });
   }
 
   /**
@@ -182,6 +191,13 @@ export class GameComponent extends BaseComponent implements OnInit {
   nextQuestion() {
     if (!this.gameSettings) return;
 
+    if (this.isOnline) {
+      this.gameServerService.changeQuestion(
+        this.gameSettings.onlineId || '',
+        true
+      );
+    }
+
     if (this.stageIndex === this.gameSettings.game.questions.length - 1) {
       this.endgame();
       return;
@@ -195,10 +211,24 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   previousQuestion() {
+    if (!this.gameSettings) return;
+    if (this.isOnline) {
+      this.gameServerService.changeQuestion(
+        this.gameSettings.onlineId || '',
+        false
+      );
+    }
+
     if (this.stageIndex === 0) {
       return;
     }
     this.stageIndex -= 1;
+
+    this.gameSettings.game.questions[this.stageIndex].answers.forEach(
+      (answer) => {
+        this.gameService.answerInstant$.next(answer);
+      }
+    );
   }
 
   onFail(team: TeamTypes) {

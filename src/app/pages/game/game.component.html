@@ -5,7 +5,9 @@
 </div>
 } @if (gameSettings) {
 <div class="root-container">
-  <div class="header">@if (gameSettings.onlineId){ {{ gameSettings.onlineId }} }</div>
+  <div class="header">
+    @if (gameSettings.onlineId){ {{ gameSettings.onlineId }} }
+  </div>
   <h1 class="header">
     {{ gameSettings.game.questions[stageIndex].stageName }}
   </h1>
@@ -48,9 +50,11 @@
     [class.team--active]="activePlayer.team === 'teamRight' || showAnswersMode"
     class="team"
   />
-  }
+  } @if (isAdminMode) {
   <div class="center-row controls controls-container">
-    <button (click)="nextQuestion()" mat-raised-button>Дальше!</button>
+    <button (click)="previousQuestion()" mat-raised-button>Назад</button>
+    <button (click)="nextQuestion()" mat-raised-button>Дальше</button>
   </div>
+  }
 </div>
 }

@@ -30,10 +30,18 @@ export class GameServerService {
   }
 
   openCard(gameId: string, card: IAnswer): void {
-    this.socket.emit('openCard', [gameId, card]);
+    this.socket.emit('openCard', gameId, card);
   }
 
   openCard$(): Observable<IAnswer> {
     return this.socket.fromEvent<IAnswer, 'openCard'>('openCard');
+  }
+
+  changeQuestion(gameId: string, next: boolean): void {
+    this.socket.emit('changeQuestion', gameId, next);
+  }
+
+  changeQuestion$(): Observable<boolean> {
+    return this.socket.fromEvent<boolean, 'changeQuestion'>('changeQuestion');
   }
 }
