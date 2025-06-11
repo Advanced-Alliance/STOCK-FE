@@ -11,6 +11,7 @@ import { Observable, of } from 'rxjs';
 import { TeamComponent } from './team/team.component';
 import { AnswersComponent } from './answers/answers.component';
 import { GameService } from './game.service';
+import { GameServerService } from '../../services/game-server.service';
 
 @Component({
   selector: 'app-game',
@@ -40,7 +41,6 @@ export class GameComponent extends BaseComponent implements OnInit {
   placeholder: string;
   currentQuestionIdx: number;
   isSoundOn = true;
-  private openedAnswers: boolean[];
   private audioFail: HTMLAudioElement;
   private audioFlip: HTMLAudioElement;
   private audioCash: HTMLAudioElement;
@@ -49,6 +49,7 @@ export class GameComponent extends BaseComponent implements OnInit {
   constructor(
     private gameSettingService: GameSettingService,
     private gameService: GameService,
+    private gameServerService: GameServerService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -66,6 +67,8 @@ export class GameComponent extends BaseComponent implements OnInit {
       .getGameSettings()
       .pipe(this.unsubscribeOnDestroy)
       .subscribe((gameSettings: IGameSettings | null) => {
+        console.log(gameSettings);
+
         if (!gameSettings) {
           this.router.navigate(['/']);
           return;

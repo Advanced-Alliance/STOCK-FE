@@ -51,6 +51,7 @@ export interface IGame {
 }
 
 export interface IGameSettings {
+  onlineId?: string;
   game: IGame;
   authorName?: string;
   authorDescription?: string;

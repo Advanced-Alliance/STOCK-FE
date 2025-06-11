@@ -5,9 +5,11 @@
 </div>
 } @if (gameSettings) {
 <div class="root-container">
-  <h1 class="center-row header">
+  <div class="header">@if (gameSettings.onlineId){ {{ gameSettings.onlineId }} }</div>
+  <h1 class="header">
     {{ gameSettings.game.questions[stageIndex].stageName }}
   </h1>
+  <div>{{ gameSettings.game.name }}</div>
 
   <div class="center-row bank">
     <span>

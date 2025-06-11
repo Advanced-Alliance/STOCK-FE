@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { map, Observable } from 'rxjs';
+import { IGameSettings } from '../models/models';
 
 @Injectable()
 export class GameServerService {
@@ -14,7 +15,11 @@ export class GameServerService {
     return this.socket.fromEvent('message');
   }
 
-  joinGame(gameId: string, callback: (value: string) => void): void {
+  createGame(gameSettings: IGameSettings, callback: (gameId: string | false) => void): void {
+    this.socket.emit('createGame', gameSettings, callback);
+  }
+
+  joinGame(gameId: string, callback: (gameSettings: IGameSettings | null) => void): void {
     this.socket.emit('joinGame', gameId, callback);
   }
 }

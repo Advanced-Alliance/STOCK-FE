@@ -7,7 +7,7 @@
 
     @if (!editGameName) {
       <h1 class="header">
-        {{ gameForm["controls"].gameName.value }}
+        {{ gameForm["controls"].name.value }}
         @if (unsavedChanges) {
           <span>*</span>
         }
@@ -16,7 +16,7 @@
 
     @if (editGameName) {
       <mat-form-field>
-        <input formControlName="gameName" matInput />
+        <input formControlName="name" matInput />
       </mat-form-field>
     }
     <button
@@ -159,7 +159,6 @@
         class="capitalize button-mar"
         color="primary"
         type="submit"
-        disabled
         mat-flat-button
         >
         <mat-icon>public</mat-icon>

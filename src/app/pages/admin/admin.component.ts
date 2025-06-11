@@ -27,6 +27,7 @@ import { MatIcon } from '@angular/material/icon';
 
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { GameServerService } from '../../services/game-server.service';
 
 @Component({
   selector: 'app-admin',
@@ -43,8 +44,8 @@ import { MatInput } from '@angular/material/input';
     MatTabGroup,
     MatTab,
     MatLabel,
-    MatButton
-],
+    MatButton,
+  ],
 })
 export class AdminComponent extends BaseComponent implements OnInit {
   gameForm: UntypedFormGroup;
@@ -67,7 +68,9 @@ export class AdminComponent extends BaseComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private adminService: AdminService,
-    private gameService: GameSettingService,
+    private gameSettingService: GameSettingService,
+    private gameServerService: GameServerService,
+
     private fb: UntypedFormBuilder,
     private router: Router,
     private route: ActivatedRoute
@@ -82,8 +85,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   saveChanges(): void {
     this.unsavedChanges = false;
-    this.gameService.setGameSettings(this.getChanges());
-    this.gameService
+    this.gameSettingService.setGameSettings(this.getChanges());
+    this.gameSettingService
       .getGameSettings()
       .pipe(this.unsubscribeOnDestroy)
       .subscribe((gameSettings) => {
@@ -110,7 +113,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
       reader.onload = (e: any) => {
         const json = e.target.result;
-        const gameSettings = this.gameService.parseJSON(json);
+        const gameSettings = this.gameSettingService.parseJSON(json);
 
         this.questions.clear();
 
@@ -164,19 +167,27 @@ export class AdminComponent extends BaseComponent implements OnInit {
     answers.removeAt(answerIndex);
   }
 
-  startGame(online: boolean) {
-    this.gameService.setGameSettings(this.getChanges());
-    if (!online) {
-      this.router.navigate(['game'], { relativeTo: this.route });
-      return;
+  startGame(online: boolean): void {
+    const newGameSettings = this.getChanges();
+    if (online) {
+      const callback = (onlineId: string | false) => {
+        if (onlineId)
+          this.gameSettingService.setGameSettings({
+            ...newGameSettings,
+            onlineId,
+          });
+        this.router.navigate(['game'], { relativeTo: this.route });
+      };
+      return this.gameServerService.createGame(newGameSettings, callback);
     }
-    // TODO: change to real id from web server
-    this.router.navigate(['/game'], { queryParams: { id: 0 } });
+    this.gameSettingService.setGameSettings(newGameSettings);
+    this.router.navigate(['game'], { relativeTo: this.route });
+    return;
   }
 
   private initNewGame() {
     this.gameForm = this.fb.group({
-      gameName: ['Новая игра', Validators.required],
+      name: ['Новая игра', Validators.required],
       showQuestionsText: [true],
       maxFails: [3],
       gameType: [GameType.Classic],
@@ -215,7 +226,11 @@ export class AdminComponent extends BaseComponent implements OnInit {
     return formArrayAnswers;
   }
 
-  private createAnswer(id: number, name?: string, points?: number): UntypedFormGroup {
+  private createAnswer(
+    id: number,
+    name?: string,
+    points?: number
+  ): UntypedFormGroup {
     return this.fb.group({
       id: this.fb.control(id),
       text: this.fb.control(name),
