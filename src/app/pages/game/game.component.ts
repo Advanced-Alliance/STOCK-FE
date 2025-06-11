@@ -22,9 +22,10 @@ import { GameServerService } from '../../services/game-server.service';
 })
 export class GameComponent extends BaseComponent implements OnInit {
   gameSettings?: IGameSettings;
-  isAdminMode: boolean = false;
-  gameEnded: boolean = false;
-  showAnswersMode: boolean = false;
+  isAdminMode = false;
+  gameEnded = false;
+  showAnswersMode = false;
+  isOnline = false;
 
   bank = 0;
 
@@ -94,6 +95,24 @@ export class GameComponent extends BaseComponent implements OnInit {
         if ('admin' in this.route.snapshot.data) {
           this.isAdminMode = this.route.snapshot.data['admin'];
         }
+
+        if (gameSettings.onlineId) {
+          this.isOnline = true;
+          this.onlineSubs();
+        }
+      });
+  }
+
+  private onlineSubs(): void {
+    if (this.isAdminMode) return;
+
+    this.gameServerService
+      .openCard$()
+      .pipe(this.unsubscribeOnDestroy)
+      .subscribe((answer) => {
+        console.log('got answer', answer);
+
+        this.onSelected(answer.id);
       });
   }
 
@@ -135,6 +154,14 @@ export class GameComponent extends BaseComponent implements OnInit {
     if (answer.opened) return;
     answer.opened = true;
 
+    // TODO: so bad....
+    if (this.isOnline && this.isAdminMode) {
+      this.gameServerService.openCard(
+        this.gameSettings?.onlineId || '',
+        answer
+      );
+    }
+
     this.gameService.answerInstant$.next(answer);
 
     const award = answer.points || 0;
@@ -147,7 +174,7 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.activePlayer.team =
       this.activePlayer.team == 'teamLeft' ? 'teamRight' : 'teamLeft';
 
-    if (this.showAnswersMode) return;
+    if (this.showAnswersMode || (this.isOnline && this.isAdminMode)) return;
 
     this.playFlipSound();
   }
