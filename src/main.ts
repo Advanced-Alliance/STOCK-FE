@@ -1,5 +1,4 @@
 import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { environment } from './environments/environment';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
@@ -8,6 +7,9 @@ import { SharedModule } from './app/shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app/app-routing.module';
 import { AppComponent } from './app/app.component';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:8080', options: {} };
 
 if (environment.production) {
   enableProdMode();
@@ -20,6 +22,7 @@ bootstrapApplication(AppComponent, {
       CoreModule,
       SharedModule,
       RouterModule,
+      SocketIoModule.forRoot(config),
       AppRoutingModule // Must be the last one
     ),
   ],

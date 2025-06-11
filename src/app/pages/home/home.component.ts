@@ -15,6 +15,7 @@ import { MatButton, MatAnchor } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatTooltip } from '@angular/material/tooltip';
+import { GameServerService } from '../../services/game-server.service';
 
 @Component({
   selector: 'app-home',
@@ -37,18 +38,25 @@ export class HomeComponent extends BaseComponent implements OnInit {
   gameFrom = new UntypedFormGroup({
     gameId: new UntypedFormControl('', [
       Validators.required,
-      Validators.pattern(/^(\d){4}$/),
+      Validators.pattern(/^(\d|[A-Z]){4}$/),
     ]),
   });
   gameAvalable = false;
 
-  constructor() {
+  constructor(private gameServerService: GameServerService) {
     super();
   }
 
+  joinGameCallback = (msg: string) => {
+    console.log(`Success: ${msg}`);
+  };
+
   ngOnInit() {}
 
-  play() {
-    alert('You cannot to play yet');
+  play(): void {
+    this.gameServerService.joinGame(
+      this.gameFrom.controls['gameId'].value,
+      this.joinGameCallback
+    );
   }
 }

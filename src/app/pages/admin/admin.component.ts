@@ -179,7 +179,7 @@ export class AdminComponent extends BaseComponent implements OnInit {
       gameName: ['Новая игра', Validators.required],
       showQuestionsText: [true],
       maxFails: [3],
-      gameType: [GameType.teamPlay],
+      gameType: [GameType.Classic],
       questions: this.fb.array([
         this.getDefaultTab('Простая игра'),
         this.getDefaultTab('Двойная игра'),

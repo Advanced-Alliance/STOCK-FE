@@ -5,8 +5,8 @@ export enum OrderBy {
 }
 
 export enum GameType {
-  teamPlay = 'teamplay',
-  PvP = 'pvp',
+  Classic = 'classic',
+  Modern = 'modern',
 }
 
 export interface IAnswer {
