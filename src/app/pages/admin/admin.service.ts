@@ -27,7 +27,7 @@ export class AdminService {
       [JSON.stringify(gameSettings)],
       { type: 'application/json' }
     );
-    const filename = 'STOCK game settings.json';
+    const filename = `${gameSettings.game.name || 'STOCK Game Settings'}.json`;
     this.fileSaverService.save(fileSettingsBlob, filename);
   }
 }

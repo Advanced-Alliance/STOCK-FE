@@ -60,4 +60,12 @@ export class GameServerService {
   changeTeam$(): Observable<TeamTypes> {
     return this.socket.fromEvent<TeamTypes, 'changeTeam'>('changeTeam');
   }
+
+  changePoints(gameId: string, team: TeamTypes, points: number): void {
+    this.socket.emit('changePoints', gameId, team, points);
+  }
+
+  changePoints$(): Observable<[TeamTypes, number]> {
+    return this.socket.fromEvent<[TeamTypes, number], 'changePoints'>('changePoints');
+  }
 }

@@ -9,7 +9,7 @@
     @if (gameSettings.onlineId){ {{ gameSettings.onlineId }} }
   </div>
   <h1 class="header">
-    {{ gameSettings.game.questions[stageIndex].stageName }}
+    {{ gameSettings.game.questions[currentStage].stageName }}
   </h1>
   <div>{{ gameSettings.game.name }}</div>
   @if(gameSettings.game.gameType === GameType.Classic) {
@@ -34,12 +34,13 @@
 
   <div>
     <answers
-      [count]="gameSettings.game.questions[stageIndex].answers.length"
+      [count]="gameSettings.game.questions[currentStage].answers.length"
       (open)="onSelected($event)"
     />
     @if (isAdminMode) {
+    <p>{{ gameSettings.game.questions[currentStage].questionText }}</p>
     <ol>
-      @for (answer of gameSettings.game.questions[stageIndex].answers; track
+      @for (answer of gameSettings.game.questions[currentStage].answers; track
       answer;) {
       <li>{{ answer.text }}</li>
       }
@@ -61,8 +62,58 @@
   />
   } @if (isAdminMode) {
   <div class="center-row controls controls-container">
-    <button (click)="previousQuestion()" mat-raised-button>Назад</button>
-    <button (click)="nextQuestion()" mat-raised-button>Дальше</button>
+    <div>
+      <button (click)="previousQuestion()" mat-raised-button>Назад</button>
+      <button (click)="nextQuestion()" mat-raised-button>Дальше</button>
+    </div>
+    <div>
+      <section class="example-section">
+        <mat-checkbox
+          class="example-margin"
+          [checked]="showAnswersMode"
+          (click)="showAnswersMode = !showAnswersMode"
+          >{{
+            showAnswersMode ? "Режим накопления баллов" : "Режим демонстрации"
+          }}</mat-checkbox
+        >
+      </section>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Очки красной команды</mat-label>
+        <input
+          type="text"
+          [value]="gameSettings.game.teamLeft.points"
+          #teamLeftPoints
+          matInput
+        />
+      </mat-form-field>
+      <button
+        aria-label="Clear"
+        (click)="setTeamPoints('teamLeft', teamLeftPoints.value)"
+        mat-raised-button
+      >
+        Поменять очки <img [src]="teamOneIcon" style="height: 24px" />
+      </button>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Очки синей команды</mat-label>
+        <input
+          type="text"
+          [value]="gameSettings.game.teamRight.points"
+          #teamRightPoints
+          matInput
+        />
+      </mat-form-field>
+      <button
+        aria-label="Clear"
+        (click)="setTeamPoints('teamRight', teamRightPoints.value)"
+        mat-raised-button
+      >
+        Поменять очки <img [src]="teamTwoIcon" style="height: 24px" />
+      </button>
+    </div>
   </div>
   }
 </div>

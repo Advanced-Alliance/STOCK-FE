@@ -9,11 +9,14 @@ import { AppRoutingModule } from './app/app-routing.module';
 import { AppComponent } from './app/app.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 
-const config: SocketIoConfig = { url: 'http://localhost:8080', options: {} };
+let websocketUrl = 'http://localhost:8080';
 
 if (environment.production) {
+  websocketUrl = '';
   enableProdMode();
 }
+
+const config: SocketIoConfig = { url: websocketUrl, options: {} };
 
 bootstrapApplication(AppComponent, {
   providers: [

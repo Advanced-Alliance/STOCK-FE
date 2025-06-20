@@ -197,6 +197,8 @@ export class AdminComponent extends BaseComponent implements OnInit {
       questions: this.fb.array([
         this.getDefaultTab('Простая игра'),
         this.getDefaultTab('Двойная игра'),
+        this.getDefaultTab('Тройная игра'),
+        this.getDefaultTab('Игра наоборот'),
         this.getDefaultTab(),
       ]),
     });
@@ -222,9 +224,12 @@ export class AdminComponent extends BaseComponent implements OnInit {
 
   private getDefaultAnswers(): UntypedFormArray {
     const formArrayAnswers = this.fb.array([
-      this.createAnswer(0, 'Частый ответ', 60),
-      this.createAnswer(1, 'Средний ответ', 30),
-      this.createAnswer(2, 'Редкий ответ', 10),
+      this.createAnswer(0, ''),
+      this.createAnswer(1, ''),
+      this.createAnswer(2, ''),
+      this.createAnswer(3, ''),
+      this.createAnswer(4, ''),
+      this.createAnswer(5, ''),
     ]);
     return formArrayAnswers;
   }

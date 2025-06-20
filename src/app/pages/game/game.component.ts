@@ -1,6 +1,7 @@
 import {
   GameType,
   IActivePlayer,
+  IAnswer,
   IGameSettings,
   TeamTypes,
 } from './../../models/models';
@@ -10,20 +11,30 @@ import { Component, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CardComponent } from './answers/card/card.component';
 import { MatButton } from '@angular/material/button';
-import { delay, Observable, of } from 'rxjs';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { Observable, of } from 'rxjs';
 import { TeamComponent } from './team/team.component';
 import { AnswersComponent } from './answers/answers.component';
 import { GameService } from './game.service';
 import { GameServerService } from '../../services/game-server.service';
+import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss'],
   providers: [GameService],
-  imports: [TeamComponent, AnswersComponent, MatButton, AnswersComponent],
+  imports: [
+    TeamComponent,
+    AnswersComponent,
+    MatButton,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatCheckbox,
+    AnswersComponent,
+  ],
 })
 export class GameComponent extends BaseComponent implements OnInit {
   readonly GameType = GameType;
@@ -35,7 +46,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
   bank = 0;
 
-  stageIndex: number = 0;
+  currentStage: number = 0;
   activePlayer: IActivePlayer; // TODO: change to activeTeam witch array
   counters: any[] = []; // TODO: move to HTML Element type
 
@@ -114,11 +125,13 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     this.gameServerService
       .openCard$()
-      .pipe(delay(1500), this.unsubscribeOnDestroy)
+      .pipe(this.unsubscribeOnDestroy)
       .subscribe((answer) => {
         console.log('got answer', answer);
 
-        this.onSelected(answer.id);
+        this.gameService.answerInstant$.next(answer);
+
+        this.playFlipSound();
       });
 
     this.gameServerService
@@ -132,7 +145,7 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     this.gameServerService
       .setFail$()
-      .pipe(delay(1500), this.unsubscribeOnDestroy)
+      .pipe(this.unsubscribeOnDestroy)
       .subscribe((team) => {
         console.log('Team failed:', team);
 
@@ -147,6 +160,18 @@ export class GameComponent extends BaseComponent implements OnInit {
 
         this.setActiveTeam(team);
       });
+
+    this.gameServerService
+      .changePoints$()
+      .pipe(this.unsubscribeOnDestroy)
+      .subscribe(([team, points]) => {
+        console.log('Force changed points:', team, points);
+
+        const selectedTeam = this.gameSettings?.game[team];
+        if (selectedTeam) {
+          selectedTeam.points = points;
+        }
+      });
   }
 
   /**
@@ -157,11 +182,23 @@ export class GameComponent extends BaseComponent implements OnInit {
     this.placeholder = 'Ответ';
   }
 
+  setTeamPoints(team: TeamTypes, points: number | string): void {
+    points = Number(points);
+
+    this.gameServerService.changePoints(
+      this.gameSettings?.onlineId || '',
+      team,
+      points
+    );
+
+    if (this.gameSettings) this.gameSettings.game[team].points = points;
+  }
+
   setActiveTeam(team: TeamTypes) {
     if (!this.gameSettings) return;
-    if (this.isOnline) {
-      this.gameServerService.changeTeam(this.gameSettings.onlineId || '', team);
-    }
+    // if (this.isOnline) {
+    //   this.gameServerService.changeTeam(this.gameSettings.onlineId || '', team);
+    // }
     this.activePlayer.team = team;
   }
 
@@ -174,18 +211,16 @@ export class GameComponent extends BaseComponent implements OnInit {
     const game = this.gameSettings?.game;
     if (!game) return;
 
-    const answer = game.questions[this.stageIndex].answers[id];
+    const answer = game.questions[this.currentStage].answers[id];
 
     if (answer.opened) return;
     answer.opened = true;
 
-    // TODO: so bad....
-    if (this.isOnline && this.isAdminMode) {
-      this.gameServerService.openCard(
-        this.gameSettings?.onlineId || '',
-        answer
-      );
+    if (this.isAdminMode && this.isOnline) {
+      return this.onSelectedAdmin(answer);
     }
+
+    if (this.isOnline) return;
 
     this.gameService.answerInstant$.next(answer);
 
@@ -193,15 +228,66 @@ export class GameComponent extends BaseComponent implements OnInit {
 
     if (!this.activePlayer) return;
 
+    // this.setTeamPoints(this.activePlayer.team, award);
     game[this.activePlayer.team].points += award;
     // this.counters[this.activePlayer.team || 0].innerHTML = currentTeam.points;
 
     this.activePlayer.team =
       this.activePlayer.team == 'teamLeft' ? 'teamRight' : 'teamLeft';
 
-    if (this.showAnswersMode) return;
+    // if (this.showAnswersMode) return;
 
     this.playFlipSound();
+  }
+
+  private onSelectedAdmin(answer: IAnswer): void {
+    this.gameService.answerInstant$.next(answer);
+
+    const delay = 1500;
+
+    setTimeout(() => {
+      this.gameServerService.openCard(
+        this.gameSettings?.onlineId || '',
+        answer
+      );
+    }, delay);
+
+    const team = this.activePlayer.team;
+
+    if (
+      !this.showAnswersMode &&
+      this.gameSettings &&
+      this.gameSettings.game[team].fails < this.gameSettings.game.maxFails
+    ) {
+      const points = this.gameSettings.game[team].points + (answer.points || 0);
+
+      if (team) {
+        const game = this.gameSettings?.game;
+        if (!game) return;
+        if (!this.activePlayer) return;
+
+        game[team].points = points;
+      }
+
+      setTimeout(() => {
+        this.gameServerService.changePoints(
+          this.gameSettings?.onlineId || '',
+          team,
+          points
+        );
+      }, delay);
+    }
+
+    this.activePlayer.team =
+      this.activePlayer.team === 'teamLeft' ? 'teamRight' : 'teamLeft';
+
+    setTimeout(() => {
+      !this.showAnswersMode &&
+        this.gameServerService.changeTeam(
+          this.gameSettings?.onlineId || '',
+          this.activePlayer.team
+        );
+    }, delay);
   }
 
   nextQuestion() {
@@ -214,7 +300,7 @@ export class GameComponent extends BaseComponent implements OnInit {
       );
     }
 
-    if (this.stageIndex === this.gameSettings.game.questions.length - 1) {
+    if (this.currentStage === this.gameSettings.game.questions.length - 1) {
       this.endgame();
       return;
     }
@@ -235,12 +321,12 @@ export class GameComponent extends BaseComponent implements OnInit {
       );
     }
 
-    if (this.stageIndex === 0) {
+    if (this.currentStage === 0) {
       return;
     }
-    this.stageIndex -= 1;
+    this.currentStage -= 1;
 
-    this.gameSettings.game.questions[this.stageIndex].answers.forEach(
+    this.gameSettings.game.questions[this.currentStage].answers.forEach(
       (answer) => {
         this.gameService.answerInstant$.next(answer);
       }
@@ -250,7 +336,11 @@ export class GameComponent extends BaseComponent implements OnInit {
   onFail(team: TeamTypes) {
     if (!this.gameSettings) return;
     if (this.isOnline) {
-      this.gameServerService.setFail(this.gameSettings.onlineId || '', team);
+      const delay = 1500;
+      const id = this.gameSettings.onlineId || '';
+      setTimeout(() => {
+        this.gameServerService.setFail(id, team);
+      }, delay);
     }
 
     this.playFailSound();
@@ -258,15 +348,14 @@ export class GameComponent extends BaseComponent implements OnInit {
     if (!this.gameSettings || this.showAnswersMode) return;
 
     // TODO: replace with teams array;
-    this.gameSettings.game[team].fails++;
 
-    if (this.gameSettings.game.maxFails <= this.gameSettings.game[team].fails) {
-      this.showAnswersMode = true;
+    if (this.gameSettings.game[team].fails <= this.gameSettings.game.maxFails) {
+      this.gameSettings.game[team].fails++;
     }
   }
 
   private nextRound() {
-    this.stageIndex++;
+    this.currentStage++;
 
     const game = this.gameSettings?.game;
 
@@ -296,10 +385,10 @@ export class GameComponent extends BaseComponent implements OnInit {
   }
 
   private closeAnswersAll(): void {
-    const answers = this.gameSettings?.game.questions[this.stageIndex].answers;
+    const answers = this.gameSettings?.game.questions[this.currentStage].answers;
     if (!this.gameSettings) return;
     if (!answers) return;
-    for (const { id } of this.gameSettings.game.questions[this.stageIndex]
+    for (const { id } of this.gameSettings.game.questions[this.currentStage]
       .answers) {
       this.gameService.answerInstant$.next({ id, opened: false });
     }
@@ -333,14 +422,14 @@ export class GameComponent extends BaseComponent implements OnInit {
     const audio = new Audio();
     audio.controls = true;
     const audioFormats = [
-      // {
-      //   name: '.mp3',
-      //   type: 'audio/mpeg',
-      // },
       {
-        name: '.wav',
-        type: 'audio/wav',
+        name: '.mp3',
+        type: 'audio/mpeg',
       },
+      // {
+      //   name: '.wav',
+      //   type: 'audio/wav',
+      // },
       // {
       //   name: '.ogg',
       //   type: 'audio/ogg',

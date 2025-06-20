@@ -52,7 +52,7 @@
         label="{{ q['controls'].stageName.value }}"
       >
         <div class="question" formGroupName="{{ i }}">
-          <mat-form-field>
+          <mat-form-field class="rich-input">
             <mat-label>Название этапа</mat-label>
             <input
               formControlName="stageName"
@@ -62,7 +62,7 @@
             />
           </mat-form-field>
           <br />
-          <mat-form-field>
+          <mat-form-field class="rich-input">
             <mat-label>Текст вопроса</mat-label>
             <textarea formControlName="questionText" matInput></textarea>
           </mat-form-field>

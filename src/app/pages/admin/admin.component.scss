@@ -36,13 +36,18 @@
   margin: 0;
 }
 
+.rich-input {
+  width: 100%;
+  max-width: 500px;
+}
+
 .question {
   @include flex(column, start, start);
   margin: map-get($map: $margin, $key: "sm");
 }
 
 .form-content {
-  margin: map-get($map: $margin, $key: "sm");
+  margin: 0 map-get($map: $margin, $key: "sm");
 }
 
 .answers-block {
